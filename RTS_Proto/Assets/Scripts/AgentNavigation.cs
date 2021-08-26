@@ -20,14 +20,7 @@ public class AgentNavigation : MonoBehaviour
         this.lastValidTile = worldGrid.NodeFromWorldPoint(transform.position);
     }
 
-
     private void Update()
-    {
-        transform.eulerAngles = new Vector3(0, 0, 0);
-    }
-
-
-    private void FixedUpdate()
     {
         DijkstraTile currentTile = worldGrid.NodeFromWorldPoint(transform.position);
 
@@ -44,7 +37,11 @@ public class AgentNavigation : MonoBehaviour
             if (hit.collider.tag == "target")
             {
                 // Clear line of sight to target position
-                rb.MovePosition(transform.position + (hit.transform.position - transform.position).normalized * Time.deltaTime * force);
+                Vector3 moveDir = (hit.transform.position - transform.position).normalized;
+
+                rb.MovePosition(transform.position + moveDir * Time.deltaTime * force);
+                if (moveDir != Vector3.zero)
+                    transform.forward = new Vector3(moveDir.x, 0, moveDir.z);
             }
             else
             {
@@ -53,14 +50,20 @@ public class AgentNavigation : MonoBehaviour
                 {
                     int2 flowVector = this.lastValidTile.gridPos - currentTile.gridPos;
                     Vector3 moveDir = new Vector3(flowVector.x, 0, flowVector.y).normalized;
+
                     rb.MovePosition(transform.position + moveDir * Time.deltaTime * force);
+                    if (moveDir != Vector3.zero)
+                        transform.forward = moveDir;
                 }
                 else
                 {
                     this.lastValidTile = currentTile;
                     int2 flowVector = currentTile.FlowFieldVector;
                     Vector3 moveDir = new Vector3(flowVector.x, 0, flowVector.y).normalized;
+
                     rb.MovePosition(transform.position + moveDir * Time.deltaTime * force);
+                    if (moveDir != Vector3.zero)
+                        transform.forward = moveDir;
                 }
             }
         }

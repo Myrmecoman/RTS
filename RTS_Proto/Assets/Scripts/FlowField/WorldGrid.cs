@@ -60,7 +60,7 @@ public class WorldGrid : MonoBehaviour
         tempDijkstra.Dispose();
         double FlowFieldTime = Time.realtimeSinceStartupAsDouble - t;
 
-        Debug.Log("Times : \n" + "dijkstra : " + DijkstraTime + " | flowfield : " + FlowFieldTime + " | update time : " + updateGrid);
+        //Debug.Log("Times : \n" + "dijkstra : " + DijkstraTime + " | flowfield : " + FlowFieldTime + " | update time : " + updateGrid);
     }
 
 
