@@ -19,6 +19,7 @@ public class Cam_controller : MonoBehaviour
         cam = GetComponent<Camera>();
         Cursor.visible = true;
         Cursor.lockState = CursorLockMode.None;
+        UpdateHeight();
     }
 
 
@@ -66,6 +67,12 @@ public class Cam_controller : MonoBehaviour
         else
             transform.position = new Vector3(transform.position.x, Mathf.Clamp(transform.position.y + 2f, 10f, 50f), transform.position.z);
 
+        UpdateHeight();
+    }
+
+
+    private void UpdateHeight()
+    {
         transform.eulerAngles = new Vector3(45 + (transform.position.y - 10), transform.eulerAngles.y, transform.eulerAngles.z);
     }
 }

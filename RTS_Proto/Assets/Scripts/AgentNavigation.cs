@@ -16,12 +16,14 @@ public class AgentNavigation : MonoBehaviour
     private void Start()
     {
         rb = GetComponent<Rigidbody>();
-        rb.constraints = RigidbodyConstraints.FreezePositionY;
-        this.lastValidTile = worldGrid.NodeFromWorldPoint(transform.position);
+        lastValidTile = worldGrid.NodeFromWorldPoint(transform.position);
     }
 
-    private void Update()
+    private void FixedUpdate()
     {
+        if (worldGrid.computingJobs)
+            return;
+
         DijkstraTile currentTile = worldGrid.NodeFromWorldPoint(transform.position);
 
         RaycastHit hit;
@@ -30,16 +32,17 @@ public class AgentNavigation : MonoBehaviour
         // This would cast rays only against colliders in layer 7, we want to collide against everything except layer 7
         layerMask = ~layerMask;
 
-        if (worldGrid.StartPosition != null && Physics.Raycast(transform.position, worldGrid.StartPosition - transform.position, out hit, Mathf.Infinity, layerMask))
+        if (worldGrid.StartPosition != null && Physics.Raycast(transform.position, worldGrid.StartPosition - transform.position, out hit, 1000f, layerMask))
         {
-            //Debug.DrawRay(transform.position, worldGrid.StartPosition.position - transform.position, Color.red, 1f);
+            //Debug.DrawRay(transform.position, worldGrid.StartPosition - transform.position, Color.red, 0.1f);
 
-            if (hit.collider.tag == "target")
+            if (hit.transform.tag == "target")
             {
                 // Clear line of sight to target position
-                Vector3 moveDir = (hit.transform.position - transform.position).normalized;
+                Vector3 Ynull = new Vector3(hit.transform.position.x, transform.position.y, hit.transform.position.z);
+                Vector3 moveDir = (Ynull - transform.position).normalized;
 
-                rb.MovePosition(transform.position + moveDir * Time.deltaTime * force);
+                rb.MovePosition(transform.position + moveDir * Time.fixedDeltaTime * force);
                 if (moveDir != Vector3.zero)
                     transform.forward = new Vector3(moveDir.x, 0, moveDir.z);
             }
@@ -51,7 +54,7 @@ public class AgentNavigation : MonoBehaviour
                     int2 flowVector = this.lastValidTile.gridPos - currentTile.gridPos;
                     Vector3 moveDir = new Vector3(flowVector.x, 0, flowVector.y).normalized;
 
-                    rb.MovePosition(transform.position + moveDir * Time.deltaTime * force);
+                    rb.MovePosition(transform.position + moveDir * Time.fixedDeltaTime * force);
                     if (moveDir != Vector3.zero)
                         transform.forward = moveDir;
                 }
@@ -61,7 +64,7 @@ public class AgentNavigation : MonoBehaviour
                     int2 flowVector = currentTile.FlowFieldVector;
                     Vector3 moveDir = new Vector3(flowVector.x, 0, flowVector.y).normalized;
 
-                    rb.MovePosition(transform.position + moveDir * Time.deltaTime * force);
+                    rb.MovePosition(transform.position + moveDir * Time.fixedDeltaTime * force);
                     if (moveDir != Vector3.zero)
                         transform.forward = moveDir;
                 }
