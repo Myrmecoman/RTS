@@ -6,7 +6,7 @@ public class Cam_controller : MonoBehaviour
 {
     public float speed = 10f;
     public GameObject MoveCommandObj;
-    public WorldGrid worldGrid;
+    public GameManager gameManager;
 
     [HideInInspector] public Vector2 move;
 
@@ -62,9 +62,6 @@ public class Cam_controller : MonoBehaviour
         if (selectedAgents.Count == 0)
             return;
 
-        foreach (var i in selectedAgents)
-            i.SetDestination();
-
         // Bit shift the index of the layer to get a bit mask, 0 is default
         int layerMask = 1 << 0;
 
@@ -77,16 +74,16 @@ public class Cam_controller : MonoBehaviour
             if (moveCommandSprite != null)
             {
                 // Don't recalculate path if click at same place
-                if (moveCommandSprite.transform.position == hit.point + new Vector3(0, 0.0001f, 0))
-                    return;
+                // if (moveCommandSprite.transform.position == hit.point + new Vector3(0, 0.0001f, 0))
+                //     return;
                 Destroy(moveCommandSprite);
             }
 
             moveCommandSprite = Instantiate(MoveCommandObj);
             moveCommandSprite.transform.position = hit.point + new Vector3(0, 0.0001f, 0);
-        }
 
-        worldGrid.ChangeTarget(moveCommandSprite.transform.position);
+            gameManager.MoveCommand(selectedAgents, moveCommandSprite.transform.position);
+        }
     }
 
 

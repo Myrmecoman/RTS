@@ -4,12 +4,12 @@ using UnityEngine;
 
 public class AgentNavigation : MonoBehaviour
 {
-    public WorldGrid worldGrid;
     public float force = 1.0f;
     public SpriteRenderer sprite;
     public Transform leftMostPart;
     public Transform rightMostPart;
 
+    [HideInInspector] public WorldGrid worldGrid;
     [HideInInspector] public bool hasDestination = false;
     [HideInInspector] public bool destinationReached = true;
 

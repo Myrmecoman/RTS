@@ -5,10 +5,9 @@ using UnityEngine;
 
 public class WorldGrid : MonoBehaviour
 {
-    public LayerMask WallMask; // This is the mask that the program will look for when trying to find obstructions to the path
-    public Vector2 vGridWorldSize; // A vector2 to store the width and height of the graph in world units
-    public float fNodeRadius; // This stores how big each square on the graph will be
-
+    [HideInInspector] public LayerMask WallMask; // This is the mask that the program will look for when trying to find obstructions to the path
+    [HideInInspector] public Vector2 vGridWorldSize; // A vector2 to store the width and height of the graph in world units
+    [HideInInspector] public float fNodeRadius; // This stores how big each square on the graph will be
     [HideInInspector] public bool computingJobs = false; // Tells if we have access to precise pathfinding
     [HideInInspector] public Vector3 StartPosition; // This is where the program will start the pathfinding from
 
@@ -22,7 +21,6 @@ public class WorldGrid : MonoBehaviour
     private float imprecisefNodeRadius;
     private float imprecisefNodeDiameter;
     private int impreciseiGridSizeX, impreciseiGridSizeY;
-    private Vector3 imprecisebottomLeft;
 
     // Needed to manage jobs without blocking
     private double delay;
@@ -35,7 +33,7 @@ public class WorldGrid : MonoBehaviour
     private bool flowScheduled = false;
 
 
-    private void Awake()
+    private void Start()
     {
         bottomLeft = transform.position - Vector3.right * vGridWorldSize.x / 2 - Vector3.forward * vGridWorldSize.y / 2;
 
