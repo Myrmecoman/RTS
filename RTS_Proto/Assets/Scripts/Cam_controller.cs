@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -11,6 +12,7 @@ public class Cam_controller : MonoBehaviour
 
     private Camera cam;
     private GameObject moveCommandSprite = null;
+    private List<AgentNavigation> selectedAgents;
 
 
     // Start is called before the first frame update
@@ -19,6 +21,7 @@ public class Cam_controller : MonoBehaviour
         cam = GetComponent<Camera>();
         Cursor.visible = true;
         Cursor.lockState = CursorLockMode.None;
+        selectedAgents = new List<AgentNavigation>();
         UpdateHeight();
     }
 
@@ -33,8 +36,35 @@ public class Cam_controller : MonoBehaviour
     }
 
 
+    public void Select()
+    {
+        foreach (var i in selectedAgents)
+            i.UnSelect();
+
+        selectedAgents.Clear();
+
+        Ray ray = cam.ScreenPointToRay(Mouse.current.position.ReadValue());
+        RaycastHit hit;
+        if (Physics.Raycast(ray, out hit, 1000f))
+        {
+            if (hit.transform.tag == "agent")
+            {
+                AgentNavigation agent = hit.transform.GetComponent<AgentNavigation>();
+                agent.Select();
+                selectedAgents.Add(agent);
+            }
+        }
+    }
+
+
     public void MoveCommand()
     {
+        if (selectedAgents.Count == 0)
+            return;
+
+        foreach (var i in selectedAgents)
+            i.SetDestination();
+
         // Bit shift the index of the layer to get a bit mask, 0 is default
         int layerMask = 1 << 0;
 

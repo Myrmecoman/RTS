@@ -17,6 +17,13 @@ public class WorldGrid : MonoBehaviour
     private int iGridSizeX, iGridSizeY; // Size of the Grid in Array units
     private Vector3 bottomLeft; // Get the real world position of the bottom left of the grid
 
+    // Variable for fast pathfinding
+    private NativeArray<DijkstraTile> impreciseNodeArray;
+    private float imprecisefNodeRadius;
+    private float imprecisefNodeDiameter;
+    private int impreciseiGridSizeX, impreciseiGridSizeY;
+    private Vector3 imprecisebottomLeft;
+
     // Needed to manage jobs without blocking
     private double delay;
     private NativeArray<DijkstraTile> tempDijkstra;
@@ -31,9 +38,18 @@ public class WorldGrid : MonoBehaviour
     private void Awake()
     {
         bottomLeft = transform.position - Vector3.right * vGridWorldSize.x / 2 - Vector3.forward * vGridWorldSize.y / 2;
+
+        // precise
         fNodeDiameter = fNodeRadius * 2;
         iGridSizeX = Mathf.RoundToInt(vGridWorldSize.x / fNodeDiameter);
         iGridSizeY = Mathf.RoundToInt(vGridWorldSize.y / fNodeDiameter);
+
+        // imprecise
+        imprecisefNodeRadius = fNodeDiameter;
+        imprecisefNodeDiameter = imprecisefNodeRadius * 2;
+        impreciseiGridSizeX = Mathf.RoundToInt(vGridWorldSize.x / imprecisefNodeDiameter);
+        impreciseiGridSizeY = Mathf.RoundToInt(vGridWorldSize.y / imprecisefNodeDiameter);
+
         CreateGrid();
     }
 
@@ -57,7 +73,9 @@ public class WorldGrid : MonoBehaviour
                     dijkstraScheduled = true;
                     handleUpdate.Complete();
                     var jobDataDij = new DijkstraGrid();
+                    computingJobs = false;
                     jobDataDij.target = NodeFromWorldPoint(StartPosition);
+                    computingJobs = true;
                     jobDataDij.gridSize = new int2(iGridSizeX, iGridSizeY);
                     jobDataDij.grid = NodeArray;
                     handleDijkstra = jobDataDij.Schedule(handleUpdate);
@@ -85,7 +103,7 @@ public class WorldGrid : MonoBehaviour
                         updateScheduled = false;
                         dijkstraScheduled = false;
                         flowScheduled = false;
-                        Debug.Log("total : " + (Time.realtimeSinceStartup - delay));
+                        Debug.Log("precise total : " + (Time.realtimeSinceStartup - delay));
                     }
                 }
             }
@@ -96,8 +114,33 @@ public class WorldGrid : MonoBehaviour
     // Change target position
     public void ChangeTarget(Vector3 newStartPosition)
     {
-        computingJobs = true;
         StartPosition = newStartPosition;
+        computingJobs = true;
+        double imprecisedelay = Time.realtimeSinceStartupAsDouble;
+
+        // imprecise claculation
+        var jobUpdateGrid = new UpdateGrid();
+        jobUpdateGrid.grid = impreciseNodeArray;
+        var imprecisehandleUpdate = jobUpdateGrid.Schedule(impreciseNodeArray.Length, 32 /* batches */);
+        imprecisehandleUpdate.Complete();
+
+        var jobDataDij = new DijkstraGrid();
+        jobDataDij.target = NodeFromWorldPoint(StartPosition);
+        jobDataDij.gridSize = new int2(impreciseiGridSizeX, impreciseiGridSizeY);
+        jobDataDij.grid = impreciseNodeArray;
+        jobDataDij.Run();
+
+        var jobData = new FlowFieldGrid();
+        jobData.gridSize = new int2(impreciseiGridSizeX, impreciseiGridSizeY);
+        NativeArray<DijkstraTile>  imprecisetempDijkstra = new NativeArray<DijkstraTile>(impreciseNodeArray, Allocator.TempJob);
+        jobData.RdGrid = imprecisetempDijkstra;
+        jobData.grid = impreciseNodeArray;
+        var impreciseFlowHandle = jobData.Schedule(impreciseNodeArray.Length, 32 /* batches */);
+        impreciseFlowHandle.Complete();
+        imprecisetempDijkstra.Dispose();
+
+        Debug.Log("imprecise total : " + (Time.realtimeSinceStartup - imprecisedelay));
+
         delay = Time.realtimeSinceStartupAsDouble;
     }
 
@@ -106,6 +149,7 @@ public class WorldGrid : MonoBehaviour
     void CreateGrid()
     {
         NodeArray = new NativeArray<DijkstraTile>(iGridSizeX * iGridSizeY, Allocator.Persistent);
+        impreciseNodeArray = new NativeArray<DijkstraTile>(impreciseiGridSizeX * impreciseiGridSizeY, Allocator.Persistent);
 
         //Loop through the arrays
         for (int x = 0; x < iGridSizeX; x++)
@@ -122,6 +166,21 @@ public class WorldGrid : MonoBehaviour
                 NodeArray[iGridSizeY * x + y] = tile; // Create a new node in the array
             }
         }
+
+        for (int x = 0; x < impreciseiGridSizeX; x++)
+        {
+            for (int y = 0; y < impreciseiGridSizeY; y++)
+            {
+                //Get the world coordinates from the bottom left of the graph
+                Vector3 worldPoint = bottomLeft + Vector3.right * (x * imprecisefNodeDiameter + imprecisefNodeRadius) + Vector3.forward * (y * imprecisefNodeDiameter + imprecisefNodeRadius);
+                DijkstraTile tile = new DijkstraTile(new int2(x, y));
+
+                if (Physics.CheckSphere(worldPoint, imprecisefNodeRadius - 0.0001f /* in case of single point collision */, WallMask))
+                    tile.weight = int.MaxValue;
+
+                impreciseNodeArray[impreciseiGridSizeY * x + y] = tile; // Create a new node in the array
+            }
+        }
     }
 
 
@@ -134,16 +193,25 @@ public class WorldGrid : MonoBehaviour
         ixPos = Mathf.Clamp01(ixPos);
         iyPos = Mathf.Clamp01(iyPos);
 
-        int ix = Mathf.RoundToInt((iGridSizeX - 1) * ixPos);
-        int iy = Mathf.RoundToInt((iGridSizeY - 1) * iyPos);
-
-        return NodeArray[iGridSizeY * ix + iy];
+        if (!computingJobs)
+        {
+            int ix = Mathf.RoundToInt((iGridSizeX - 1) * ixPos);
+            int iy = Mathf.RoundToInt((iGridSizeY - 1) * iyPos);
+            return NodeArray[iGridSizeY * ix + iy];
+        }
+        else
+        {
+            int ix = Mathf.RoundToInt((impreciseiGridSizeX - 1) * ixPos);
+            int iy = Mathf.RoundToInt((impreciseiGridSizeY - 1) * iyPos);
+            return impreciseNodeArray[impreciseiGridSizeY * ix + iy];
+        }
     }
 
 
     private void OnApplicationQuit()
     {
         NodeArray.Dispose();
+        impreciseNodeArray.Dispose();
     }
 
 
@@ -152,6 +220,19 @@ public class WorldGrid : MonoBehaviour
     private void OnDrawGizmos()
     {
         Gizmos.DrawWireCube(transform.position, new Vector3(vGridWorldSize.x, 1, vGridWorldSize.y)); // Draw a wire cube with the given dimensions from the Unity inspector
+
+        if (impreciseNodeArray != null) // If the grid is not empty
+        {
+            foreach (DijkstraTile n in impreciseNodeArray) // Loop through every node in the grid
+            {
+                if (n.weight == int.MaxValue) // If the current node is a wall node
+                {
+                    Gizmos.color = Color.blue;
+                    Vector3 worldPoint = bottomLeft + Vector3.right * (n.gridPos.x * imprecisefNodeDiameter + imprecisefNodeRadius) + Vector3.forward * (n.gridPos.y * imprecisefNodeDiameter + imprecisefNodeRadius);
+                    Gizmos.DrawCube(worldPoint, new Vector3(1, 0, 1) * imprecisefNodeDiameter);
+                }
+            }
+        }
 
         if (NodeArray != null) // If the grid is not empty
         {

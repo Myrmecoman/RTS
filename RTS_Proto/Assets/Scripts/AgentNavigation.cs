@@ -6,7 +6,11 @@ public class AgentNavigation : MonoBehaviour
 {
     public WorldGrid worldGrid;
     public float force = 1.0f;
+    public SpriteRenderer sprite;
+    public Transform leftMostPart;
+    public Transform rightMostPart;
 
+    [HideInInspector] public bool hasDestination = false;
     [HideInInspector] public bool destinationReached = true;
 
     private Rigidbody rb;
@@ -19,14 +23,18 @@ public class AgentNavigation : MonoBehaviour
         lastValidTile = worldGrid.NodeFromWorldPoint(transform.position);
     }
 
+
     private void FixedUpdate()
     {
-        if (worldGrid.computingJobs)
+        // NEED TO FIND OUT WHEN DESTINATION IS REACHED
+
+        if (!hasDestination)
             return;
 
         DijkstraTile currentTile = worldGrid.NodeFromWorldPoint(transform.position);
 
-        RaycastHit hit;
+        RaycastHit hitLeft;
+        RaycastHit hitRight;
         // Bit shift the index of the layer to get a bit mask, 7 corresponds to agents
         int layerMask = 1 << 7;
         // This would cast rays only against colliders in layer 7, we want to collide against everything except layer 7
@@ -35,14 +43,17 @@ public class AgentNavigation : MonoBehaviour
         // Detecting if we reached our target position
         float horizontalDist = Vector3.Distance(new Vector3(transform.position.x, 0, transform.position.z), new Vector3(worldGrid.StartPosition.x, 0, worldGrid.StartPosition.z));
 
-        if (horizontalDist > 0.05f && worldGrid.StartPosition != null && Physics.Raycast(transform.position, worldGrid.StartPosition - transform.position, out hit, 1000f, layerMask))
+        if (horizontalDist > 0.05f &&
+            worldGrid.StartPosition != null &&
+            Physics.Raycast(leftMostPart.position, worldGrid.StartPosition - transform.position, out hitLeft, 1000f, layerMask) &&
+            Physics.Raycast(rightMostPart.position, worldGrid.StartPosition - transform.position, out hitRight, 1000f, layerMask))
         {
             //Debug.DrawRay(transform.position, worldGrid.StartPosition - transform.position, Color.red, 0.1f);
 
-            if (hit.transform.tag == "target")
+            if (hitLeft.transform.tag == "target" && hitRight.transform.tag == "target")
             {
                 // Clear line of sight to target position
-                Vector3 Ynull = new Vector3(hit.transform.position.x, transform.position.y, hit.transform.position.z);
+                Vector3 Ynull = new Vector3(worldGrid.StartPosition.x, transform.position.y, worldGrid.StartPosition.z);
                 Vector3 moveDir = (Ynull - transform.position).normalized;
 
                 rb.MovePosition(transform.position + new Vector3(moveDir.x, 0, moveDir.z) * Time.fixedDeltaTime * force);
@@ -74,5 +85,23 @@ public class AgentNavigation : MonoBehaviour
             }
         }
         //Debug.Log("Failed cast");
+    }
+
+
+    public void Select()
+    {
+        sprite.enabled = true;
+    }
+
+
+    public void SetDestination()
+    {
+        hasDestination = true;
+    }
+
+
+    public void UnSelect()
+    {
+        sprite.enabled = false;
     }
 }
