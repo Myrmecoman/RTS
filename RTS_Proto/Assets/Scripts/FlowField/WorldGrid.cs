@@ -8,8 +8,8 @@ public class WorldGrid : MonoBehaviour
     public LayerMask WallMask; // This is the mask that the program will look for when trying to find obstructions to the path
     public Vector2 vGridWorldSize; // A vector2 to store the width and height of the graph in world units
     public float fNodeRadius; // This stores how big each square on the graph will be
-    public bool computingJobs = false; // Tells if we have access to precise pathfinding
 
+    [HideInInspector] public bool computingJobs = false; // Tells if we have access to precise pathfinding
     [HideInInspector] public Vector3 StartPosition; // This is where the program will start the pathfinding from
 
     private NativeArray<DijkstraTile> NodeArray; // The array of nodes that the A Star algorithm uses

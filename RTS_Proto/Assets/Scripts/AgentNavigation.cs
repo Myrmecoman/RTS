@@ -32,7 +32,10 @@ public class AgentNavigation : MonoBehaviour
         // This would cast rays only against colliders in layer 7, we want to collide against everything except layer 7
         layerMask = ~layerMask;
 
-        if (worldGrid.StartPosition != null && Physics.Raycast(transform.position, worldGrid.StartPosition - transform.position, out hit, 1000f, layerMask))
+        // Detecting if we reached our target position
+        float horizontalDist = Vector3.Distance(new Vector3(transform.position.x, 0, transform.position.z), new Vector3(worldGrid.StartPosition.x, 0, worldGrid.StartPosition.z));
+
+        if (horizontalDist > 0.05f && worldGrid.StartPosition != null && Physics.Raycast(transform.position, worldGrid.StartPosition - transform.position, out hit, 1000f, layerMask))
         {
             //Debug.DrawRay(transform.position, worldGrid.StartPosition - transform.position, Color.red, 0.1f);
 
