@@ -42,9 +42,9 @@ public class AgentNavigation : MonoBehaviour
                 Vector3 Ynull = new Vector3(hit.transform.position.x, transform.position.y, hit.transform.position.z);
                 Vector3 moveDir = (Ynull - transform.position).normalized;
 
-                rb.MovePosition(transform.position + moveDir * Time.fixedDeltaTime * force);
+                rb.MovePosition(transform.position + new Vector3(moveDir.x, 0, moveDir.z) * Time.fixedDeltaTime * force);
                 if (moveDir != Vector3.zero)
-                    transform.forward = new Vector3(moveDir.x, 0, moveDir.z);
+                    transform.LookAt(new Vector3(worldGrid.StartPosition.x, transform.position.y, worldGrid.StartPosition.z), Vector3.up);
             }
             else
             {
