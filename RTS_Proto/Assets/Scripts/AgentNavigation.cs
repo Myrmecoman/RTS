@@ -20,7 +20,6 @@ public class AgentNavigation : MonoBehaviour
     private void Start()
     {
         rb = GetComponent<Rigidbody>();
-        lastValidTile = worldGrid.NodeFromWorldPoint(transform.position);
     }
 
 
@@ -84,7 +83,8 @@ public class AgentNavigation : MonoBehaviour
                 }
             }
         }
-        //Debug.Log("Failed cast");
+
+        lastValidTile = worldGrid.NodeFromWorldPoint(transform.position);
     }
 
 
