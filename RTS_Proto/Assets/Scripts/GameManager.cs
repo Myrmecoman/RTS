@@ -44,7 +44,9 @@ public class GameManager : MonoBehaviour
 
                 foreach (var ag in agents)
                 {
-                    ag.worldGrid = grids[i];
+                    ag.UnsetDestination();
+                    ag.worldGrid.Clear();
+                    ag.worldGrid.Add(grids[i]);
                     ag.SetDestination();
                 }
 

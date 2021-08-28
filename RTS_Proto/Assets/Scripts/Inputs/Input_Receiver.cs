@@ -31,6 +31,9 @@ public class Input_Receiver : MonoBehaviour
 
         controls.TopDownControls.Select.performed += _ => cam_controller.Select();
 
+        //controls.TopDownControls.BoxSelect.performed += _ => cam_controller.BoxSelectLifted();
+        //controls.TopDownControls.BoxSelect.canceled += _ => cam_controller.BoxSelectPerformed();
+
         controls.TopDownControls.Zoom.performed += _ => cam_controller.Zoom(_.ReadValue<Vector2>());
     }
 }

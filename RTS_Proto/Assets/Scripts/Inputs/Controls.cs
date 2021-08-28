@@ -49,6 +49,14 @@ public class @Controls : IInputActionCollection, IDisposable
                     ""expectedControlType"": ""Button"",
                     ""processors"": """",
                     ""interactions"": """"
+                },
+                {
+                    ""name"": ""BoxSelect"",
+                    ""type"": ""Button"",
+                    ""id"": ""7d8508e1-0007-477c-8645-fccf4bde466d"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """"
                 }
             ],
             ""bindings"": [
@@ -139,6 +147,17 @@ public class @Controls : IInputActionCollection, IDisposable
                     ""action"": ""Select"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""4928bfb2-f54f-450d-9651-6afef81b59ae"",
+                    ""path"": ""<Mouse>/leftButton"",
+                    ""interactions"": ""Hold"",
+                    ""processors"": """",
+                    ""groups"": ""PC"",
+                    ""action"": ""BoxSelect"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
                 }
             ]
         }
@@ -168,6 +187,7 @@ public class @Controls : IInputActionCollection, IDisposable
         m_TopDownControls_MoveCommand = m_TopDownControls.FindAction("MoveCommand", throwIfNotFound: true);
         m_TopDownControls_Zoom = m_TopDownControls.FindAction("Zoom", throwIfNotFound: true);
         m_TopDownControls_Select = m_TopDownControls.FindAction("Select", throwIfNotFound: true);
+        m_TopDownControls_BoxSelect = m_TopDownControls.FindAction("BoxSelect", throwIfNotFound: true);
     }
 
     public void Dispose()
@@ -221,6 +241,7 @@ public class @Controls : IInputActionCollection, IDisposable
     private readonly InputAction m_TopDownControls_MoveCommand;
     private readonly InputAction m_TopDownControls_Zoom;
     private readonly InputAction m_TopDownControls_Select;
+    private readonly InputAction m_TopDownControls_BoxSelect;
     public struct TopDownControlsActions
     {
         private @Controls m_Wrapper;
@@ -229,6 +250,7 @@ public class @Controls : IInputActionCollection, IDisposable
         public InputAction @MoveCommand => m_Wrapper.m_TopDownControls_MoveCommand;
         public InputAction @Zoom => m_Wrapper.m_TopDownControls_Zoom;
         public InputAction @Select => m_Wrapper.m_TopDownControls_Select;
+        public InputAction @BoxSelect => m_Wrapper.m_TopDownControls_BoxSelect;
         public InputActionMap Get() { return m_Wrapper.m_TopDownControls; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -250,6 +272,9 @@ public class @Controls : IInputActionCollection, IDisposable
                 @Select.started -= m_Wrapper.m_TopDownControlsActionsCallbackInterface.OnSelect;
                 @Select.performed -= m_Wrapper.m_TopDownControlsActionsCallbackInterface.OnSelect;
                 @Select.canceled -= m_Wrapper.m_TopDownControlsActionsCallbackInterface.OnSelect;
+                @BoxSelect.started -= m_Wrapper.m_TopDownControlsActionsCallbackInterface.OnBoxSelect;
+                @BoxSelect.performed -= m_Wrapper.m_TopDownControlsActionsCallbackInterface.OnBoxSelect;
+                @BoxSelect.canceled -= m_Wrapper.m_TopDownControlsActionsCallbackInterface.OnBoxSelect;
             }
             m_Wrapper.m_TopDownControlsActionsCallbackInterface = instance;
             if (instance != null)
@@ -266,6 +291,9 @@ public class @Controls : IInputActionCollection, IDisposable
                 @Select.started += instance.OnSelect;
                 @Select.performed += instance.OnSelect;
                 @Select.canceled += instance.OnSelect;
+                @BoxSelect.started += instance.OnBoxSelect;
+                @BoxSelect.performed += instance.OnBoxSelect;
+                @BoxSelect.canceled += instance.OnBoxSelect;
             }
         }
     }
@@ -285,5 +313,6 @@ public class @Controls : IInputActionCollection, IDisposable
         void OnMoveCommand(InputAction.CallbackContext context);
         void OnZoom(InputAction.CallbackContext context);
         void OnSelect(InputAction.CallbackContext context);
+        void OnBoxSelect(InputAction.CallbackContext context);
     }
 }
