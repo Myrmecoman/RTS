@@ -171,7 +171,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 7895656420259041077}
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 0, y: 1.88, z: 0}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 0.5, y: 0.5, z: 0.5}
   m_Children:
   - {fileID: 1561628320281390283}
@@ -242,11 +242,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5bc7878f8db6ee645b0d9c91a227be10, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  worldGrid: {fileID: 0}
   force: 5
   sprite: {fileID: 5240247204630164244}
   leftMostPart: {fileID: 3210876219809377603}
   rightMostPart: {fileID: 3727201695207642459}
+  worldGrid: {fileID: 0}
+  hasDestination: 0
   destinationReached: 1
 --- !u!136 &8997136376528109127
 CapsuleCollider:

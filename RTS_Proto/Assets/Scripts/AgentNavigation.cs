@@ -44,12 +44,16 @@ public class AgentNavigation : MonoBehaviour
 
         if (horizontalDist > 0.05f &&
             worldGrid.StartPosition != null &&
-            Physics.Raycast(leftMostPart.position, worldGrid.StartPosition - transform.position, out hitLeft, 1000f, layerMask) &&
-            Physics.Raycast(rightMostPart.position, worldGrid.StartPosition - transform.position, out hitRight, 1000f, layerMask))
+            Physics.Raycast(leftMostPart.position, worldGrid.StartPosition - leftMostPart.position, out hitLeft, 1000f, layerMask) &&
+            Physics.Raycast(rightMostPart.position, worldGrid.StartPosition - rightMostPart.position, out hitRight, 1000f, layerMask))
         {
-            //Debug.DrawRay(transform.position, worldGrid.StartPosition - transform.position, Color.red, 0.1f);
+            // Debug.DrawRay(leftMostPart.position, worldGrid.StartPosition - leftMostPart.position, Color.red, 0.1f);
+            // Debug.DrawRay(rightMostPart.position, worldGrid.StartPosition - rightMostPart.position, Color.red, 0.1f);
 
-            if (hitLeft.transform.tag == "target" && hitRight.transform.tag == "target")
+            if (hitLeft.distance / Vector3.Distance(leftMostPart.position, worldGrid.StartPosition) >= 0.99f &&
+                hitLeft.distance / Vector3.Distance(leftMostPart.position, worldGrid.StartPosition) <= 1.01f &&
+                hitRight.distance / Vector3.Distance(rightMostPart.position, worldGrid.StartPosition) >= 0.99f &&
+                hitRight.distance / Vector3.Distance(rightMostPart.position, worldGrid.StartPosition) <= 1.01f)
             {
                 // Clear line of sight to target position
                 Vector3 Ynull = new Vector3(worldGrid.StartPosition.x, transform.position.y, worldGrid.StartPosition.z);

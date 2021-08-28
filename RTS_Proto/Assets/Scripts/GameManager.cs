@@ -29,9 +29,7 @@ public class GameManager : MonoBehaviour
     {
         // For test purposes
         for (float i = 0; i < 10; i++)
-        {
-            GameObject obj = (GameObject) Instantiate(Resources.Load("Agent"), new Vector3(i * 3, 0.5f, -65), Quaternion.identity);
-        }
+            Instantiate(Resources.Load("Agent"), new Vector3(i * 3, 0.5f, -65), Quaternion.identity);
     }
 
 

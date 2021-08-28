@@ -101,7 +101,7 @@ public class WorldGrid : MonoBehaviour
                         updateScheduled = false;
                         dijkstraScheduled = false;
                         flowScheduled = false;
-                        Debug.Log("precise total : " + (Time.realtimeSinceStartup - delay));
+                        // Debug.Log("precise total : " + (Time.realtimeSinceStartup - delay));
                     }
                 }
             }
@@ -137,7 +137,7 @@ public class WorldGrid : MonoBehaviour
         impreciseFlowHandle.Complete();
         imprecisetempDijkstra.Dispose();
 
-        Debug.Log("imprecise total : " + (Time.realtimeSinceStartup - imprecisedelay));
+        // Debug.Log("imprecise total : " + (Time.realtimeSinceStartup - imprecisedelay));
 
         delay = Time.realtimeSinceStartupAsDouble;
     }
@@ -212,7 +212,7 @@ public class WorldGrid : MonoBehaviour
         impreciseNodeArray.Dispose();
     }
 
-
+    /*
 #if (UNITY_EDITOR)
     // Function that draws the wireframe
     private void OnDrawGizmos()
@@ -246,4 +246,5 @@ public class WorldGrid : MonoBehaviour
         }
     }
     #endif
+    */
 }
