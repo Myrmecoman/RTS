@@ -420,7 +420,7 @@ GameObject:
   - component: {fileID: 248943212}
   - component: {fileID: 248943211}
   - component: {fileID: 248943210}
-  m_Layer: 0
+  m_Layer: 8
   m_Name: Plane
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -610,6 +610,8 @@ GameObject:
   - component: {fileID: 353563227}
   - component: {fileID: 353563228}
   - component: {fileID: 353563229}
+  - component: {fileID: 353563226}
+  - component: {fileID: 353563230}
   m_Layer: 0
   m_Name: GameManager
   m_TagString: Untagged
@@ -617,6 +619,19 @@ GameObject:
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 4294967295
   m_IsActive: 1
+--- !u!114 &353563226
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 353563225}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 6169b161ed6f9704983341d76f214018, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  StackActionHold: 0
 --- !u!4 &353563227
 Transform:
   m_ObjectHideFlags: 0
@@ -644,6 +659,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   cam_controller: {fileID: 963194230}
+  selection: {fileID: 353563226}
 --- !u!114 &353563229
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -662,6 +678,18 @@ MonoBehaviour:
   vGridWorldSize: {x: 256, y: 256}
   fNodeRadius: 0.5
   singleGrid: {fileID: 401016532501664971, guid: bd05e8614e5a3204bae4c11281f1c43f, type: 3}
+--- !u!114 &353563230
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 353563225}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 70dc395d58bcee648bc3529b45c21bb3, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &403331884
 GameObject:
   m_ObjectHideFlags: 0
@@ -1550,9 +1578,11 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   speed: 50
-  MoveCommandObj: {fileID: 6996756979080215270, guid: 07789293593921d4abc333ded639ab75, type: 3}
+  moveCommandObj: {fileID: 6996756979080215270, guid: 07789293593921d4abc333ded639ab75, type: 3}
   gameManager: {fileID: 353563229}
+  selection: {fileID: 353563230}
   move: {x: 0, y: 0}
+  HoldingStack: 0
 --- !u!1 &1034313785
 GameObject:
   m_ObjectHideFlags: 0

@@ -33,7 +33,7 @@ public class GameManager : MonoBehaviour
     }
 
 
-    public void MoveCommand(List<AgentNavigation> agents, Vector3 target)
+    public void MoveCommand(Dictionary<int, AgentNavigation> agents, Vector3 target)
     {
         for (int i = 0; i < arraysSize; i++)
         {
@@ -42,12 +42,12 @@ public class GameManager : MonoBehaviour
                 inUse[i] = true;
                 grids[i].ChangeTarget(target);
 
-                foreach (var ag in agents)
+                foreach (KeyValuePair<int, AgentNavigation> ag in agents)
                 {
-                    ag.UnsetDestination();
-                    ag.worldGrid.Clear();
-                    ag.worldGrid.Add(grids[i]);
-                    ag.SetDestination();
+                    ag.Value.UnsetDestination();
+                    ag.Value.worldGrid.Clear();
+                    ag.Value.worldGrid.Add(grids[i]);
+                    ag.Value.SetDestination();
                 }
 
                 return;

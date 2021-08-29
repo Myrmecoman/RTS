@@ -46,9 +46,8 @@ public class AgentNavigation : MonoBehaviour
 
         RaycastHit hitLeft;
         RaycastHit hitRight;
-        // Bit shift the index of the layer to get a bit mask, 7 corresponds to agents
+        // collide against everything except layer 7
         int layerMask = 1 << 7;
-        // This would cast rays only against colliders in layer 7, we want to collide against everything except layer 7
         layerMask = ~layerMask;
 
         if (horizontalDist > 0.05f &&

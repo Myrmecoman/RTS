@@ -5,14 +5,15 @@ using UnityEngine.InputSystem;
 public class Cam_controller : MonoBehaviour
 {
     public float speed = 10f;
-    public GameObject MoveCommandObj;
+    public GameObject moveCommandObj;
     public GameManager gameManager;
+    public SelectedDico selection;
 
     [HideInInspector] public Vector2 move;
+    [HideInInspector] public bool HoldingStack = false;
 
     private Camera cam;
     private GameObject moveCommandSprite = null;
-    private List<AgentNavigation> selectedAgents;
 
 
     // Start is called before the first frame update
@@ -21,7 +22,6 @@ public class Cam_controller : MonoBehaviour
         cam = GetComponent<Camera>();
         Cursor.visible = true;
         Cursor.lockState = CursorLockMode.None;
-        selectedAgents = new List<AgentNavigation>();
         UpdateHeight();
     }
 
@@ -36,53 +36,25 @@ public class Cam_controller : MonoBehaviour
     }
 
 
-    public void Select()
-    {
-        foreach (var i in selectedAgents)
-            i.UnSelect();
-
-        selectedAgents.Clear();
-
-        Ray ray = cam.ScreenPointToRay(Mouse.current.position.ReadValue());
-        RaycastHit hit;
-        if (Physics.Raycast(ray, out hit, 1000f))
-        {
-            if (hit.transform.tag == "agent")
-            {
-                AgentNavigation agent = hit.transform.GetComponent<AgentNavigation>();
-                agent.Select();
-                selectedAgents.Add(agent);
-            }
-        }
-    }
-
-
     public void MoveCommand()
     {
-        if (selectedAgents.Count == 0)
+        if (selection.selectedTable.Count == 0)
             return;
-
-        // Bit shift the index of the layer to get a bit mask, 0 is default
-        int layerMask = 1 << 0;
 
         Ray ray = cam.ScreenPointToRay(Mouse.current.position.ReadValue());
         RaycastHit hit;
+        int layerMask = LayerMask.GetMask("ground");
         if (Physics.Raycast(ray, out hit, 1000f, layerMask))
         {
             Vector3 prevPos = Vector3.zero;
 
             if (moveCommandSprite != null)
-            {
-                // Don't recalculate path if click at same place
-                // if (moveCommandSprite.transform.position == hit.point + new Vector3(0, 0.0001f, 0))
-                //     return;
                 Destroy(moveCommandSprite);
-            }
 
-            moveCommandSprite = Instantiate(MoveCommandObj);
+            moveCommandSprite = Instantiate(moveCommandObj);
             moveCommandSprite.transform.position = hit.point + new Vector3(0, 0.0001f, 0);
 
-            gameManager.MoveCommand(selectedAgents, moveCommandSprite.transform.position);
+            gameManager.MoveCommand(selection.selectedTable, moveCommandSprite.transform.position);
         }
     }
 

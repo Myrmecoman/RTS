@@ -7,6 +7,7 @@ TagManager:
   - mineral
   - target
   - agent
+  - building
   layers:
   - Default
   - TransparentFX
@@ -16,8 +17,8 @@ TagManager:
   - UI
   - wall
   - agent
-  - 
-  - 
+  - ground
+  - building
   - 
   - 
   - 
