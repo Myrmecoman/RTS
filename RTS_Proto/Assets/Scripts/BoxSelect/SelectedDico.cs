@@ -13,7 +13,6 @@ public class SelectedDico : MonoBehaviour
         {
             selectedTable.Add(id, go);
             go.Select();
-            Debug.Log("Added " + id + " to selected dict");
         }
     }
 
