@@ -243,6 +243,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   force: 5
+  heightFromCenter: 1
   sprite: {fileID: 5240247204630164244}
   leftMostPart: {fileID: 3210876219809377603}
   rightMostPart: {fileID: 3727201695207642459}
@@ -278,7 +279,7 @@ Rigidbody:
   m_UseGravity: 0
   m_IsKinematic: 0
   m_Interpolate: 0
-  m_Constraints: 84
+  m_Constraints: 80
   m_CollisionDetection: 0
 --- !u!1 &9065454119557976084
 GameObject:

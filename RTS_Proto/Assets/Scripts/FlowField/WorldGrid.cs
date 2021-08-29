@@ -158,8 +158,12 @@ public class WorldGrid : MonoBehaviour
                 Vector3 worldPoint = bottomLeft + Vector3.right * (x * fNodeDiameter + fNodeRadius) + Vector3.forward * (y * fNodeDiameter + fNodeRadius);
                 DijkstraTile tile = new DijkstraTile(new int2(x, y));
 
-                if (Physics.CheckSphere(worldPoint, fNodeRadius - 0.0001f /* in case of single point collision */, WallMask))
+                // checking for wall from -20 to 20 and convert to 2D matrix of walls
+                if (Physics.CheckCapsule(worldPoint - Vector3.up * 100, worldPoint + Vector3.up * 100, fNodeRadius - 0.0001f /* in case of single point collision */, WallMask))
+                {
                     tile.weight = int.MaxValue;
+                    break;
+                }
 
                 NodeArray[iGridSizeY * x + y] = tile; // Create a new node in the array
             }
@@ -212,6 +216,7 @@ public class WorldGrid : MonoBehaviour
         impreciseNodeArray.Dispose();
     }
 
+    
     /*
 #if (UNITY_EDITOR)
     // Function that draws the wireframe

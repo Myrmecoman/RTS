@@ -6,6 +6,7 @@ using UnityEngine;
 public class AgentNavigation : MonoBehaviour
 {
     public float force = 1.0f;
+    public float heightFromCenter = 0f;
     public SpriteRenderer sprite;
     public Transform leftMostPart;
     public Transform rightMostPart;
@@ -31,6 +32,16 @@ public class AgentNavigation : MonoBehaviour
 
         if (!hasDestination)
             return;
+
+        RaycastHit verifyHeight;
+        // collide against everything except layer 7
+        int layerMaskHeight = 1 << 7;
+        layerMaskHeight = ~layerMaskHeight;
+        if (Physics.Raycast(transform.position, Vector3.down, out verifyHeight, 1000f, layerMaskHeight))
+        {
+            if (verifyHeight.distance > heightFromCenter + 0.01f)
+                transform.position = new Vector3(transform.position.x, transform.position.y - (verifyHeight.distance - (heightFromCenter - 0.01f)), transform.position.z);
+        }
 
         DijkstraTile currentTile = worldGrid[0].NodeFromWorldPoint(transform.position);
 

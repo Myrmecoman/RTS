@@ -28,8 +28,8 @@ public class GameManager : MonoBehaviour
     private void Start()
     {
         // For test purposes
-        for (float i = 0; i < 10; i++)
-            Instantiate(Resources.Load("Agent"), new Vector3(i * 3, 0.5f, -65), Quaternion.identity);
+        for (float i = 0; i < 20; i++)
+            Instantiate(Resources.Load("Agent"), new Vector3(i * 1.5f, 0.5f, -65), Quaternion.identity);
     }
 
 
