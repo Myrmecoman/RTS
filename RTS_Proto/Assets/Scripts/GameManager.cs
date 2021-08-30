@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.InputSystem;
 
 public class GameManager : MonoBehaviour
 {
@@ -10,7 +11,7 @@ public class GameManager : MonoBehaviour
 
     private static int arraysSize = 100;
     private WorldGrid[] grids = new WorldGrid[arraysSize];
-    private bool[] inUse = new bool[arraysSize];
+    [HideInInspector] public int[] inUse = new int[arraysSize];
 
 
     private void Awake()
@@ -29,7 +30,26 @@ public class GameManager : MonoBehaviour
     {
         // For test purposes
         for (float i = 0; i < 20; i++)
-            Instantiate(Resources.Load("Agent"), new Vector3(i * 1.5f, 0.5f, -65), Quaternion.identity);
+        {
+            GameObject obj = (GameObject) Instantiate(Resources.Load("Agent"), new Vector3(i * 1.5f, 0.5f, -65), Quaternion.identity);
+            obj.GetComponent<AgentNavigation>().gameManager = this;
+        }
+    }
+
+
+    private void Update()
+    {
+        if (Keyboard.current.qKey.wasPressedThisFrame)
+            Debug.Log("Free grids : " + NbCurrentlyFree());
+
+        if (Keyboard.current.aKey.wasPressedThisFrame)
+        {
+            string s = "[";
+            for (int i = 0; i < inUse.Length; i++)
+                s += inUse[i] + ", ";
+            s += "]";
+            Debug.Log(s);
+        }
     }
 
 
@@ -37,16 +57,24 @@ public class GameManager : MonoBehaviour
     {
         for (int i = 0; i < arraysSize; i++)
         {
-            if (inUse[i] == false)
+            if (inUse[i] == 0)
             {
-                inUse[i] = true;
+                inUse[i] = agents.Count;
                 grids[i].ChangeTarget(target);
 
                 foreach (KeyValuePair<int, AgentNavigation> ag in agents)
                 {
-                    ag.Value.UnsetDestination();
+                    if (ag.Value.hasDestination)
+                    {
+                        foreach (int indexes in ag.Value.gridIndexes)
+                            inUse[indexes]--;
+                        ag.Value.UnsetDestination();
+                    }
+
+                    ag.Value.gridIndexes.Clear();
                     ag.Value.worldGrid.Clear();
                     ag.Value.worldGrid.Add(grids[i]);
+                    ag.Value.gridIndexes.Add(i);
                     ag.Value.SetDestination();
                 }
 
@@ -55,5 +83,17 @@ public class GameManager : MonoBehaviour
         }
 
         Debug.Log("All grids already in use");
+    }
+
+
+    private int NbCurrentlyFree()
+    {
+        int total = 0;
+        foreach (int i in inUse)
+        {
+            if (i == 0)
+                total++;
+        }
+        return total;
     }
 }

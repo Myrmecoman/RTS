@@ -11,9 +11,10 @@ public class AgentNavigation : MonoBehaviour
     public Transform leftMostPart;
     public Transform rightMostPart;
 
+    [HideInInspector] public GameManager gameManager;
     [HideInInspector] public List<WorldGrid> worldGrid;
+    [HideInInspector] public List<int> gridIndexes;
     [HideInInspector] public bool hasDestination = false;
-    [HideInInspector] public bool destinationReached = false;
 
     private Rigidbody rb;
     private DijkstraTile lastValidTile;
@@ -23,6 +24,7 @@ public class AgentNavigation : MonoBehaviour
     {
         rb = GetComponent<Rigidbody>();
         worldGrid = new List<WorldGrid>();
+        gridIndexes = new List<int>();
     }
 
 
@@ -33,6 +35,29 @@ public class AgentNavigation : MonoBehaviour
         if (!hasDestination)
             return;
 
+        AdjustHeight();
+
+        DijkstraTile currentTile = worldGrid[0].NodeFromWorldPoint(transform.position);
+
+        // Detecting if we reached our target position
+        float horizontalDist = Vector3.Distance(new Vector3(transform.position.x, 0, transform.position.z), new Vector3(worldGrid[0].StartPosition.x, 0, worldGrid[0].StartPosition.z));
+        if (horizontalDist <= 0.05f)
+        {
+            gameManager.inUse[gridIndexes[0]]--;
+            gridIndexes.RemoveAt(0);
+            worldGrid.RemoveAt(0);
+            hasDestination = false;
+            return;
+        }
+
+        MoveAndRotate(currentTile, horizontalDist);
+
+        lastValidTile = worldGrid[0].NodeFromWorldPoint(transform.position);
+    }
+
+
+    private void AdjustHeight()
+    {
         RaycastHit verifyHeight;
         // collide against everything except layer 7
         int layerMaskHeight = 1 << 7;
@@ -42,19 +67,11 @@ public class AgentNavigation : MonoBehaviour
             if (verifyHeight.distance > heightFromCenter + 0.01f)
                 transform.position = new Vector3(transform.position.x, transform.position.y - (verifyHeight.distance - (heightFromCenter - 0.01f)), transform.position.z);
         }
+    }
 
-        DijkstraTile currentTile = worldGrid[0].NodeFromWorldPoint(transform.position);
 
-        // Detecting if we reached our target position
-        float horizontalDist = Vector3.Distance(new Vector3(transform.position.x, 0, transform.position.z), new Vector3(worldGrid[0].StartPosition.x, 0, worldGrid[0].StartPosition.z));
-
-        if (horizontalDist <= 0.05f)
-        {
-            hasDestination = false;
-            destinationReached = true;
-            return;
-        }
-
+    private void MoveAndRotate(DijkstraTile currentTile, float horizontalDist)
+    {
         RaycastHit hitLeft;
         RaycastHit hitRight;
         // collide against everything except layer 7
@@ -103,8 +120,6 @@ public class AgentNavigation : MonoBehaviour
                 }
             }
         }
-
-        lastValidTile = worldGrid[0].NodeFromWorldPoint(transform.position);
     }
 
 
