@@ -46,7 +46,8 @@ public class AgentNavigation : MonoBehaviour
             gameManager.inUse[gridIndexes[0]]--;
             gridIndexes.RemoveAt(0);
             worldGrid.RemoveAt(0);
-            hasDestination = false;
+            if (worldGrid.Count == 0)
+                hasDestination = false;
             return;
         }
 
@@ -129,20 +130,30 @@ public class AgentNavigation : MonoBehaviour
     }
 
 
-    public void SetDestination()
-    {
-        hasDestination = true;
-    }
-
-
-    public void UnsetDestination()
-    {
-        hasDestination = false;
-    }
-
-
     public void UnSelect()
     {
         sprite.enabled = false;
     }
+
+
+    public void AddDestination(WorldGrid grid, int index)
+    {
+        worldGrid.Add(grid);
+        gridIndexes.Add(index);
+        hasDestination = true;
+    }
+
+
+    public void UnsetAllDestinations()
+    {
+        foreach (int indexes in gridIndexes)
+            gameManager.inUse[indexes]--;
+
+        gridIndexes.Clear();
+        worldGrid.Clear();
+        hasDestination = false;
+    }
+
+
+    
 }

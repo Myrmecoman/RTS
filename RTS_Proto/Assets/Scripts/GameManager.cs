@@ -2,6 +2,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
+
 public class GameManager : MonoBehaviour
 {
     public LayerMask WallMask; // This is the mask that the program will look for when trying to find obstructions to the path
@@ -31,8 +32,11 @@ public class GameManager : MonoBehaviour
         // For test purposes
         for (float i = 0; i < 20; i++)
         {
-            GameObject obj = (GameObject) Instantiate(Resources.Load("Agent"), new Vector3(i * 1.5f, 0.5f, -65), Quaternion.identity);
-            obj.GetComponent<AgentNavigation>().gameManager = this;
+            for (float j = 0; j < 10; j++)
+            {
+                GameObject obj = (GameObject)Instantiate(Resources.Load("Agent"), new Vector3(i * 1.5f, 0.5f, -65 + j* 1.5f), Quaternion.identity);
+                obj.GetComponent<AgentNavigation>().gameManager = this;
+            }
         }
     }
 
@@ -64,18 +68,8 @@ public class GameManager : MonoBehaviour
 
                 foreach (KeyValuePair<int, AgentNavigation> ag in agents)
                 {
-                    if (ag.Value.hasDestination)
-                    {
-                        foreach (int indexes in ag.Value.gridIndexes)
-                            inUse[indexes]--;
-                        ag.Value.UnsetDestination();
-                    }
-
-                    ag.Value.gridIndexes.Clear();
-                    ag.Value.worldGrid.Clear();
-                    ag.Value.worldGrid.Add(grids[i]);
-                    ag.Value.gridIndexes.Add(i);
-                    ag.Value.SetDestination();
+                    ag.Value.UnsetAllDestinations();
+                    ag.Value.AddDestination(grids[i], i);
                 }
 
                 return;
