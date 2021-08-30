@@ -51,7 +51,7 @@ public class AgentNavigation : MonoBehaviour
             return;
         }
 
-        MoveAndRotate(currentTile, horizontalDist);
+        MoveAndRotate(ref currentTile, ref horizontalDist);
 
         lastValidTile = worldGrid[0].NodeFromWorldPoint(transform.position);
     }
@@ -71,7 +71,7 @@ public class AgentNavigation : MonoBehaviour
     }
 
 
-    private void MoveAndRotate(DijkstraTile currentTile, float horizontalDist)
+    private void MoveAndRotate(ref DijkstraTile currentTile, ref float horizontalDist)
     {
         RaycastHit hitLeft;
         RaycastHit hitRight;
@@ -144,6 +144,14 @@ public class AgentNavigation : MonoBehaviour
     }
 
 
+    public void UnsetCurrentDestination()
+    {
+        gameManager.inUse[gridIndexes[0]]--;
+        gridIndexes.RemoveAt(0);
+        worldGrid.RemoveAt(0);
+    }
+
+
     public void UnsetAllDestinations()
     {
         foreach (int indexes in gridIndexes)
@@ -153,7 +161,4 @@ public class AgentNavigation : MonoBehaviour
         worldGrid.Clear();
         hasDestination = false;
     }
-
-
-    
 }

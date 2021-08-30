@@ -90,4 +90,14 @@ public class GameManager : MonoBehaviour
         }
         return total;
     }
+
+
+    #if (UNITY_EDITOR)
+    // Function that draws the wireframe
+    private void OnDrawGizmos()
+    {
+        // Draw a wire cube with the given dimensions from the Unity inspector
+        Gizmos.DrawWireCube(transform.position, new Vector3(vGridWorldSize.x, 1, vGridWorldSize.y));
+    }
+    #endif
 }

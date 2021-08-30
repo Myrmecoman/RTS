@@ -215,12 +215,10 @@ public class WorldGrid : MonoBehaviour
 
     
     
-#if (UNITY_EDITOR)
+    #if (UNITY_EDITOR)
     // Function that draws the wireframe
     private void OnDrawGizmos()
     {
-        Gizmos.DrawWireCube(transform.position, new Vector3(vGridWorldSize.x, 1, vGridWorldSize.y)); // Draw a wire cube with the given dimensions from the Unity inspector
-
         if (impreciseNodeArray != null) // If the grid is not empty
         {
             foreach (DijkstraTile n in impreciseNodeArray) // Loop through every node in the grid
@@ -248,5 +246,4 @@ public class WorldGrid : MonoBehaviour
         }
     }
     #endif
-    
 }
