@@ -10,6 +10,9 @@ public class GameManager : MonoBehaviour
     public float fNodeRadius; // This stores how big each square on the graph will be
     public WorldGrid singleGrid;
 
+    [HideInInspector] public int minerals = 0;
+    [HideInInspector] public int gas = 0;
+
     private static int arraysSize = 100;
     private WorldGrid[] grids = new WorldGrid[arraysSize];
     [HideInInspector] public int[] inUse = new int[arraysSize];
@@ -80,7 +83,7 @@ public class GameManager : MonoBehaviour
     }
 
 
-    private int NbCurrentlyFree()
+    public int NbCurrentlyFree()
     {
         int total = 0;
         foreach (int i in inUse)
