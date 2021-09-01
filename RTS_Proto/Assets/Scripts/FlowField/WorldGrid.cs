@@ -214,7 +214,7 @@ public class WorldGrid : MonoBehaviour
     }
 
     
-    
+    /*
     #if (UNITY_EDITOR)
     // Function that draws the wireframe
     private void OnDrawGizmos()
@@ -246,4 +246,5 @@ public class WorldGrid : MonoBehaviour
         }
     }
     #endif
+    */
 }

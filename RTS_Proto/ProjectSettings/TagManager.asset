@@ -8,6 +8,7 @@ TagManager:
   - target
   - agent
   - building
+  - fogOfWar
   layers:
   - Default
   - TransparentFX
@@ -19,7 +20,7 @@ TagManager:
   - agent
   - ground
   - building
-  - 
+  - fogOfWar
   - 
   - 
   - 
