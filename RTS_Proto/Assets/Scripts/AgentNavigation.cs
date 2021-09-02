@@ -11,7 +11,6 @@ public class AgentNavigation : MonoBehaviour
     public Transform leftMostPart;
     public Transform rightMostPart;
 
-    [HideInInspector] public GameManager gameManager;
     [HideInInspector] public List<WorldGrid> worldGrid;
     [HideInInspector] public List<int> gridIndexes;
     [HideInInspector] public bool hasDestination = false;
@@ -43,7 +42,7 @@ public class AgentNavigation : MonoBehaviour
         float horizontalDist = Vector3.Distance(new Vector3(transform.position.x, 0, transform.position.z), new Vector3(worldGrid[0].StartPosition.x, 0, worldGrid[0].StartPosition.z));
         if (horizontalDist <= 0.05f)
         {
-            gameManager.inUse[gridIndexes[0]]--;
+            GameManager.instance.inUse[gridIndexes[0]]--;
             gridIndexes.RemoveAt(0);
             worldGrid.RemoveAt(0);
             if (worldGrid.Count == 0)
@@ -146,7 +145,7 @@ public class AgentNavigation : MonoBehaviour
 
     public void UnsetCurrentDestination()
     {
-        gameManager.inUse[gridIndexes[0]]--;
+        GameManager.instance.inUse[gridIndexes[0]]--;
         gridIndexes.RemoveAt(0);
         worldGrid.RemoveAt(0);
     }
@@ -155,7 +154,7 @@ public class AgentNavigation : MonoBehaviour
     public void UnsetAllDestinations()
     {
         foreach (int indexes in gridIndexes)
-            gameManager.inUse[indexes]--;
+            GameManager.instance.inUse[indexes]--;
 
         gridIndexes.Clear();
         worldGrid.Clear();

@@ -10,6 +10,9 @@ public class WorldGrid : MonoBehaviour
     [HideInInspector] public float fNodeRadius; // This stores how big each square on the graph will be
     [HideInInspector] public bool computingJobs = false; // Tells if we have access to precise pathfinding
     [HideInInspector] public Vector3 StartPosition; // This is where the program will start the pathfinding from
+    #if (UNITY_EDITOR)
+    [HideInInspector] public int debugNb;
+    #endif
 
     private NativeArray<DijkstraTile> NodeArray; // The array of nodes that the A Star algorithm uses
     private float fNodeDiameter; // Twice the amount of the radius (Set in the start function)
@@ -143,8 +146,7 @@ public class WorldGrid : MonoBehaviour
     }
 
 
-    // Draw the grid
-    void CreateGrid()
+    private void CreateGrid()
     {
         NodeArray = new NativeArray<DijkstraTile>(iGridSizeX * iGridSizeY, Allocator.Persistent);
         impreciseNodeArray = new NativeArray<DijkstraTile>(impreciseiGridSizeX * impreciseiGridSizeY, Allocator.Persistent);
@@ -158,7 +160,6 @@ public class WorldGrid : MonoBehaviour
                 Vector3 worldPoint = bottomLeft + Vector3.right * (x * fNodeDiameter + fNodeRadius) + Vector3.forward * (y * fNodeDiameter + fNodeRadius);
                 DijkstraTile tile = new DijkstraTile(new int2(x, y));
 
-                // checking for wall from -20 to 20 and convert to 2D matrix of walls
                 if (Physics.CheckCapsule(worldPoint - Vector3.up * 100, worldPoint + Vector3.up * 100, fNodeRadius - 0.0001f /* in case of single point collision */, WallMask))
                     tile.weight = int.MaxValue;
 
@@ -178,6 +179,116 @@ public class WorldGrid : MonoBehaviour
                     tile.weight = int.MaxValue;
 
                 impreciseNodeArray[impreciseiGridSizeY * x + y] = tile; // Create a new node in the array
+            }
+        }
+    }
+
+
+    public void AddGridColliders(Vector3 centerPos)
+    {
+        int largestBuildingRadius = (int) (2 / fNodeRadius);
+        int impreciseLargestBuildingRadius = (int)(2 / imprecisefNodeRadius);
+
+        float ixPos = ((centerPos.x + vGridWorldSize.x / 2) / vGridWorldSize.x);
+        float iyPos = ((centerPos.z + vGridWorldSize.y / 2) / vGridWorldSize.y);
+
+        ixPos = Mathf.Clamp01(ixPos);
+        iyPos = Mathf.Clamp01(iyPos);
+
+        int ix = Mathf.RoundToInt((iGridSizeX - 1) * ixPos);
+        int iy = Mathf.RoundToInt((iGridSizeY - 1) * iyPos);
+
+        if (!computingJobs)
+        {
+            for (int x = ix - largestBuildingRadius; x < ix + largestBuildingRadius; x++)
+            {
+                for (int y = iy - largestBuildingRadius; y < iy + largestBuildingRadius; y++)
+                {
+                    //Get the world coordinates from the bottom left of the graph
+                    Vector3 worldPoint = bottomLeft + Vector3.right * (x * fNodeDiameter + fNodeRadius) + Vector3.forward * (y * fNodeDiameter + fNodeRadius);
+
+                    //Instantiate(Resources.Load("debugSphere"), worldPoint + Vector3.up, Quaternion.identity);
+                    if (Physics.CheckCapsule(worldPoint - Vector3.up * 100, worldPoint + Vector3.up * 100, fNodeRadius - 0.0001f /* in case of single point collision */, WallMask))
+                    {
+                        DijkstraTile tile = new DijkstraTile(new int2(x, y));
+                        tile.weight = int.MaxValue;
+                        NodeArray[iGridSizeY * x + y] = tile;
+                    }
+                }
+            }
+        }
+
+        ix = Mathf.RoundToInt((impreciseiGridSizeX - 1) * ixPos);
+        iy = Mathf.RoundToInt((impreciseiGridSizeY - 1) * iyPos);
+
+        for (int x = ix - impreciseLargestBuildingRadius; x < ix + impreciseLargestBuildingRadius; x++)
+        {
+            for (int y = iy - impreciseLargestBuildingRadius; y < iy + impreciseLargestBuildingRadius; y++)
+            {
+                //Get the world coordinates from the bottom left of the graph
+                Vector3 worldPoint = bottomLeft + Vector3.right * (x * imprecisefNodeDiameter + imprecisefNodeRadius) + Vector3.forward * (y * imprecisefNodeDiameter + imprecisefNodeRadius);
+
+                //Instantiate(Resources.Load("debugSphere"), worldPoint + Vector3.up * 2, Quaternion.identity);
+                if (Physics.CheckCapsule(worldPoint - Vector3.up * 100, worldPoint + Vector3.up * 100, imprecisefNodeRadius - 0.0001f /* in case of single point collision */, WallMask))
+                {
+                    DijkstraTile tile = new DijkstraTile(new int2(x, y));
+                    tile.weight = int.MaxValue;
+                    impreciseNodeArray[impreciseiGridSizeY * x + y] = tile;
+                }
+            }
+        }
+    }
+
+
+    public void RemoveGridColliders(Vector3 centerPos)
+    {
+        int largestBuildingRadius = (int)(2 / fNodeRadius);
+        int impreciseLargestBuildingRadius = (int)(2 / imprecisefNodeRadius);
+
+        float ixPos = ((centerPos.x + vGridWorldSize.x / 2) / vGridWorldSize.x);
+        float iyPos = ((centerPos.z + vGridWorldSize.y / 2) / vGridWorldSize.y);
+
+        ixPos = Mathf.Clamp01(ixPos);
+        iyPos = Mathf.Clamp01(iyPos);
+
+        int ix = Mathf.RoundToInt((iGridSizeX - 1) * ixPos);
+        int iy = Mathf.RoundToInt((iGridSizeY - 1) * iyPos);
+
+        if (!computingJobs)
+        {
+            for (int x = ix - largestBuildingRadius; x < ix + largestBuildingRadius; x++)
+            {
+                for (int y = iy - largestBuildingRadius; y < iy + largestBuildingRadius; y++)
+                {
+                    //Get the world coordinates from the bottom left of the graph
+                    Vector3 worldPoint = bottomLeft + Vector3.right * (x * fNodeDiameter + fNodeRadius) + Vector3.forward * (y * fNodeDiameter + fNodeRadius);
+
+                    //Instantiate(Resources.Load("debugSphere"), worldPoint + Vector3.up, Quaternion.identity);
+                    if (!Physics.CheckCapsule(worldPoint - Vector3.up * 100, worldPoint + Vector3.up * 100, fNodeRadius - 0.0001f /* in case of single point collision */, WallMask))
+                    {
+                        DijkstraTile tile = new DijkstraTile(new int2(x, y));
+                        NodeArray[iGridSizeY * x + y] = tile;
+                    }
+                }
+            }
+        }
+
+        ix = Mathf.RoundToInt((impreciseiGridSizeX - 1) * ixPos);
+        iy = Mathf.RoundToInt((impreciseiGridSizeY - 1) * iyPos);
+
+        for (int x = ix - impreciseLargestBuildingRadius; x < ix + impreciseLargestBuildingRadius; x++)
+        {
+            for (int y = iy - impreciseLargestBuildingRadius; y < iy + impreciseLargestBuildingRadius; y++)
+            {
+                //Get the world coordinates from the bottom left of the graph
+                Vector3 worldPoint = bottomLeft + Vector3.right * (x * imprecisefNodeDiameter + imprecisefNodeRadius) + Vector3.forward * (y * imprecisefNodeDiameter + imprecisefNodeRadius);
+
+                //Instantiate(Resources.Load("debugSphere"), worldPoint + Vector3.up * 2, Quaternion.identity);
+                if (!Physics.CheckCapsule(worldPoint - Vector3.up * 100, worldPoint + Vector3.up * 100, imprecisefNodeRadius - 0.0001f /* in case of single point collision */, WallMask))
+                {
+                    DijkstraTile tile = new DijkstraTile(new int2(x, y));
+                    impreciseNodeArray[impreciseiGridSizeY * x + y] = tile;
+                }
             }
         }
     }
@@ -214,11 +325,13 @@ public class WorldGrid : MonoBehaviour
     }
 
     
-    /*
     #if (UNITY_EDITOR)
     // Function that draws the wireframe
     private void OnDrawGizmos()
     {
+        if (debugNb != 1)
+            return;
+
         if (impreciseNodeArray != null) // If the grid is not empty
         {
             foreach (DijkstraTile n in impreciseNodeArray) // Loop through every node in the grid
@@ -227,7 +340,7 @@ public class WorldGrid : MonoBehaviour
                 {
                     Gizmos.color = Color.blue;
                     Vector3 worldPoint = bottomLeft + Vector3.right * (n.gridPos.x * imprecisefNodeDiameter + imprecisefNodeRadius) + Vector3.forward * (n.gridPos.y * imprecisefNodeDiameter + imprecisefNodeRadius);
-                    Gizmos.DrawCube(worldPoint, new Vector3(1, 0, 1) * imprecisefNodeDiameter);
+                    Gizmos.DrawCube(worldPoint, new Vector3(1, 0.001f, 1) * imprecisefNodeDiameter);
                 }
             }
         }
@@ -238,13 +351,12 @@ public class WorldGrid : MonoBehaviour
             {
                 if (n.weight == int.MaxValue) // If the current node is a wall node
                 {
-                    Gizmos.color = Color.magenta;
+                    Gizmos.color = Color.red;
                     Vector3 worldPoint = bottomLeft + Vector3.right * (n.gridPos.x * fNodeDiameter + fNodeRadius) + Vector3.forward * (n.gridPos.y * fNodeDiameter + fNodeRadius);
-                    Gizmos.DrawCube(worldPoint, new Vector3(1, 0, 1) * fNodeDiameter);
+                    Gizmos.DrawCube(worldPoint, new Vector3(1, 0.001f, 1) * fNodeDiameter);
                 }
             }
         }
     }
     #endif
-    */
 }

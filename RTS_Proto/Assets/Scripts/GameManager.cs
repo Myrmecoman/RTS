@@ -5,6 +5,8 @@ using UnityEngine.InputSystem;
 
 public class GameManager : MonoBehaviour
 {
+    public static GameManager instance;
+
     public LayerMask WallMask; // This is the mask that the program will look for when trying to find obstructions to the path
     public Vector2 vGridWorldSize; // A vector2 to store the width and height of the graph in world units
     public float fNodeRadius; // This stores how big each square on the graph will be
@@ -14,18 +16,29 @@ public class GameManager : MonoBehaviour
     [HideInInspector] public int gas = 0;
 
     private static int arraysSize = 100;
-    private WorldGrid[] grids = new WorldGrid[arraysSize];
+    [HideInInspector] public WorldGrid[] grids = new WorldGrid[arraysSize];
     [HideInInspector] public int[] inUse = new int[arraysSize];
 
 
     private void Awake()
     {
+        // make this a singleton
+        if (instance == null)
+            instance = this;
+        else
+            Destroy(gameObject);
+
         for (int i = 0; i < arraysSize; i++)
         {
             grids[i] = Instantiate(singleGrid, transform);
             grids[i].WallMask = WallMask;
             grids[i].vGridWorldSize = vGridWorldSize;
             grids[i].fNodeRadius = fNodeRadius;
+
+            #if (UNITY_EDITOR)
+            if (i == 0)
+                grids[i].debugNb = 1;
+            #endif
         }
     }
 
@@ -36,10 +49,7 @@ public class GameManager : MonoBehaviour
         for (float i = 0; i < 20; i++)
         {
             for (float j = 0; j < 10; j++)
-            {
-                GameObject obj = (GameObject)Instantiate(Resources.Load("Agent"), new Vector3(i * 1.5f, 0.5f, -65 + j* 1.5f), Quaternion.identity);
-                obj.GetComponent<AgentNavigation>().gameManager = this;
-            }
+                Instantiate(Resources.Load("Agent"), new Vector3(i * 1.5f, 0.5f, j* 1.5f), Quaternion.identity);
         }
     }
 

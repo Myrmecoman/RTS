@@ -1,4 +1,3 @@
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -6,7 +5,6 @@ public class Cam_controller : MonoBehaviour
 {
     public float speed = 10f;
     public GameObject moveCommandObj;
-    public GameManager gameManager;
     public SelectedDico selection;
 
     [HideInInspector] public Vector2 move;
@@ -54,7 +52,7 @@ public class Cam_controller : MonoBehaviour
             moveCommandSprite = Instantiate(moveCommandObj);
             moveCommandSprite.transform.position = hit.point + new Vector3(0, 0.0001f, 0);
 
-            gameManager.MoveCommand(selection.selectedTable, moveCommandSprite.transform.position);
+            GameManager.instance.MoveCommand(selection.selectedTable, moveCommandSprite.transform.position);
         }
     }
 
