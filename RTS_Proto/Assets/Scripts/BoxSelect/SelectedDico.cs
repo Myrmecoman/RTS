@@ -3,7 +3,20 @@ using UnityEngine;
 
 public class SelectedDico : MonoBehaviour
 {
+    public static SelectedDico instance;
+
     [HideInInspector] public Dictionary<int, AgentNavigation> selectedTable = new Dictionary<int, AgentNavigation>();
+
+
+    private void Awake()
+    {
+        // make this a singleton
+        if (instance == null)
+            instance = this;
+        else
+            Destroy(gameObject);
+    }
+
 
     public void AddSelected(AgentNavigation go)
     {

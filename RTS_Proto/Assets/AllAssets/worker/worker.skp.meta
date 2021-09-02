@@ -85,7 +85,7 @@ SketchUpImporter:
     armStretch: 0.05
     legStretch: 0.05
     feetSpacing: 0
-    globalScale: 1
+    globalScale: 0.0254
     rootMotionBoneName: 
     hasTranslationDoF: 0
     hasExtraRoot: 0
@@ -100,10 +100,10 @@ SketchUpImporter:
   userData: 
   assetBundleName: 
   assetBundleVariant: 
-  generateBackFace: 1
-  mergeCoplanarFaces: 0
+  generateBackFace: 0
+  mergeCoplanarFaces: 1
   selectedNodes: 0000000001000000
   assetHash:
     serializedVersion: 2
-    Hash: 34603be4e18af89fa29478a1b926ed50
+    Hash: 12d93f96c947a5660de5bc968297a76d
   fileUnit: 0

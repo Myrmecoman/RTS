@@ -297,7 +297,7 @@ Transform:
   m_LocalScale: {x: 256, y: 1, z: 256}
   m_Children: []
   m_Father: {fileID: 1582632177}
-  m_RootOrder: 3
+  m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &353563225
 GameObject:
@@ -377,7 +377,7 @@ MonoBehaviour:
     m_Bits: 576
   vGridWorldSize: {x: 256, y: 256}
   fNodeRadius: 0.5
-  singleGrid: {fileID: 401016532501664971, guid: bd05e8614e5a3204bae4c11281f1c43f, type: 3}
+  singleGrid: {fileID: 2307963398867471092, guid: bd05e8614e5a3204bae4c11281f1c43f, type: 3}
   minerals: 0
   gas: 0
   grids:
@@ -525,7 +525,7 @@ Transform:
   m_LocalScale: {x: 20, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 1582632177}
-  m_RootOrder: 1
+  m_RootOrder: 2
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!65 &500614161
 BoxCollider:
@@ -1136,7 +1136,6 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   speed: 50
   moveCommandObj: {fileID: 6996756979080215270, guid: 07789293593921d4abc333ded639ab75, type: 3}
-  selection: {fileID: 353563230}
   move: {x: 0, y: 0}
   HoldingStack: 0
 --- !u!1 &1034880260
@@ -1249,7 +1248,7 @@ Transform:
   m_LocalScale: {x: 40, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 1582632177}
-  m_RootOrder: 2
+  m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 90, z: 0}
 --- !u!65 &1385344475
 BoxCollider:
@@ -1421,10 +1420,10 @@ Transform:
   m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children:
+  - {fileID: 329277350}
   - {fileID: 1919601994}
   - {fileID: 500614160}
   - {fileID: 1385344474}
-  - {fileID: 329277350}
   - {fileID: 701331564}
   m_Father: {fileID: 0}
   m_RootOrder: 5
@@ -1522,5 +1521,5 @@ Transform:
   m_LocalScale: {x: 20, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 1582632177}
-  m_RootOrder: 0
+  m_RootOrder: 1
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}

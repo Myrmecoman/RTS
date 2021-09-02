@@ -3,15 +3,26 @@ using UnityEngine.InputSystem;
 
 public class Cam_controller : MonoBehaviour
 {
+    public static Cam_controller instance;
+
     public float speed = 10f;
     public GameObject moveCommandObj;
-    public SelectedDico selection;
 
     [HideInInspector] public Vector2 move;
     [HideInInspector] public bool HoldingStack = false;
 
     private Camera cam;
     private GameObject moveCommandSprite = null;
+
+
+    private void Awake()
+    {
+        // make this a singleton
+        if (instance == null)
+            instance = this;
+        else
+            Destroy(gameObject);
+    }
 
 
     // Start is called before the first frame update
@@ -36,7 +47,7 @@ public class Cam_controller : MonoBehaviour
 
     public void MoveCommand()
     {
-        if (selection.selectedTable.Count == 0)
+        if (SelectedDico.instance.selectedTable.Count == 0)
             return;
 
         Ray ray = cam.ScreenPointToRay(Mouse.current.position.ReadValue());
@@ -52,7 +63,7 @@ public class Cam_controller : MonoBehaviour
             moveCommandSprite = Instantiate(moveCommandObj);
             moveCommandSprite.transform.position = hit.point + new Vector3(0, 0.0001f, 0);
 
-            GameManager.instance.MoveCommand(selection.selectedTable, moveCommandSprite.transform.position);
+            GameManager.instance.MoveCommand(SelectedDico.instance.selectedTable, moveCommandSprite.transform.position);
         }
     }
 
