@@ -2,7 +2,7 @@ using UnityEngine;
 
 public class Input_Receiver : MonoBehaviour
 {
-    public Cam_controller cam_controller;
+    public CamController cam_controller;
     public GlobalSelection selection;
 
     private Controls controls;

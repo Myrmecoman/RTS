@@ -23,6 +23,7 @@ public class AgentNavigation : MonoBehaviour
     private void Start()
     {
         rb = GetComponent<Rigidbody>();
+        rb.isKinematic = true;
         worldGrid = new List<WorldGrid>();
         gridIndexes = new List<int>();
     }
@@ -33,7 +34,14 @@ public class AgentNavigation : MonoBehaviour
         // NEED TO FIND OUT WHEN DESTINATION IS REACHED
 
         if (!hasDestination)
+        {
+            if (!rb.isKinematic)
+                rb.isKinematic = true;
             return;
+        }
+
+        if (rb.isKinematic)
+            rb.isKinematic = false;
 
         AdjustHeight();
 
@@ -138,6 +146,7 @@ public class AgentNavigation : MonoBehaviour
 
     public void MoveTowardsSprite()
     {
+        //Debug.Log("moving towards");
         moveTowardsSprite.SetActive(true);
     }
 

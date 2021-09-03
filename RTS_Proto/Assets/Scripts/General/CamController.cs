@@ -1,9 +1,9 @@
 using UnityEngine;
 using UnityEngine.InputSystem;
 
-public class Cam_controller : MonoBehaviour
+public class CamController : MonoBehaviour
 {
-    public static Cam_controller instance;
+    public static CamController instance;
 
     public float speed = 10f;
     public GameObject moveCommandObj;
@@ -67,17 +67,17 @@ public class Cam_controller : MonoBehaviour
             if (hit.transform.gameObject.tag == "agent")
             {
                 hit.collider.GetComponent<AgentNavigation>().MoveTowardsSprite();
-                GameManager.instance.MoveCommand(SelectedDico.instance.selectedTable, hit.transform.position);
+                GameManager.instance.MoveCommand(SelectedDico.instance.selectedTable, hit.transform.position - Vector3.up * hit.collider.GetComponent<AgentNavigation>().heightFromCenter);
             }
             if (hit.transform.gameObject.tag == "building")
             {
                 hit.collider.GetComponent<BuildingManager>().MoveTowardsSprite();
-                GameManager.instance.MoveCommand(SelectedDico.instance.selectedTable, hit.transform.position);
+                GameManager.instance.MoveCommand(SelectedDico.instance.selectedTable, hit.transform.position - Vector3.up * hit.collider.GetComponent<BuildingManager>().heightFromCenter);
             }
             if (hit.transform.gameObject.tag == "resource")
             {
                 hit.collider.GetComponent<ResourceObject>().MoveTowardsSprite();
-                GameManager.instance.MoveCommand(SelectedDico.instance.selectedTable, hit.transform.position);
+                GameManager.instance.MoveCommand(SelectedDico.instance.selectedTable, hit.transform.position - Vector3.up * hit.collider.GetComponent<ResourceObject>().heightFromCenter);
             }
         }
     }

@@ -49,7 +49,7 @@ public class GameManager : MonoBehaviour
         for (float i = 0; i < 20; i++)
         {
             for (float j = 0; j < 10; j++)
-                Instantiate(Resources.Load("Agent"), new Vector3(i * 1.5f, 0.5f, j* 1.5f), Quaternion.identity);
+                Instantiate(Resources.Load("Agent"), new Vector3(i * 1.5f, 1f, j* 1.5f), Quaternion.identity);
         }
     }
 

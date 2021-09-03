@@ -5,7 +5,7 @@ public class SpriteMoveTowards : MonoBehaviour
     public float speed = 5;
     public double enableTime = 3;
 
-    private double currTime = 0;
+    private double currTime = 3;
 
 
     void Update()
