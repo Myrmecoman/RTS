@@ -54,22 +54,6 @@ public class GameManager : MonoBehaviour
     }
 
 
-    private void Update()
-    {
-        if (Keyboard.current.qKey.wasPressedThisFrame)
-            Debug.Log("Free grids : " + NbCurrentlyFree());
-
-        if (Keyboard.current.aKey.wasPressedThisFrame)
-        {
-            string s = "[";
-            for (int i = 0; i < inUse.Length; i++)
-                s += inUse[i] + ", ";
-            s += "]";
-            Debug.Log(s);
-        }
-    }
-
-
     public void MoveCommand(Dictionary<int, AgentNavigation> agents, Vector3 target)
     {
         for (int i = 0; i < arraysSize; i++)

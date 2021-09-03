@@ -3,8 +3,8 @@ using UnityEngine;
 public class BuildingManager : MonoBehaviour
 {
     public string buildingName;
-    public float diameter;
     public float buildTime = 1f;
+    public GameObject moveTowardsSprite;
     public string[] unitsNames;
     public int[] unitsPrices;
     public float[] unitsBuildTime;
@@ -28,8 +28,7 @@ public class BuildingManager : MonoBehaviour
 
     public void MoveTowardsSprite()
     {
-        GameObject obj = (GameObject)Instantiate(Resources.Load("moveTowards"), transform);
-        obj.transform.localScale = new Vector3(diameter / 4, diameter / 4, diameter / 4);
+        moveTowardsSprite.SetActive(true);
     }
 
 

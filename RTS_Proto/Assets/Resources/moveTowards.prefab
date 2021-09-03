@@ -10,7 +10,6 @@ GameObject:
   m_Component:
   - component: {fileID: 9155545357268707043}
   - component: {fileID: 3996984617630067455}
-  - component: {fileID: 947179994538474570}
   - component: {fileID: 4350161714262579743}
   m_Layer: 0
   m_Name: moveTowards
@@ -84,19 +83,6 @@ SpriteRenderer:
   m_WasSpriteAssigned: 1
   m_MaskInteraction: 0
   m_SpriteSortPoint: 0
---- !u!114 &947179994538474570
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5778516623386043852}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 6d059a1059c4230409257558f23d6ee9, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  timeBeforeDeath: 3
 --- !u!114 &4350161714262579743
 MonoBehaviour:
   m_ObjectHideFlags: 0

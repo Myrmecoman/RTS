@@ -7,8 +7,8 @@ public class AgentNavigation : MonoBehaviour
 {
     public float force = 1.0f;
     public float heightFromCenter = 0f;
-    public float diameter = 1f;
     public SpriteRenderer sprite;
+    public GameObject moveTowardsSprite;
     public Transform leftMostPart;
     public Transform rightMostPart;
 
@@ -138,9 +138,7 @@ public class AgentNavigation : MonoBehaviour
 
     public void MoveTowardsSprite()
     {
-        GameObject obj = (GameObject)Instantiate(Resources.Load("moveTowards"), transform);
-        obj.transform.position = sprite.transform.position;
-        obj.transform.localScale = new Vector3(diameter / 4, diameter / 4, diameter / 4);
+        moveTowardsSprite.SetActive(true);
     }
 
 
