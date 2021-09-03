@@ -4,16 +4,16 @@
 TagManager:
   serializedVersion: 2
   tags:
-  - mineral
-  - target
   - agent
   - building
   - fogOfWar
+  - ground
+  - resource
   layers:
   - Default
   - TransparentFX
   - Ignore Raycast
-  - target
+  - 
   - Water
   - UI
   - wall
@@ -21,7 +21,7 @@ TagManager:
   - ground
   - building
   - fogOfWar
-  - 
+  - resource
   - 
   - 
   - 
