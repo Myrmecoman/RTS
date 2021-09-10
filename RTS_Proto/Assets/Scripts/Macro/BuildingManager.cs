@@ -4,7 +4,6 @@ public class BuildingManager : MonoBehaviour
 {
     public string buildingName;
     public float buildTime = 1f;
-    public float heightFromCenter;
     public GameObject moveTowardsSprite;
     public string[] unitsNames;
     public int[] unitsPrices;

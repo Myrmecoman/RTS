@@ -6,6 +6,6 @@ EditorBuildSettings:
   serializedVersion: 2
   m_Scenes:
   - enabled: 1
-    path: Assets/Scenes/ObstacleScene.unity
-    guid: fa296c4fbd20c2b46abf5e80cd43c36c
+    path: Assets/Scenes/GameplayTest.unity
+    guid: 177392e449c53ce4aad47a280b638d5a
   m_configObjects: {}

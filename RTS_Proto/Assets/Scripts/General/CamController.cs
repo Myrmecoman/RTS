@@ -66,18 +66,18 @@ public class CamController : MonoBehaviour
             }
             if (hit.transform.gameObject.tag == "agent")
             {
-                hit.collider.GetComponent<AgentNavigation>().MoveTowardsSprite();
-                GameManager.instance.MoveCommand(SelectedDico.instance.selectedTable, hit.transform.position - Vector3.up * hit.collider.GetComponent<AgentNavigation>().heightFromCenter);
+                hit.collider.GetComponent<AgentManager>().MoveTowardsSprite();
+                GameManager.instance.MoveCommand(SelectedDico.instance.selectedTable, hit.transform.position);
             }
             if (hit.transform.gameObject.tag == "building")
             {
                 hit.collider.GetComponent<BuildingManager>().MoveTowardsSprite();
-                GameManager.instance.MoveCommand(SelectedDico.instance.selectedTable, hit.transform.position - Vector3.up * hit.collider.GetComponent<BuildingManager>().heightFromCenter);
+                GameManager.instance.MoveCommand(SelectedDico.instance.selectedTable, hit.transform.position);
             }
             if (hit.transform.gameObject.tag == "resource")
             {
                 hit.collider.GetComponent<ResourceObject>().MoveTowardsSprite();
-                GameManager.instance.MoveCommand(SelectedDico.instance.selectedTable, hit.transform.position - Vector3.up * hit.collider.GetComponent<ResourceObject>().heightFromCenter);
+                GameManager.instance.MoveCommand(SelectedDico.instance.selectedTable, hit.transform.position);
             }
         }
     }

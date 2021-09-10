@@ -66,12 +66,12 @@ public class GlobalSelection : MonoBehaviour
                 {
                     if (StackActionHold) //inclusive select
                     {
-                        selected_table.AddSelected(hit.transform.GetComponent<AgentNavigation>());
+                        selected_table.AddSelected(hit.transform.GetComponent<AgentManager>());
                     }
                     else //exclusive selected
                     {
                         selected_table.DeselectAll();
-                        selected_table.AddSelected(hit.transform.GetComponent<AgentNavigation>());
+                        selected_table.AddSelected(hit.transform.GetComponent<AgentManager>());
                     }
                 }
                 else //if we didnt hit something
@@ -219,6 +219,6 @@ public class GlobalSelection : MonoBehaviour
     private void OnTriggerEnter(Collider other)
     {
         if (other.tag == "agent" || other.tag == "building")
-            selected_table.AddSelected(other.GetComponent<AgentNavigation>());
+            selected_table.AddSelected(other.GetComponent<AgentManager>());
     }
 }

@@ -46,15 +46,15 @@ public class GameManager : MonoBehaviour
     private void Start()
     {
         // For test purposes
-        for (float i = 0; i < 20; i++)
+        for (float i = 0; i < 30; i++)
         {
-            for (float j = 0; j < 10; j++)
-                Instantiate(Resources.Load("Agent"), new Vector3(i * 1.5f, 1f, j* 1.5f), Quaternion.identity);
+            for (float j = 0; j < 30; j++)
+                Instantiate(Resources.Load("Agent"), new Vector3(i * 1.5f, 0.5f, j* 1.5f), Quaternion.identity);
         }
     }
 
 
-    public void MoveCommand(Dictionary<int, AgentNavigation> agents, Vector3 target)
+    public void MoveCommand(Dictionary<int, AgentManager> agents, Vector3 target)
     {
         for (int i = 0; i < arraysSize; i++)
         {
@@ -63,9 +63,9 @@ public class GameManager : MonoBehaviour
                 inUse[i] = agents.Count;
                 grids[i].ChangeTarget(target);
 
-                foreach (KeyValuePair<int, AgentNavigation> ag in agents)
+                foreach (KeyValuePair<int, AgentManager> ag in agents)
                 {
-                    ag.Value.UnsetAllDestinations();
+                    ag.Value.UnsetDestination();
                     ag.Value.AddDestination(grids[i], i);
                 }
 
