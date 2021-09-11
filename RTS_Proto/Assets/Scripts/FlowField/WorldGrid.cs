@@ -9,6 +9,7 @@ public class WorldGrid : MonoBehaviour
     [HideInInspector] public Vector2 vGridWorldSize; // A vector2 to store the width and height of the graph in world units
     [HideInInspector] public float fNodeRadius; // This stores how big each square on the graph will be
     [HideInInspector] public bool computingJobs = false; // Tells if we have access to precise pathfinding
+    [HideInInspector] private Transform TrStartPosition; // Keep a transform in case of changes (follow)
     [HideInInspector] public Vector3 StartPosition; // This is where the program will start the pathfinding from
     #if (UNITY_EDITOR)
     [HideInInspector] public int debugNb;
@@ -57,6 +58,11 @@ public class WorldGrid : MonoBehaviour
 
     private void Update()
     {
+        if (TrStartPosition != null && TrStartPosition.position != StartPosition && Time.realtimeSinceStartup - delay > 0.5f)
+        {
+            ChangeTarget(TrStartPosition);
+        }
+
         if (computingJobs)
         {
             if (!updateScheduled)
@@ -113,9 +119,13 @@ public class WorldGrid : MonoBehaviour
 
 
     // Change target position
-    public void ChangeTarget(Vector3 newStartPosition)
+    public void ChangeTarget(Transform newStartPosition)
     {
-        StartPosition = newStartPosition;
+        if (newStartPosition.position == StartPosition)
+            return;
+
+        TrStartPosition = newStartPosition;
+        StartPosition = newStartPosition.position;
         computingJobs = true;
         double imprecisedelay = Time.realtimeSinceStartupAsDouble;
 

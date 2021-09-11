@@ -1,6 +1,5 @@
 using System.Collections.Generic;
 using UnityEngine;
-using UnityEngine.InputSystem;
 
 
 public class GameManager : MonoBehaviour
@@ -19,6 +18,12 @@ public class GameManager : MonoBehaviour
     [HideInInspector] public WorldGrid[] grids = new WorldGrid[arraysSize];
     [HideInInspector] public int[] inUse = new int[arraysSize];
 
+    [HideInInspector] public List<Transform> allyUnits;
+    [HideInInspector] public List<Transform> allyBuildings;
+    [HideInInspector] public List<Transform> enemyUnits;
+    [HideInInspector] public List<Transform> enemyBuildings;
+
+
 
     private void Awake()
     {
@@ -27,6 +32,11 @@ public class GameManager : MonoBehaviour
             instance = this;
         else
             Destroy(gameObject);
+
+        allyUnits = new List<Transform>();
+        allyBuildings = new List<Transform>();
+        enemyUnits = new List<Transform>();
+        enemyBuildings = new List<Transform>();
 
         for (int i = 0; i < arraysSize; i++)
         {
@@ -46,15 +56,27 @@ public class GameManager : MonoBehaviour
     private void Start()
     {
         // For test purposes
-        for (float i = 0; i < 30; i++)
+        for (float i = 0; i < 20; i++)
         {
-            for (float j = 0; j < 30; j++)
-                Instantiate(Resources.Load("Agent"), new Vector3(i * 1.5f, 0.5f, j* 1.5f), Quaternion.identity);
+            for (float j = 0; j < 20; j++)
+            {
+                GameObject obj = (GameObject) Instantiate(Resources.Load("Agent"), new Vector3(i * 1.5f, 0.5f, j * 1.5f), Quaternion.identity);
+                allyUnits.Add(obj.transform);
+            }
+        }
+
+        for (float i = 0; i < 20; i++)
+        {
+            for (float j = 0; j < 20; j++)
+            {
+                GameObject obj = (GameObject)Instantiate(Resources.Load("Agent"), new Vector3(i * 1.5f, 0.5f, j * 1.5f + 50), Quaternion.identity);
+                enemyUnits.Add(obj.transform);
+            }
         }
     }
 
 
-    public void MoveCommand(Dictionary<int, AgentManager> agents, Vector3 target)
+    public void MoveCommand(Dictionary<int, AgentManager> agents, Transform target, bool follow = false)
     {
         for (int i = 0; i < arraysSize; i++)
         {
@@ -66,7 +88,7 @@ public class GameManager : MonoBehaviour
                 foreach (KeyValuePair<int, AgentManager> ag in agents)
                 {
                     ag.Value.UnsetDestination();
-                    ag.Value.AddDestination(grids[i], i);
+                    ag.Value.AddDestination(grids[i], i, target);
                 }
 
                 return;
