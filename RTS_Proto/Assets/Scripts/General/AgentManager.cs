@@ -43,9 +43,10 @@ public class AgentManager : MonoBehaviour
 
         AdjustHeight();
 
-        double t = Time.realtimeSinceStartup;
+        // double t = Time.realtimeSinceStartup;
         AgentManager foundTarget = CheckEnnemy();
-        Debug.Log("kd search = " + (Time.realtimeSinceStartup - t));
+        // Debug.Log("kd search = " + (Time.realtimeSinceStartup - t));
+
         if ((!hasDestination || attackCommand) && foundTarget != null)
         {
             // attack target
