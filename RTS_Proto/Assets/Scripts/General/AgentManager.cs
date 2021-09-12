@@ -25,6 +25,7 @@ public class AgentManager : MonoBehaviour
     [HideInInspector] public bool hasDestination = false;
 
     private bool attackCommand = false;
+    private bool patrolCommand = false;
     private Rigidbody rb;
     private DijkstraTile lastValidTile;
     private Transform follow;
@@ -42,10 +43,11 @@ public class AgentManager : MonoBehaviour
 
         AdjustHeight();
 
-        AgentManager foundTarget = null;//CheckEnnemy();
+        double t = Time.realtimeSinceStartup;
+        AgentManager foundTarget = CheckEnnemy();
+        Debug.Log("kd search = " + (Time.realtimeSinceStartup - t));
         if ((!hasDestination || attackCommand) && foundTarget != null)
         {
-            Debug.Log("no");
             // attack target
             rb.isKinematic = true;
             return;
@@ -152,27 +154,15 @@ public class AgentManager : MonoBehaviour
     }
 
 
-    // very intensive function, to be optimized later (layer exclusion, running every x seconds etc...)
+    // very intensive function, to be optimized later (quad tree, running every x seconds etc...)
     private AgentManager CheckEnnemy()
     {
-        int bestTarget = -1;
-        float closestDistanceSqr = Mathf.Infinity;
-        Vector3 pos = transform.position;
+        Transform nearestEnemy = GameManager.instance.enemyUnits.FindClosest(transform.position);
 
-        for (int i = 0; i < GameManager.instance.enemyUnits.Count; i++)
-        {
-            float dSqrToTarget = (GameManager.instance.enemyUnits[i].transform.position - pos).sqrMagnitude;
-            if (dSqrToTarget < closestDistanceSqr)
-            {
-                closestDistanceSqr = dSqrToTarget;
-                bestTarget = i;
-            }
-        }
+        if (Vector3.Distance(new Vector3(transform.position.x, 0, transform.position.z), new Vector3(nearestEnemy.position.x, 0, nearestEnemy.position.z)) <= attackRange)
+            return nearestEnemy.GetComponent<AgentManager>();
 
-        if (bestTarget == -1)
-            return null;
-
-        return GameManager.instance.enemyUnits[bestTarget].GetComponent<AgentManager>();
+        return null;
     }
 
 
@@ -190,17 +180,21 @@ public class AgentManager : MonoBehaviour
 
     public void MoveTowardsSprite()
     {
-        //Debug.Log("moving towards");
         moveTowardsSprite.SetActive(true);
     }
 
 
-    public void AddDestination(WorldGrid grid, int index, Transform follow = null)
+    public void AddDestination(WorldGrid grid, int index, Transform follow = null, int action = 0 /* 1 = attack, 2 = patrol */)
     {
         worldGrid = grid;
         gridIndexe = index;
         hasDestination = true;
         this.follow = follow;
+
+        if (action == 1 || action == 2)
+            attackCommand = true;
+        if (action == 2)
+            patrolCommand = true;
     }
 
 
@@ -209,5 +203,7 @@ public class AgentManager : MonoBehaviour
         GameManager.instance.inUse[gridIndexe]--;
         hasDestination = false;
         follow = null;
+        attackCommand = false;
+        patrolCommand = true;
     }
 }

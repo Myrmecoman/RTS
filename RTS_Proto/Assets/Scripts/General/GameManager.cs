@@ -18,10 +18,10 @@ public class GameManager : MonoBehaviour
     [HideInInspector] public WorldGrid[] grids = new WorldGrid[arraysSize];
     [HideInInspector] public int[] inUse = new int[arraysSize];
 
-    [HideInInspector] public List<Transform> allyUnits;
-    [HideInInspector] public List<Transform> allyBuildings;
-    [HideInInspector] public List<Transform> enemyUnits;
-    [HideInInspector] public List<Transform> enemyBuildings;
+    [HideInInspector] public KdTree<Transform> allyUnits;
+    [HideInInspector] public KdTree<Transform> allyBuildings;
+    [HideInInspector] public KdTree<Transform> enemyUnits;
+    [HideInInspector] public KdTree<Transform> enemyBuildings;
 
 
 
@@ -33,10 +33,10 @@ public class GameManager : MonoBehaviour
         else
             Destroy(gameObject);
 
-        allyUnits = new List<Transform>();
-        allyBuildings = new List<Transform>();
-        enemyUnits = new List<Transform>();
-        enemyBuildings = new List<Transform>();
+        allyUnits = new KdTree<Transform>();
+        allyBuildings = new KdTree<Transform>();
+        enemyUnits = new KdTree<Transform>();
+        enemyBuildings = new KdTree<Transform>();
 
         for (int i = 0; i < arraysSize; i++)
         {
