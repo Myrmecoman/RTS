@@ -56,7 +56,7 @@ public class GameManager : MonoBehaviour
     private void Start()
     {
         // For test purposes
-        for (float i = 0; i < 20; i++)
+        for (float i = 0; i < 10; i++)
         {
             for (float j = 0; j < 10; j++)
             {
@@ -65,11 +65,12 @@ public class GameManager : MonoBehaviour
             }
         }
 
-        for (float i = 0; i < 20; i++)
+        for (float i = 0; i < 5; i++)
         {
-            for (float j = 0; j < 10; j++)
+            for (float j = 0; j < 5; j++)
             {
                 GameObject obj = (GameObject)Instantiate(Resources.Load("Agent"), new Vector3(i * 1.5f, 0.5f, j * 1.5f + 50), Quaternion.identity);
+                obj.GetComponent<AgentManager>().isAlly = false;
                 enemyUnits.Add(obj.transform);
             }
         }

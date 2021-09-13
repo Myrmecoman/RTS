@@ -8,7 +8,7 @@ public class AgentManager : MonoBehaviour
     public int supply = 1;
     public int attackDamage = 5;
     public int attackRange = 5;
-    public float attackSpeed = 2;
+    public float attackSpeed = 1;
     public int health = 50;
     public int armor = 0;
     public float speed = 1.0f;
@@ -20,12 +20,14 @@ public class AgentManager : MonoBehaviour
     public Transform leftMostPart;
     public Transform rightMostPart;
 
+    [HideInInspector] public bool isAlly = true;
     [HideInInspector] public WorldGrid worldGrid;
     [HideInInspector] public int gridIndexe;
     [HideInInspector] public bool hasDestination = false;
 
     private bool attackCommand = false;
     private bool patrolCommand = false;
+    private double attackCooldown;
     private Rigidbody rb;
     private DijkstraTile lastValidTile;
     private Transform follow;
@@ -43,16 +45,24 @@ public class AgentManager : MonoBehaviour
 
         AdjustHeight();
 
-        // double t = Time.realtimeSinceStartup;
-        AgentManager foundTarget = CheckEnnemy();
-        // Debug.Log("kd search = " + (Time.realtimeSinceStartup - t));
+        if (attackCooldown > 0)
+            attackCooldown -= Time.deltaTime;
 
-        if ((!hasDestination || attackCommand) && foundTarget != null)
+        if (attackCooldown <= 0)
         {
-            // attack target
-            rb.isKinematic = true;
-            return;
+            // double t = Time.realtimeSinceStartup;
+            AgentManager foundTarget = CheckEnnemy();
+            // Debug.Log("kd search = " + (Time.realtimeSinceStartup - t));
+
+            if ((!hasDestination || attackCommand) && foundTarget != null)
+            {
+                // attack target
+                Attack(foundTarget);
+                return;
+            }
         }
+
+        
 
         if (rb.isKinematic)
             rb.isKinematic = false;
@@ -158,12 +168,57 @@ public class AgentManager : MonoBehaviour
     // very intensive function, to be optimized later (quad tree, running every x seconds etc...)
     private AgentManager CheckEnnemy()
     {
-        Transform nearestEnemy = GameManager.instance.enemyUnits.FindClosest(transform.position);
+        if (GameManager.instance.enemyUnits.Count == 0 || GameManager.instance.allyUnits.Count == 0)
+            return null;
+
+        Transform nearestEnemy;
+
+        if (isAlly)
+            nearestEnemy = GameManager.instance.enemyUnits.FindClosest(transform.position);
+        else
+            nearestEnemy = GameManager.instance.allyUnits.FindClosest(transform.position);
 
         if (Vector3.Distance(new Vector3(transform.position.x, 0, transform.position.z), new Vector3(nearestEnemy.position.x, 0, nearestEnemy.position.z)) <= attackRange)
             return nearestEnemy.GetComponent<AgentManager>();
 
         return null;
+    }
+
+
+    private void Attack(AgentManager ag)
+    {
+        transform.LookAt(new Vector3(ag.transform.position.x, transform.position.y, ag.transform.position.z));
+        ag.GetAttacked(attackDamage);
+        attackCooldown = attackSpeed;
+        rb.isKinematic = true;
+    }
+
+
+    private void GetAttacked(int dmg)
+    {
+        int diff = dmg - armor;
+
+        if (diff <= 0)
+            return;
+
+        health -= diff;
+
+        if (health <= 0)
+        {
+            if (isAlly)
+                GameManager.instance.allyUnits.RemoveAll(new System.Predicate<int>(IsSameObj));
+            else
+                GameManager.instance.enemyUnits.RemoveAll(new System.Predicate<int>(IsSameObj));
+
+            UnsetDestination();
+            Destroy(gameObject);
+        }    
+    }
+
+
+    private bool IsSameObj(int objID)
+    {
+        return gameObject.GetInstanceID() == objID;
     }
 
 

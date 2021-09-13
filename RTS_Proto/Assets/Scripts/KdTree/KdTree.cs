@@ -117,16 +117,18 @@ public class KdTree<T> : IEnumerable<T>, IEnumerable where T : Component
     /// remove all objects that matches the given predicate
     /// </summary>
     /// <param name="match">lamda expression</param>
-    public void RemoveAll(Predicate<T> match)
+    public void RemoveAll(Predicate<int> match)
     {
         var list = new List<KdNode>(_getNodes());
-        list.RemoveAll(n => match(n.component));
+        list.RemoveAll(n => match(n.component.gameObject.GetInstanceID()));
         Clear();
+
         foreach (var node in list)
         {
             node._oldRef = null;
             node.next = null;
         }
+
         foreach (var node in list)
             _add(node);
     }
@@ -152,8 +154,6 @@ public class KdTree<T> : IEnumerable<T>, IEnumerable where T : Component
     /// </summary>
     public void Clear()
     {
-
-
         //rest for the garbage collection
         _root = null;
         _last = null;
