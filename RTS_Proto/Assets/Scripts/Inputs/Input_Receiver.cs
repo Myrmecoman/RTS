@@ -1,5 +1,6 @@
 using UnityEngine;
 
+
 public class Input_Receiver : MonoBehaviour
 {
     public CamController cam_controller;
