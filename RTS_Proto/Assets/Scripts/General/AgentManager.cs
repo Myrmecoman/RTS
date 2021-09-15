@@ -256,10 +256,13 @@ public class AgentManager : MonoBehaviour
 
     public void UnsetDestination()
     {
-        GameManager.instance.inUse[gridIndexe]--;
-        hasDestination = false;
-        follow = null;
-        attackCommand = false;
-        patrolCommand = true;
+        if (hasDestination)
+        {
+            GameManager.instance.inUse[gridIndexe]--;
+            follow = null;
+            hasDestination = false;
+            attackCommand = false;
+            patrolCommand = false;
+        }
     }
 }

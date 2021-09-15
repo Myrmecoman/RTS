@@ -64,17 +64,17 @@ public class CamController : MonoBehaviour
                 moveCommandSprite.transform.position = hit.point + new Vector3(0, 0.0001f, 0);
                 GameManager.instance.MoveCommand(SelectedDico.instance.selectedTable, moveCommandSprite.transform);
             }
-            if (hit.transform.gameObject.tag == "agent")
+            else if (hit.transform.gameObject.tag == "agent")
             {
                 hit.collider.GetComponent<AgentManager>().MoveTowardsSprite();
                 GameManager.instance.MoveCommand(SelectedDico.instance.selectedTable, hit.transform, true);
             }
-            if (hit.transform.gameObject.tag == "building")
+            else if (hit.transform.gameObject.tag == "building")
             {
                 hit.collider.GetComponent<BuildingManager>().MoveTowardsSprite();
                 GameManager.instance.MoveCommand(SelectedDico.instance.selectedTable, hit.transform);
             }
-            if (hit.transform.gameObject.tag == "resource")
+            else if (hit.transform.gameObject.tag == "resource")
             {
                 hit.collider.GetComponent<ResourceObject>().MoveTowardsSprite();
                 GameManager.instance.MoveCommand(SelectedDico.instance.selectedTable, hit.transform);

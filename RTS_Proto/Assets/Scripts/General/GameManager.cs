@@ -85,11 +85,16 @@ public class GameManager : MonoBehaviour
             {
                 inUse[i] = agents.Count;
                 grids[i].ChangeTarget(target);
+                Debug.Log(NbCurrentlyFree() + " set agents : " + agents.Count);
 
                 foreach (KeyValuePair<int, AgentManager> ag in agents)
                 {
                     ag.Value.UnsetDestination();
-                    ag.Value.AddDestination(grids[i], i, target);
+
+                    if (follow)
+                        ag.Value.AddDestination(grids[i], i, target);
+                    else
+                        ag.Value.AddDestination(grids[i], i);
                 }
 
                 return;
