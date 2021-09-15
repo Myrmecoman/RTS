@@ -25,6 +25,7 @@ public class AgentManager : MonoBehaviour
     [HideInInspector] public int gridIndexe;
     [HideInInspector] public bool hasDestination = false;
 
+    private bool holdPosition = false;
     private bool attackCommand = false;
     private bool patrolCommand = false;
     private double attackCooldown;
@@ -60,12 +61,10 @@ public class AgentManager : MonoBehaviour
                 Attack(foundTarget);
                 return;
             }
+
+            if (rb.isKinematic && !holdPosition)
+                rb.isKinematic = false;
         }
-
-        
-
-        if (rb.isKinematic)
-            rb.isKinematic = false;
 
         if (!hasDestination)
             return;
@@ -194,6 +193,14 @@ public class AgentManager : MonoBehaviour
     }
 
 
+    public void HoldPosition()
+    {
+        UnsetDestination();
+        holdPosition = true;
+        rb.isKinematic = true;
+    }
+
+
     private void GetAttacked(int dmg)
     {
         int diff = dmg - armor;
@@ -210,6 +217,7 @@ public class AgentManager : MonoBehaviour
             else
                 GameManager.instance.enemyUnits.RemoveAll(new System.Predicate<int>(IsSameObj));
 
+            SelectedDico.instance.DeslectDueToDestruction(GetInstanceID());
             UnsetDestination();
             Destroy(gameObject);
         }    
@@ -242,6 +250,9 @@ public class AgentManager : MonoBehaviour
 
     public void AddDestination(WorldGrid grid, int index, Transform follow = null, int action = 0 /* 1 = attack, 2 = patrol */)
     {
+        holdPosition = false;
+        if (rb.isKinematic)
+            rb.isKinematic = false;
         worldGrid = grid;
         gridIndexe = index;
         hasDestination = true;

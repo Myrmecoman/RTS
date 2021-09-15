@@ -69,7 +69,7 @@ public class GameManager : MonoBehaviour
         {
             for (float j = 0; j < 5; j++)
             {
-                GameObject obj = (GameObject)Instantiate(Resources.Load("Agent"), new Vector3(i * 1.5f, 0.5f, j * 1.5f + 50), Quaternion.identity);
+                GameObject obj = (GameObject)Instantiate(Resources.Load("Agent"), new Vector3(i * 1.5f, 0.5f, j * 1.5f + 30), Quaternion.identity);
                 obj.GetComponent<AgentManager>().isAlly = false;
                 enemyUnits.Add(obj.transform);
             }
@@ -85,7 +85,6 @@ public class GameManager : MonoBehaviour
             {
                 inUse[i] = agents.Count;
                 grids[i].ChangeTarget(target);
-                Debug.Log(NbCurrentlyFree() + " set agents : " + agents.Count);
 
                 foreach (KeyValuePair<int, AgentManager> ag in agents)
                 {

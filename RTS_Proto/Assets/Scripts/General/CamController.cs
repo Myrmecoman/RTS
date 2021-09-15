@@ -1,5 +1,7 @@
+using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
+
 
 public class CamController : MonoBehaviour
 {
@@ -42,6 +44,16 @@ public class CamController : MonoBehaviour
             transform.position.x + move.x * Time.deltaTime * speed,
             transform.position.y,
             transform.position.z + move.y * Time.deltaTime * speed);
+    }
+
+
+    public void HoldPosition()
+    {
+        if (SelectedDico.instance.selectedTable.Count == 0)
+            return;
+
+        foreach (KeyValuePair<int, AgentManager> ag in SelectedDico.instance.selectedTable)
+            ag.Value.HoldPosition();
     }
 
 

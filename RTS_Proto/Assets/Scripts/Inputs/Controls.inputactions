@@ -14,6 +14,14 @@
                     "interactions": ""
                 },
                 {
+                    "name": "HoldPosition",
+                    "type": "Button",
+                    "id": "af890c8d-f0d8-449a-8bcd-136f43b57422",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": ""
+                },
+                {
                     "name": "MoveCommand",
                     "type": "Button",
                     "id": "5e715d4e-f8a1-46e1-952c-0e73c5238ef2",
@@ -112,17 +120,6 @@
                 },
                 {
                     "name": "",
-                    "id": "1c6bffd9-3ed9-4157-b5db-512ab26cf599",
-                    "path": "<Mouse>/rightButton",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": "PC",
-                    "action": "MoveCommand",
-                    "isComposite": false,
-                    "isPartOfComposite": false
-                },
-                {
-                    "name": "",
                     "id": "b51fd4ac-70cf-4547-9ae0-5adb9c695630",
                     "path": "<Mouse>/scroll",
                     "interactions": "",
@@ -162,6 +159,28 @@
                     "processors": "",
                     "groups": "PC",
                     "action": "StackAction",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "1c6bffd9-3ed9-4157-b5db-512ab26cf599",
+                    "path": "<Mouse>/rightButton",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "PC",
+                    "action": "MoveCommand",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "3ff7ac75-8b40-4653-a47e-209b2e55040f",
+                    "path": "<Keyboard>/e",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "PC",
+                    "action": "HoldPosition",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }

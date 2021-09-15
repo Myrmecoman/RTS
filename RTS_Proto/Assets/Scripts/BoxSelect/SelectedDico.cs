@@ -37,6 +37,13 @@ public class SelectedDico : MonoBehaviour
     }
 
 
+    public void DeslectDueToDestruction(int id)
+    {
+        if (selectedTable.ContainsKey(id))
+            selectedTable.Remove(id);
+    }
+
+
     public void DeselectAll()
     {
         foreach(KeyValuePair<int, AgentManager> pair in selectedTable)
