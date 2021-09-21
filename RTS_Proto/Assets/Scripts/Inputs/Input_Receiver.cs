@@ -1,5 +1,5 @@
 using UnityEngine;
-
+using UnityEngine.InputSystem;
 
 public class Input_Receiver : MonoBehaviour
 {
@@ -37,5 +37,14 @@ public class Input_Receiver : MonoBehaviour
 
         controls.TopDownControls.StackAction.performed += _ => selection.StackActionHold = true;
         controls.TopDownControls.StackAction.canceled += _ => selection.StackActionHold = false;
+    }
+
+
+    private void Update()
+    {
+        if (Keyboard.current.anyKey.wasPressedThisFrame)
+        {
+
+        }
     }
 }
