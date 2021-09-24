@@ -9,12 +9,14 @@ public class CamController : MonoBehaviour
 
     public float speed = 10f;
     public GameObject moveCommandObj;
+    public GameObject attackCommandObj;
+    public GameObject patrolCommandObj;
 
     [HideInInspector] public Vector2 move;
     [HideInInspector] public bool HoldingStack = false;
 
     private Camera cam;
-    private GameObject moveCommandSprite = null;
+    private GameObject lastCommandSprite = null;
 
 
     private void Awake()
@@ -57,6 +59,81 @@ public class CamController : MonoBehaviour
     }
 
 
+    public void AttackCommand()
+    {
+        Debug.Log("Attacking");
+
+        if (SelectedDico.instance.selectedTable.Count == 0)
+            return;
+
+        Ray ray = cam.ScreenPointToRay(Mouse.current.position.ReadValue());
+        RaycastHit hit;
+        int layerMask = LayerMask.GetMask("ground", "building", "agent"); // cannot attack resource
+        if (Physics.Raycast(ray, out hit, 1000f, layerMask))
+        {
+            if (lastCommandSprite != null)
+                Destroy(lastCommandSprite);
+
+            if (hit.transform.gameObject.tag == "ground")
+            {
+                lastCommandSprite = Instantiate(attackCommandObj);
+                lastCommandSprite.transform.position = hit.point + new Vector3(0, 0.0001f, 0);
+                GameManager.instance.AttackCommand(SelectedDico.instance.selectedTable, lastCommandSprite.transform);
+            }
+            else if (hit.transform.gameObject.tag == "agent")
+            {
+                hit.collider.GetComponent<AgentManager>().MoveTowardsSprite();
+                GameManager.instance.AttackCommand(SelectedDico.instance.selectedTable, hit.transform, true);
+            }
+            else if (hit.transform.gameObject.tag == "building")
+            {
+                hit.collider.GetComponent<BuildingManager>().MoveTowardsSprite();
+                GameManager.instance.AttackCommand(SelectedDico.instance.selectedTable, hit.transform, true);
+            }
+            else if (hit.transform.gameObject.tag == "resource")
+            {
+                hit.collider.GetComponent<ResourceObject>().MoveTowardsSprite();
+                GameManager.instance.AttackCommand(SelectedDico.instance.selectedTable, hit.transform);
+            }
+        }
+    }
+
+
+    public void PatrolCommand()
+    {
+        Debug.Log("Patroling");
+
+        if (SelectedDico.instance.selectedTable.Count == 0)
+            return;
+
+        Ray ray = cam.ScreenPointToRay(Mouse.current.position.ReadValue());
+        RaycastHit hit;
+        int layerMask = LayerMask.GetMask("ground", "building", "resource"); // cannot patrol on an agent
+        if (Physics.Raycast(ray, out hit, 1000f, layerMask))
+        {
+            if (lastCommandSprite != null)
+                Destroy(lastCommandSprite);
+
+            if (hit.transform.gameObject.tag == "ground")
+            {
+                lastCommandSprite = Instantiate(patrolCommandObj);
+                lastCommandSprite.transform.position = hit.point + new Vector3(0, 0.0001f, 0);
+                GameManager.instance.PatrolCommand(SelectedDico.instance.selectedTable, lastCommandSprite.transform);
+            }
+            else if (hit.transform.gameObject.tag == "building")
+            {
+                hit.collider.GetComponent<BuildingManager>().MoveTowardsSprite();
+                GameManager.instance.PatrolCommand(SelectedDico.instance.selectedTable, hit.transform);
+            }
+            else if (hit.transform.gameObject.tag == "resource")
+            {
+                hit.collider.GetComponent<ResourceObject>().MoveTowardsSprite();
+                GameManager.instance.PatrolCommand(SelectedDico.instance.selectedTable, hit.transform);
+            }
+        }
+    }
+
+
     public void MoveCommand()
     {
         if (SelectedDico.instance.selectedTable.Count == 0)
@@ -67,14 +144,14 @@ public class CamController : MonoBehaviour
         int layerMask = LayerMask.GetMask("ground", "building", "agent", "resource");
         if (Physics.Raycast(ray, out hit, 1000f, layerMask))
         {
-            if (moveCommandSprite != null)
-                Destroy(moveCommandSprite);
+            if (lastCommandSprite != null)
+                Destroy(lastCommandSprite);
 
             if (hit.transform.gameObject.tag == "ground")
             {
-                moveCommandSprite = Instantiate(moveCommandObj);
-                moveCommandSprite.transform.position = hit.point + new Vector3(0, 0.0001f, 0);
-                GameManager.instance.MoveCommand(SelectedDico.instance.selectedTable, moveCommandSprite.transform);
+                lastCommandSprite = Instantiate(moveCommandObj);
+                lastCommandSprite.transform.position = hit.point + new Vector3(0, 0.0001f, 0);
+                GameManager.instance.MoveCommand(SelectedDico.instance.selectedTable, lastCommandSprite.transform);
             }
             else if (hit.transform.gameObject.tag == "agent")
             {

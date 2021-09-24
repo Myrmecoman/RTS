@@ -35,6 +35,22 @@ public class @Controls : IInputActionCollection, IDisposable
                     ""interactions"": """"
                 },
                 {
+                    ""name"": ""Attack"",
+                    ""type"": ""Button"",
+                    ""id"": ""f4587ae0-39d1-4771-af25-68b1f7bcc516"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """"
+                },
+                {
+                    ""name"": ""Patrol"",
+                    ""type"": ""Button"",
+                    ""id"": ""818c8cc5-970f-481d-8790-ef394517edf4"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """"
+                },
+                {
                     ""name"": ""MoveCommand"",
                     ""type"": ""Button"",
                     ""id"": ""5e715d4e-f8a1-46e1-952c-0e73c5238ef2"",
@@ -47,14 +63,6 @@ public class @Controls : IInputActionCollection, IDisposable
                     ""type"": ""Value"",
                     ""id"": ""8f2c1f22-07d7-4d64-8bd0-29abb28370bd"",
                     ""expectedControlType"": ""Vector2"",
-                    ""processors"": """",
-                    ""interactions"": """"
-                },
-                {
-                    ""name"": ""Select"",
-                    ""type"": ""Button"",
-                    ""id"": ""5f35377c-72c5-4f66-8af1-2bbe85b5426d"",
-                    ""expectedControlType"": ""Button"",
                     ""processors"": """",
                     ""interactions"": """"
                 },
@@ -144,17 +152,6 @@ public class @Controls : IInputActionCollection, IDisposable
                 },
                 {
                     ""name"": """",
-                    ""id"": ""a8d7d8c6-9696-4679-8dde-85d310b63461"",
-                    ""path"": ""<Mouse>/leftButton"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": ""PC"",
-                    ""action"": ""Select"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": false
-                },
-                {
-                    ""name"": """",
                     ""id"": ""4928bfb2-f54f-450d-9651-6afef81b59ae"",
                     ""path"": ""<Mouse>/leftButton"",
                     ""interactions"": ""Hold"",
@@ -196,6 +193,28 @@ public class @Controls : IInputActionCollection, IDisposable
                     ""action"": ""HoldPosition"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""62879f76-4dee-4992-8f32-1c9ac748698c"",
+                    ""path"": ""<Keyboard>/a"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""PC"",
+                    ""action"": ""Attack"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""69ce3bc4-2495-4683-b772-bc1ee77c6f41"",
+                    ""path"": ""<Keyboard>/r"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""PC"",
+                    ""action"": ""Patrol"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
                 }
             ]
         }
@@ -223,9 +242,10 @@ public class @Controls : IInputActionCollection, IDisposable
         m_TopDownControls = asset.FindActionMap("TopDownControls", throwIfNotFound: true);
         m_TopDownControls_Move = m_TopDownControls.FindAction("Move", throwIfNotFound: true);
         m_TopDownControls_HoldPosition = m_TopDownControls.FindAction("HoldPosition", throwIfNotFound: true);
+        m_TopDownControls_Attack = m_TopDownControls.FindAction("Attack", throwIfNotFound: true);
+        m_TopDownControls_Patrol = m_TopDownControls.FindAction("Patrol", throwIfNotFound: true);
         m_TopDownControls_MoveCommand = m_TopDownControls.FindAction("MoveCommand", throwIfNotFound: true);
         m_TopDownControls_Zoom = m_TopDownControls.FindAction("Zoom", throwIfNotFound: true);
-        m_TopDownControls_Select = m_TopDownControls.FindAction("Select", throwIfNotFound: true);
         m_TopDownControls_BoxSelect = m_TopDownControls.FindAction("BoxSelect", throwIfNotFound: true);
         m_TopDownControls_StackAction = m_TopDownControls.FindAction("StackAction", throwIfNotFound: true);
     }
@@ -279,9 +299,10 @@ public class @Controls : IInputActionCollection, IDisposable
     private ITopDownControlsActions m_TopDownControlsActionsCallbackInterface;
     private readonly InputAction m_TopDownControls_Move;
     private readonly InputAction m_TopDownControls_HoldPosition;
+    private readonly InputAction m_TopDownControls_Attack;
+    private readonly InputAction m_TopDownControls_Patrol;
     private readonly InputAction m_TopDownControls_MoveCommand;
     private readonly InputAction m_TopDownControls_Zoom;
-    private readonly InputAction m_TopDownControls_Select;
     private readonly InputAction m_TopDownControls_BoxSelect;
     private readonly InputAction m_TopDownControls_StackAction;
     public struct TopDownControlsActions
@@ -290,9 +311,10 @@ public class @Controls : IInputActionCollection, IDisposable
         public TopDownControlsActions(@Controls wrapper) { m_Wrapper = wrapper; }
         public InputAction @Move => m_Wrapper.m_TopDownControls_Move;
         public InputAction @HoldPosition => m_Wrapper.m_TopDownControls_HoldPosition;
+        public InputAction @Attack => m_Wrapper.m_TopDownControls_Attack;
+        public InputAction @Patrol => m_Wrapper.m_TopDownControls_Patrol;
         public InputAction @MoveCommand => m_Wrapper.m_TopDownControls_MoveCommand;
         public InputAction @Zoom => m_Wrapper.m_TopDownControls_Zoom;
-        public InputAction @Select => m_Wrapper.m_TopDownControls_Select;
         public InputAction @BoxSelect => m_Wrapper.m_TopDownControls_BoxSelect;
         public InputAction @StackAction => m_Wrapper.m_TopDownControls_StackAction;
         public InputActionMap Get() { return m_Wrapper.m_TopDownControls; }
@@ -310,15 +332,18 @@ public class @Controls : IInputActionCollection, IDisposable
                 @HoldPosition.started -= m_Wrapper.m_TopDownControlsActionsCallbackInterface.OnHoldPosition;
                 @HoldPosition.performed -= m_Wrapper.m_TopDownControlsActionsCallbackInterface.OnHoldPosition;
                 @HoldPosition.canceled -= m_Wrapper.m_TopDownControlsActionsCallbackInterface.OnHoldPosition;
+                @Attack.started -= m_Wrapper.m_TopDownControlsActionsCallbackInterface.OnAttack;
+                @Attack.performed -= m_Wrapper.m_TopDownControlsActionsCallbackInterface.OnAttack;
+                @Attack.canceled -= m_Wrapper.m_TopDownControlsActionsCallbackInterface.OnAttack;
+                @Patrol.started -= m_Wrapper.m_TopDownControlsActionsCallbackInterface.OnPatrol;
+                @Patrol.performed -= m_Wrapper.m_TopDownControlsActionsCallbackInterface.OnPatrol;
+                @Patrol.canceled -= m_Wrapper.m_TopDownControlsActionsCallbackInterface.OnPatrol;
                 @MoveCommand.started -= m_Wrapper.m_TopDownControlsActionsCallbackInterface.OnMoveCommand;
                 @MoveCommand.performed -= m_Wrapper.m_TopDownControlsActionsCallbackInterface.OnMoveCommand;
                 @MoveCommand.canceled -= m_Wrapper.m_TopDownControlsActionsCallbackInterface.OnMoveCommand;
                 @Zoom.started -= m_Wrapper.m_TopDownControlsActionsCallbackInterface.OnZoom;
                 @Zoom.performed -= m_Wrapper.m_TopDownControlsActionsCallbackInterface.OnZoom;
                 @Zoom.canceled -= m_Wrapper.m_TopDownControlsActionsCallbackInterface.OnZoom;
-                @Select.started -= m_Wrapper.m_TopDownControlsActionsCallbackInterface.OnSelect;
-                @Select.performed -= m_Wrapper.m_TopDownControlsActionsCallbackInterface.OnSelect;
-                @Select.canceled -= m_Wrapper.m_TopDownControlsActionsCallbackInterface.OnSelect;
                 @BoxSelect.started -= m_Wrapper.m_TopDownControlsActionsCallbackInterface.OnBoxSelect;
                 @BoxSelect.performed -= m_Wrapper.m_TopDownControlsActionsCallbackInterface.OnBoxSelect;
                 @BoxSelect.canceled -= m_Wrapper.m_TopDownControlsActionsCallbackInterface.OnBoxSelect;
@@ -335,15 +360,18 @@ public class @Controls : IInputActionCollection, IDisposable
                 @HoldPosition.started += instance.OnHoldPosition;
                 @HoldPosition.performed += instance.OnHoldPosition;
                 @HoldPosition.canceled += instance.OnHoldPosition;
+                @Attack.started += instance.OnAttack;
+                @Attack.performed += instance.OnAttack;
+                @Attack.canceled += instance.OnAttack;
+                @Patrol.started += instance.OnPatrol;
+                @Patrol.performed += instance.OnPatrol;
+                @Patrol.canceled += instance.OnPatrol;
                 @MoveCommand.started += instance.OnMoveCommand;
                 @MoveCommand.performed += instance.OnMoveCommand;
                 @MoveCommand.canceled += instance.OnMoveCommand;
                 @Zoom.started += instance.OnZoom;
                 @Zoom.performed += instance.OnZoom;
                 @Zoom.canceled += instance.OnZoom;
-                @Select.started += instance.OnSelect;
-                @Select.performed += instance.OnSelect;
-                @Select.canceled += instance.OnSelect;
                 @BoxSelect.started += instance.OnBoxSelect;
                 @BoxSelect.performed += instance.OnBoxSelect;
                 @BoxSelect.canceled += instance.OnBoxSelect;
@@ -367,9 +395,10 @@ public class @Controls : IInputActionCollection, IDisposable
     {
         void OnMove(InputAction.CallbackContext context);
         void OnHoldPosition(InputAction.CallbackContext context);
+        void OnAttack(InputAction.CallbackContext context);
+        void OnPatrol(InputAction.CallbackContext context);
         void OnMoveCommand(InputAction.CallbackContext context);
         void OnZoom(InputAction.CallbackContext context);
-        void OnSelect(InputAction.CallbackContext context);
         void OnBoxSelect(InputAction.CallbackContext context);
         void OnStackAction(InputAction.CallbackContext context);
     }

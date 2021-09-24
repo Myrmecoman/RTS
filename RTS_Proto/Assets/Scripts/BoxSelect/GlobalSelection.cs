@@ -27,6 +27,8 @@ public class GlobalSelection : MonoBehaviour
     private Vector3[] verts;
     private Vector3[] vecs;
 
+    private int nbAddedBoxing = 0;
+
 
     // Start is called before the first frame update
     void Start()
@@ -48,7 +50,7 @@ public class GlobalSelection : MonoBehaviour
         //2. while left mouse button held
         if (Mouse.current.leftButton.isPressed)
         {
-            if((p1 - new Vector3(Mouse.current.position.ReadValue().x, Mouse.current.position.ReadValue().y, 0)).magnitude > 40)
+            if((p1 - new Vector3(Mouse.current.position.ReadValue().x, Mouse.current.position.ReadValue().y, 0)).magnitude > 20 && Input_Receiver.instance.lastKeyPressed == '\0')
             {
                 dragSelect = true;
             }
@@ -59,34 +61,38 @@ public class GlobalSelection : MonoBehaviour
         {
             if(dragSelect == false) //single select
             {
+                if (Input_Receiver.instance.lastKeyPressed != '\0')
+                {
+                    Input_Receiver.instance.ChooseAction();
+                    return;
+                }
+
                 Ray ray = Camera.main.ScreenPointToRay(p1);
 
                 int layerMask = LayerMask.GetMask("agent", "building");
                 if (Physics.Raycast(ray,out hit, 1000f, layerMask))
                 {
-                    if (StackActionHold) //inclusive select
+                    AgentManager hitAgent = hit.transform.GetComponent<AgentManager>();
+                    BuildingManager hitBuilding = hit.transform.GetComponent<BuildingManager>();
+                    if ((hitAgent != null && hitAgent.isAlly) || (hitBuilding != null && hitBuilding.isAlly))
                     {
-                        selected_table.AddSelected(hit.transform.GetComponent<AgentManager>());
-                    }
-                    else //exclusive selected
-                    {
-                        selected_table.DeselectAll();
-                        selected_table.AddSelected(hit.transform.GetComponent<AgentManager>());
+                        if (StackActionHold) //inclusive select
+                        {
+                            selected_table.AddSelected(hit.transform.GetComponent<AgentManager>());
+                        }
+                        else //exclusive selected
+                        {
+                            selected_table.DeselectAll();
+                            selected_table.AddSelected(hit.transform.GetComponent<AgentManager>());
+                        }
                     }
                 }
                 else //if we didnt hit something
                 {
-                    if (StackActionHold)
-                    {
-                        //do nothing
-                    }
-                    else
-                    {
-                        selected_table.DeselectAll();
-                    }
+                    //do nothing
                 }
             }
-            else //marquee select
+            else //box select
             {
                 verts = new Vector3[4];
                 vecs = new Vector3[4];
@@ -115,7 +121,7 @@ public class GlobalSelection : MonoBehaviour
                 selectionBox.convex = true;
                 selectionBox.isTrigger = true;
 
-                if (!StackActionHold)
+                if (!StackActionHold && nbAddedBoxing != 0)
                 {
                     selected_table.DeselectAll();
                 }
@@ -125,7 +131,7 @@ public class GlobalSelection : MonoBehaviour
             }//end marquee select
 
             dragSelect = false;
-
+            nbAddedBoxing = 0;
         }
        
     }
@@ -218,7 +224,13 @@ public class GlobalSelection : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        if (other.tag == "agent" || other.tag == "building")
+        AgentManager hitAgent = other.transform.GetComponent<AgentManager>();
+        BuildingManager hitBuilding = other.transform.GetComponent<BuildingManager>();
+
+        if ((hitAgent != null && hitAgent.isAlly) || (hitBuilding != null && hitBuilding.isAlly))
+        {
             selected_table.AddSelected(other.GetComponent<AgentManager>());
+            nbAddedBoxing++;
+        }
     }
 }

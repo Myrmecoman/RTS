@@ -3,8 +3,12 @@ using UnityEngine.InputSystem;
 
 public class Input_Receiver : MonoBehaviour
 {
+    public static Input_Receiver instance;
+
     public CamController cam_controller;
     public GlobalSelection selection;
+
+    [HideInInspector] public char lastKeyPressed = '\0';
 
     private Controls controls;
 
@@ -24,6 +28,12 @@ public class Input_Receiver : MonoBehaviour
 
     private void Awake()
     {
+        // make this a singleton
+        if (instance == null)
+            instance = this;
+        else
+            Destroy(gameObject);
+
         controls = new Controls();
 
         controls.TopDownControls.Move.performed += _ => cam_controller.move = _.ReadValue<Vector2>();
@@ -44,7 +54,33 @@ public class Input_Receiver : MonoBehaviour
     {
         if (Keyboard.current.anyKey.wasPressedThisFrame)
         {
-
+            if (controls.TopDownControls.Attack.triggered && SelectedDico.instance.selectedTable.Count != 0)
+            {
+                lastKeyPressed = 'A'; // A is for attack
+                Debug.Log("Attack pressed");
+            }
+            else if (controls.TopDownControls.Patrol.triggered && SelectedDico.instance.selectedTable.Count != 0)
+            {
+                lastKeyPressed = 'R'; // R is for patrol
+                Debug.Log("Patrol pressed");
+            }
+            else
+                lastKeyPressed = '\0';
         }
+    }
+
+
+    public void ChooseAction()
+    {
+        if (lastKeyPressed == '\0')
+            Debug.LogError("Error last key is \\0");
+        else if (lastKeyPressed == 'A')
+            cam_controller.AttackCommand();
+        else if (lastKeyPressed == 'R')
+            cam_controller.PatrolCommand();
+        else
+            Debug.LogError("Error on last key pressed: " + lastKeyPressed);
+
+        lastKeyPressed = '\0';
     }
 }

@@ -22,6 +22,22 @@
                     "interactions": ""
                 },
                 {
+                    "name": "Attack",
+                    "type": "Button",
+                    "id": "f4587ae0-39d1-4771-af25-68b1f7bcc516",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": ""
+                },
+                {
+                    "name": "Patrol",
+                    "type": "Button",
+                    "id": "818c8cc5-970f-481d-8790-ef394517edf4",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": ""
+                },
+                {
                     "name": "MoveCommand",
                     "type": "Button",
                     "id": "5e715d4e-f8a1-46e1-952c-0e73c5238ef2",
@@ -34,14 +50,6 @@
                     "type": "Value",
                     "id": "8f2c1f22-07d7-4d64-8bd0-29abb28370bd",
                     "expectedControlType": "Vector2",
-                    "processors": "",
-                    "interactions": ""
-                },
-                {
-                    "name": "Select",
-                    "type": "Button",
-                    "id": "5f35377c-72c5-4f66-8af1-2bbe85b5426d",
-                    "expectedControlType": "Button",
                     "processors": "",
                     "interactions": ""
                 },
@@ -131,17 +139,6 @@
                 },
                 {
                     "name": "",
-                    "id": "a8d7d8c6-9696-4679-8dde-85d310b63461",
-                    "path": "<Mouse>/leftButton",
-                    "interactions": "",
-                    "processors": "",
-                    "groups": "PC",
-                    "action": "Select",
-                    "isComposite": false,
-                    "isPartOfComposite": false
-                },
-                {
-                    "name": "",
                     "id": "4928bfb2-f54f-450d-9651-6afef81b59ae",
                     "path": "<Mouse>/leftButton",
                     "interactions": "Hold",
@@ -181,6 +178,28 @@
                     "processors": "",
                     "groups": "PC",
                     "action": "HoldPosition",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "62879f76-4dee-4992-8f32-1c9ac748698c",
+                    "path": "<Keyboard>/a",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "PC",
+                    "action": "Attack",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "69ce3bc4-2495-4683-b772-bc1ee77c6f41",
+                    "path": "<Keyboard>/r",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "PC",
+                    "action": "Patrol",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }

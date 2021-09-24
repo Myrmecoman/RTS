@@ -56,24 +56,75 @@ public class GameManager : MonoBehaviour
     private void Start()
     {
         // For test purposes
-        for (float i = 0; i < 10; i++)
+        for (float i = 0; i < 15; i++)
         {
-            for (float j = 0; j < 10; j++)
+            for (float j = 0; j < 15; j++)
             {
                 GameObject obj = (GameObject) Instantiate(Resources.Load("Agent"), new Vector3(i * 1.5f, 0.5f, j * 1.5f), Quaternion.identity);
                 allyUnits.Add(obj.transform);
             }
         }
 
-        for (float i = 0; i < 5; i++)
+        for (float i = 0; i < 15; i++)
         {
-            for (float j = 0; j < 5; j++)
+            for (float j = 0; j < 15; j++)
             {
                 GameObject obj = (GameObject)Instantiate(Resources.Load("Agent"), new Vector3(i * 1.5f, 0.5f, j * 1.5f + 30), Quaternion.identity);
                 obj.GetComponent<AgentManager>().isAlly = false;
                 enemyUnits.Add(obj.transform);
             }
         }
+    }
+
+
+    public void AttackCommand(Dictionary<int, AgentManager> agents, Transform target, bool focus = false)
+    {
+        for (int i = 0; i < arraysSize; i++)
+        {
+            if (inUse[i] == 0)
+            {
+                inUse[i] = agents.Count;
+                grids[i].ChangeTarget(target);
+
+                foreach (KeyValuePair<int, AgentManager> ag in agents)
+                {
+                    ag.Value.UnsetDestination();
+
+                    if (focus)
+                        ag.Value.AddDestination(grids[i], i, target, 1);
+                    else
+                        ag.Value.AddDestination(grids[i], i, null, 1);
+                }
+
+                return;
+            }
+        }
+
+        Debug.Log("All grids already in use");
+    }
+
+
+    public void PatrolCommand(Dictionary<int, AgentManager> agents, Transform target)
+    {
+        for (int i = 0; i < arraysSize; i++)
+        {
+            if (inUse[i] == 0)
+            {
+                inUse[i] = agents.Count;
+                grids[i].ChangeTarget(target);
+
+                foreach (KeyValuePair<int, AgentManager> ag in agents)
+                {
+                    ag.Value.UnsetDestination();
+
+                    ag.Value.AddDestination(grids[i], i, null, 2);
+                }
+
+                return;
+            }
+        }
+
+        Debug.Log("All grids already in use");
     }
 
 

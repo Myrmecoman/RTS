@@ -10,6 +10,8 @@ public class BuildingManager : MonoBehaviour
     public float[] unitsBuildTime;
     public bool isBuilding = false;
 
+    [HideInInspector] public bool isAlly = true;
+
 
     private void Start()
     {

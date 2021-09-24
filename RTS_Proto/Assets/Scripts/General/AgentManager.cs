@@ -49,22 +49,22 @@ public class AgentManager : MonoBehaviour
         if (attackCooldown > 0)
             attackCooldown -= Time.deltaTime;
 
-        if (attackCooldown <= 0)
+        AgentManager foundTarget = CheckEnnemy();
+
+        if (attackCooldown <= 0 && (!hasDestination || attackCommand || holdPosition) && foundTarget != null)
         {
-            // double t = Time.realtimeSinceStartup;
-            AgentManager foundTarget = CheckEnnemy();
-            // Debug.Log("kd search = " + (Time.realtimeSinceStartup - t));
-
-            if ((!hasDestination || attackCommand) && foundTarget != null)
-            {
-                // attack target
-                Attack(foundTarget);
-                return;
-            }
-
-            if (rb.isKinematic && !holdPosition)
-                rb.isKinematic = false;
+            // attack target
+            Attack(foundTarget);
+            return;
         }
+
+        if ((attackCommand || holdPosition) && foundTarget != null)
+        {
+            rb.isKinematic = true;
+            return;
+        }
+        else
+            rb.isKinematic = false;
 
         if (!hasDestination)
             return;
@@ -164,7 +164,7 @@ public class AgentManager : MonoBehaviour
     }
 
 
-    // very intensive function, to be optimized later (quad tree, running every x seconds etc...)
+    // very intensive function (could be run every x seconds)
     private AgentManager CheckEnnemy()
     {
         if (GameManager.instance.enemyUnits.Count == 0 || GameManager.instance.allyUnits.Count == 0)
@@ -189,7 +189,6 @@ public class AgentManager : MonoBehaviour
         transform.LookAt(new Vector3(ag.transform.position.x, transform.position.y, ag.transform.position.z));
         ag.GetAttacked(attackDamage);
         attackCooldown = attackSpeed;
-        rb.isKinematic = true;
     }
 
 
@@ -260,8 +259,13 @@ public class AgentManager : MonoBehaviour
 
         if (action == 1 || action == 2)
             attackCommand = true;
+        else
+            attackCommand = false;
+
         if (action == 2)
             patrolCommand = true;
+        else
+            patrolCommand = false;
     }
 
 
