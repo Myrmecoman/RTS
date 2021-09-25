@@ -88,9 +88,8 @@ public class AgentManager : MonoBehaviour
     private void AdjustHeight()
     {
         RaycastHit verifyHeight;
-        // collide against everything except layer 7
-        int layerMaskHeight = 1 << 7;
-        layerMaskHeight = ~layerMaskHeight;
+        // collide against ground only
+        int layerMaskHeight = LayerMask.GetMask("ground");
         if (Physics.Raycast(transform.position, Vector3.down, out verifyHeight, 1000f, layerMaskHeight))
         {
             if (verifyHeight.distance > 0.01f)

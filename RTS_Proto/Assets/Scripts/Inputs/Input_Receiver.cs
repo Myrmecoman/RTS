@@ -36,9 +36,6 @@ public class Input_Receiver : MonoBehaviour
 
         controls = new Controls();
 
-        controls.TopDownControls.Move.performed += _ => cam_controller.move = _.ReadValue<Vector2>();
-        controls.TopDownControls.Move.canceled += _ => cam_controller.move = Vector2.zero;
-
         controls.TopDownControls.Zoom.performed += _ => cam_controller.Zoom(_.ReadValue<Vector2>());
 
         controls.TopDownControls.HoldPosition.performed += _ => cam_controller.HoldPosition();

@@ -19,14 +19,6 @@ public class @Controls : IInputActionCollection, IDisposable
             ""id"": ""8ee366fe-8ed7-42ce-af2f-51a0f9fbb646"",
             ""actions"": [
                 {
-                    ""name"": ""Move"",
-                    ""type"": ""Value"",
-                    ""id"": ""a1f851b5-73b6-47fb-bbd6-313fd2aa9e98"",
-                    ""expectedControlType"": ""Dpad"",
-                    ""processors"": """",
-                    ""interactions"": """"
-                },
-                {
                     ""name"": ""HoldPosition"",
                     ""type"": ""Button"",
                     ""id"": ""af890c8d-f0d8-449a-8bcd-136f43b57422"",
@@ -84,61 +76,6 @@ public class @Controls : IInputActionCollection, IDisposable
                 }
             ],
             ""bindings"": [
-                {
-                    ""name"": ""Arrows"",
-                    ""id"": ""4b1242f3-09a6-49f1-8b16-e88ef5c8b09e"",
-                    ""path"": ""2DVector"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": """",
-                    ""action"": ""Move"",
-                    ""isComposite"": true,
-                    ""isPartOfComposite"": false
-                },
-                {
-                    ""name"": ""up"",
-                    ""id"": ""4f1b1163-d5f9-48ba-a555-e680b6e8af85"",
-                    ""path"": ""<Keyboard>/upArrow"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": ""PC"",
-                    ""action"": ""Move"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": true
-                },
-                {
-                    ""name"": ""down"",
-                    ""id"": ""e6e5830a-bca6-48ca-ab2b-389c3ab713d0"",
-                    ""path"": ""<Keyboard>/downArrow"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": ""PC"",
-                    ""action"": ""Move"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": true
-                },
-                {
-                    ""name"": ""left"",
-                    ""id"": ""42ae12ec-9e0a-4810-8259-876ee1a63e74"",
-                    ""path"": ""<Keyboard>/leftArrow"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": ""PC"",
-                    ""action"": ""Move"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": true
-                },
-                {
-                    ""name"": ""right"",
-                    ""id"": ""6d628367-2d0b-4216-be30-27a8b4d82aaa"",
-                    ""path"": ""<Keyboard>/rightArrow"",
-                    ""interactions"": """",
-                    ""processors"": """",
-                    ""groups"": ""PC"",
-                    ""action"": ""Move"",
-                    ""isComposite"": false,
-                    ""isPartOfComposite"": true
-                },
                 {
                     ""name"": """",
                     ""id"": ""b51fd4ac-70cf-4547-9ae0-5adb9c695630"",
@@ -240,7 +177,6 @@ public class @Controls : IInputActionCollection, IDisposable
 }");
         // TopDownControls
         m_TopDownControls = asset.FindActionMap("TopDownControls", throwIfNotFound: true);
-        m_TopDownControls_Move = m_TopDownControls.FindAction("Move", throwIfNotFound: true);
         m_TopDownControls_HoldPosition = m_TopDownControls.FindAction("HoldPosition", throwIfNotFound: true);
         m_TopDownControls_Attack = m_TopDownControls.FindAction("Attack", throwIfNotFound: true);
         m_TopDownControls_Patrol = m_TopDownControls.FindAction("Patrol", throwIfNotFound: true);
@@ -297,7 +233,6 @@ public class @Controls : IInputActionCollection, IDisposable
     // TopDownControls
     private readonly InputActionMap m_TopDownControls;
     private ITopDownControlsActions m_TopDownControlsActionsCallbackInterface;
-    private readonly InputAction m_TopDownControls_Move;
     private readonly InputAction m_TopDownControls_HoldPosition;
     private readonly InputAction m_TopDownControls_Attack;
     private readonly InputAction m_TopDownControls_Patrol;
@@ -309,7 +244,6 @@ public class @Controls : IInputActionCollection, IDisposable
     {
         private @Controls m_Wrapper;
         public TopDownControlsActions(@Controls wrapper) { m_Wrapper = wrapper; }
-        public InputAction @Move => m_Wrapper.m_TopDownControls_Move;
         public InputAction @HoldPosition => m_Wrapper.m_TopDownControls_HoldPosition;
         public InputAction @Attack => m_Wrapper.m_TopDownControls_Attack;
         public InputAction @Patrol => m_Wrapper.m_TopDownControls_Patrol;
@@ -326,9 +260,6 @@ public class @Controls : IInputActionCollection, IDisposable
         {
             if (m_Wrapper.m_TopDownControlsActionsCallbackInterface != null)
             {
-                @Move.started -= m_Wrapper.m_TopDownControlsActionsCallbackInterface.OnMove;
-                @Move.performed -= m_Wrapper.m_TopDownControlsActionsCallbackInterface.OnMove;
-                @Move.canceled -= m_Wrapper.m_TopDownControlsActionsCallbackInterface.OnMove;
                 @HoldPosition.started -= m_Wrapper.m_TopDownControlsActionsCallbackInterface.OnHoldPosition;
                 @HoldPosition.performed -= m_Wrapper.m_TopDownControlsActionsCallbackInterface.OnHoldPosition;
                 @HoldPosition.canceled -= m_Wrapper.m_TopDownControlsActionsCallbackInterface.OnHoldPosition;
@@ -354,9 +285,6 @@ public class @Controls : IInputActionCollection, IDisposable
             m_Wrapper.m_TopDownControlsActionsCallbackInterface = instance;
             if (instance != null)
             {
-                @Move.started += instance.OnMove;
-                @Move.performed += instance.OnMove;
-                @Move.canceled += instance.OnMove;
                 @HoldPosition.started += instance.OnHoldPosition;
                 @HoldPosition.performed += instance.OnHoldPosition;
                 @HoldPosition.canceled += instance.OnHoldPosition;
@@ -393,7 +321,6 @@ public class @Controls : IInputActionCollection, IDisposable
     }
     public interface ITopDownControlsActions
     {
-        void OnMove(InputAction.CallbackContext context);
         void OnHoldPosition(InputAction.CallbackContext context);
         void OnAttack(InputAction.CallbackContext context);
         void OnPatrol(InputAction.CallbackContext context);

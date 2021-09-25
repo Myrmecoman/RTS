@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using UnityEditor;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -12,7 +13,6 @@ public class CamController : MonoBehaviour
     public GameObject attackCommandObj;
     public GameObject patrolCommandObj;
 
-    [HideInInspector] public Vector2 move;
     [HideInInspector] public bool HoldingStack = false;
 
     private Camera cam;
@@ -34,7 +34,7 @@ public class CamController : MonoBehaviour
     {
         cam = GetComponent<Camera>();
         Cursor.visible = true;
-        Cursor.lockState = CursorLockMode.None;
+        Cursor.lockState = CursorLockMode.Confined;
         UpdateHeight();
     }
 
@@ -42,6 +42,8 @@ public class CamController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        Vector2 move = MoveCam();
+
         transform.position = new Vector3(
             transform.position.x + move.x * Time.deltaTime * speed,
             transform.position.y,
@@ -186,5 +188,65 @@ public class CamController : MonoBehaviour
     private void UpdateHeight()
     {
         transform.eulerAngles = new Vector3(45 + (transform.position.y - 10), transform.eulerAngles.y, transform.eulerAngles.z);
+    }
+
+    public Vector2 MoveCam()
+    {
+        Vector2 keyArrows = Vector2.zero;
+        if (Keyboard.current.leftArrowKey.isPressed)
+            keyArrows.x = -1;
+        if (Keyboard.current.rightArrowKey.isPressed)
+            keyArrows.x = 1;
+        if (Keyboard.current.downArrowKey.isPressed)
+            keyArrows.y = -1;
+        if (Keyboard.current.upArrowKey.isPressed)
+            keyArrows.y = 1;
+
+        keyArrows.Normalize();
+
+        if (keyArrows != Vector2.zero)
+            return keyArrows;
+
+        Vector2 mousePos = Mouse.current.position.ReadValue();
+        Vector2 mouseVector = Vector2.zero;
+
+#if UNITY_EDITOR
+        if (mousePos.x <= 0)
+        {
+            mouseVector.Set(mouseVector.x - 1, mouseVector.y);
+        }
+        if (mousePos.y <= 1)
+        {
+            mouseVector.Set(mouseVector.x, mouseVector.y - 1);
+        }
+        if (mousePos.x >= Handles.GetMainGameViewSize().x - 1)
+        {
+            mouseVector.Set(mouseVector.x + 1, mouseVector.y);
+        }
+        if (mousePos.y >= Handles.GetMainGameViewSize().y - 1)
+        {
+            mouseVector.Set(mouseVector.x, mouseVector.y + 1);
+        }
+#else
+        if (mousePos.x <= 0)
+        {
+            mouseVector.Set(mouseVector.x - 1, mouseVector.y);
+        }
+        if (mousePos.y <= 0)
+        {
+            mouseVector.Set(mouseVector.x, mouseVector.y - 1);
+        }
+        if (mousePos.x >= Screen.width - 1)
+        {
+            mouseVector.Set(mouseVector.x + 1, mouseVector.y);
+        }
+        if (mousePos.y >= Screen.height - 1)
+        {
+            mouseVector.Set(mouseVector.x, mouseVector.y + 1);
+        }
+#endif
+
+        mouseVector.Normalize();
+        return mouseVector;
     }
 }
