@@ -2,4 +2,3 @@ There is a bug where placing a building while computing path will fail.
 
 Implem patrol.
 Implem fast idle state.
-Move screen when mouse on border.

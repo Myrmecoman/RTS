@@ -360,6 +360,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   cam_controller: {fileID: 963194230}
   selection: {fileID: 353563226}
+  lastKeyPressed: 0
 --- !u!114 &353563229
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1030,7 +1031,6 @@ MonoBehaviour:
   moveCommandObj: {fileID: 6996756979080215270, guid: 07789293593921d4abc333ded639ab75, type: 3}
   attackCommandObj: {fileID: 4459525832455197955, guid: e2be193550c3d924fa96d41eda5d6711, type: 3}
   patrolCommandObj: {fileID: 5927982843434530874, guid: 3dcdc797fa60fb74e9b27c5b9b2f9ee9, type: 3}
-  move: {x: 0, y: 0}
   HoldingStack: 0
 --- !u!1 &1034880260
 GameObject:
