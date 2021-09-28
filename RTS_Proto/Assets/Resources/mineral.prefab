@@ -101,9 +101,8 @@ GameObject:
   - component: {fileID: 3314507356289080705}
   - component: {fileID: 1896197362620600868}
   - component: {fileID: 4446269156300973806}
-  - component: {fileID: 5135453190300711609}
   - component: {fileID: 9086155254550414041}
-  - component: {fileID: 140501979092001879}
+  - component: {fileID: 5207652572561790355}
   m_Layer: 11
   m_Name: mineral
   m_TagString: resource
@@ -184,19 +183,6 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
---- !u!65 &5135453190300711609
-BoxCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 2789045718000060219}
-  m_Material: {fileID: 0}
-  m_IsTrigger: 0
-  m_Enabled: 1
-  serializedVersion: 2
-  m_Size: {x: 3, y: 0.49514443, z: 3}
-  m_Center: {x: 0, y: 0.24757221, z: 0}
 --- !u!114 &9086155254550414041
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -209,30 +195,24 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: d7a3921ba7e8d0f47a5ee94c9d1f8d02, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  resourceType: 0
   moveTowardsSprite: {fileID: 6182011459290020271}
---- !u!114 &140501979092001879
-MonoBehaviour:
+  harvestCooldown: 3
+  resourceValue: 3
+  slot: {fileID: 0}
+--- !u!65 &5207652572561790355
+BoxCollider:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2789045718000060219}
+  m_Material: {fileID: 0}
+  m_IsTrigger: 0
   m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 8da804ab43234a24caf21bcb4a494344, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  mineralValue: 3
-  slots:
-  - {fileID: 2844439499133186900}
-  - {fileID: 4413580070040778476}
-  - {fileID: 8807350095061198811}
-  - {fileID: 1983780390061134865}
-  - {fileID: 5851296765292766979}
-  - {fileID: 6370428375919437866}
-  - {fileID: 9202898850576344289}
-  - {fileID: 6079272180195232912}
-  - {fileID: 5274360581205281210}
+  serializedVersion: 2
+  m_Size: {x: 1, y: 0.311941, z: 1}
+  m_Center: {x: 0, y: 0.1559705, z: 0}
 --- !u!1 &5481497171250569965
 GameObject:
   m_ObjectHideFlags: 0

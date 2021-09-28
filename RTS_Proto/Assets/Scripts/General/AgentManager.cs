@@ -14,6 +14,7 @@ public class AgentManager : MonoBehaviour
     public float speed = 1.0f;
     public bool canAttackGround = true;
     public bool canAttackAir = true;
+    public bool isWorker = false;
 
     public SpriteRenderer sprite;
     public GameObject moveTowardsSprite;
@@ -25,6 +26,7 @@ public class AgentManager : MonoBehaviour
     [HideInInspector] public int gridIndexe;
     [HideInInspector] public bool hasDestination = false;
 
+    private bool harvest = false;
     private bool holdPosition = false;
     private bool attackCommand = false;
     private bool patrolCommand = false;
@@ -246,7 +248,7 @@ public class AgentManager : MonoBehaviour
     }
 
 
-    public void AddDestination(WorldGrid grid, int index, Transform follow = null, int action = 0 /* 1 = attack, 2 = patrol */)
+    public void AddDestination(WorldGrid grid, int index, Transform follow = null, int action = 0 /* 1 = attack, 2 = patrol, 3 = collect-resource */, ResourceManager res = null)
     {
         holdPosition = false;
         if (rb.isKinematic)
@@ -265,6 +267,12 @@ public class AgentManager : MonoBehaviour
             patrolCommand = true;
         else
             patrolCommand = false;
+
+        if (action == 3 && isWorker)
+        {
+            harvest = true;
+            res.GetFreeSlot(gameObject.GetInstanceID(), transform);
+        }
     }
 
 
@@ -277,6 +285,7 @@ public class AgentManager : MonoBehaviour
             hasDestination = false;
             attackCommand = false;
             patrolCommand = false;
+            harvest = false;
         }
     }
 }

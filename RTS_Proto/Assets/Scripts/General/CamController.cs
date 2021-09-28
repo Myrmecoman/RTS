@@ -94,7 +94,7 @@ public class CamController : MonoBehaviour
             }
             else if (hit.transform.gameObject.tag == "resource")
             {
-                hit.collider.GetComponent<ResourceObject>().MoveTowardsSprite();
+                hit.collider.GetComponent<ResourceManager>().MoveTowardsSprite();
                 GameManager.instance.AttackCommand(SelectedDico.instance.selectedTable, hit.transform);
             }
         }
@@ -129,7 +129,7 @@ public class CamController : MonoBehaviour
             }
             else if (hit.transform.gameObject.tag == "resource")
             {
-                hit.collider.GetComponent<ResourceObject>().MoveTowardsSprite();
+                hit.collider.GetComponent<ResourceManager>().MoveTowardsSprite();
                 GameManager.instance.PatrolCommand(SelectedDico.instance.selectedTable, hit.transform);
             }
         }
@@ -167,8 +167,8 @@ public class CamController : MonoBehaviour
             }
             else if (hit.transform.gameObject.tag == "resource")
             {
-                hit.collider.GetComponent<ResourceObject>().MoveTowardsSprite();
-                GameManager.instance.MoveCommand(SelectedDico.instance.selectedTable, hit.transform);
+                hit.collider.GetComponent<ResourceManager>().MoveTowardsSprite();
+                GameManager.instance.MoveCommand(SelectedDico.instance.selectedTable, hit.transform, false, true);
             }
         }
     }

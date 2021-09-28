@@ -128,7 +128,7 @@ public class GameManager : MonoBehaviour
     }
 
 
-    public void MoveCommand(Dictionary<int, AgentManager> agents, Transform target, bool follow = false)
+    public void MoveCommand(Dictionary<int, AgentManager> agents, Transform target, bool follow = false, bool resource = false)
     {
         for (int i = 0; i < arraysSize; i++)
         {
@@ -143,6 +143,8 @@ public class GameManager : MonoBehaviour
 
                     if (follow)
                         ag.Value.AddDestination(grids[i], i, target);
+                    else if (resource && ag.Value.isWorker)
+                        ag.Value.AddDestination(grids[i], i, null, 3, target.GetComponent<ResourceManager>());
                     else
                         ag.Value.AddDestination(grids[i], i);
                 }
