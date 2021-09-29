@@ -60,7 +60,7 @@ public class GameManager : MonoBehaviour
         {
             for (float j = 0; j < 15; j++)
             {
-                GameObject obj = (GameObject) Instantiate(Resources.Load("Agent"), new Vector3(i * 1.5f, 0.5f, j * 1.5f), Quaternion.identity);
+                GameObject obj = (GameObject) Instantiate(Resources.Load("Worker"), new Vector3(i * 1.5f, 0.5f, j * 1.5f), Quaternion.identity);
                 allyUnits.Add(obj.transform);
             }
         }
@@ -139,8 +139,6 @@ public class GameManager : MonoBehaviour
 
                 foreach (KeyValuePair<int, AgentManager> ag in agents)
                 {
-                    ag.Value.UnsetDestination();
-
                     if (follow)
                         ag.Value.AddDestination(grids[i], i, target);
                     else if (resource && ag.Value.isWorker)

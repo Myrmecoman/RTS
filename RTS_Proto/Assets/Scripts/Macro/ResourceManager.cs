@@ -22,9 +22,8 @@ public class ResourceManager : MonoBehaviour
 
     private void Update()
     {
-        // distance between same height vectors
-        Vector3 workerPos = new Vector3(workerTransform.position.x, transform.position.y, workerTransform.position.z);
-        if (isOccupied != -1 && Vector3.Distance(workerPos, transform.position) < 0.1f)
+        if (isOccupied != -1 && workerTransform != null &&
+            Vector3.Distance(new Vector3(workerTransform.position.x, transform.position.y, workerTransform.position.z), transform.position) < 0.1f)
         {
             cooldown -= Time.deltaTime;
 

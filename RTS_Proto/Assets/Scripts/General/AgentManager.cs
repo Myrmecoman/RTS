@@ -26,7 +26,6 @@ public class AgentManager : MonoBehaviour
     [HideInInspector] public int gridIndexe;
     [HideInInspector] public bool hasDestination = false;
 
-    private bool harvest = false;
     private bool holdPosition = false;
     private bool attackCommand = false;
     private bool patrolCommand = false;
@@ -34,6 +33,7 @@ public class AgentManager : MonoBehaviour
     private Rigidbody rb;
     private DijkstraTile lastValidTile;
     private Transform follow;
+    private ResourceManager res = null;
      
 
     private void Start()
@@ -104,8 +104,9 @@ public class AgentManager : MonoBehaviour
     {
         RaycastHit hitLeft;
         RaycastHit hitRight;
-        // collide against everything except layer 7
+        // collide against everything except layer 7 (agents) and 11 (resource)
         int layerMask = 1 << 7;
+        layerMask = 1 << 11;
         layerMask = ~layerMask;
 
         if (horizontalDist > 0.05f &&
@@ -250,9 +251,8 @@ public class AgentManager : MonoBehaviour
 
     public void AddDestination(WorldGrid grid, int index, Transform follow = null, int action = 0 /* 1 = attack, 2 = patrol, 3 = collect-resource */, ResourceManager res = null)
     {
-        holdPosition = false;
-        if (rb.isKinematic)
-            rb.isKinematic = false;
+        UnsetDestination();
+
         worldGrid = grid;
         gridIndexe = index;
         hasDestination = true;
@@ -268,11 +268,8 @@ public class AgentManager : MonoBehaviour
         else
             patrolCommand = false;
 
-        if (action == 3 && isWorker)
-        {
-            harvest = true;
-            res.GetFreeSlot(gameObject.GetInstanceID(), transform);
-        }
+        if (action == 3 && isWorker && res.GetFreeSlot(gameObject.GetInstanceID(), transform))
+            this.res = res;
     }
 
 
@@ -285,7 +282,10 @@ public class AgentManager : MonoBehaviour
             hasDestination = false;
             attackCommand = false;
             patrolCommand = false;
-            harvest = false;
+            holdPosition = false;
+            rb.isKinematic = false;
+            if (res)
+                res.FreeSlot(gameObject.GetInstanceID());
         }
     }
 }
