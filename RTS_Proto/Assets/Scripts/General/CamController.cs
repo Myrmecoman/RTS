@@ -45,9 +45,9 @@ public class CamController : MonoBehaviour
         Vector2 move = MoveCam();
 
         transform.position = new Vector3(
-            transform.position.x + move.x * Time.deltaTime * speed,
+            Mathf.Clamp(transform.position.x + move.x * Time.deltaTime * speed, -128, 128),
             transform.position.y,
-            transform.position.z + move.y * Time.deltaTime * speed);
+            Mathf.Clamp(transform.position.z + move.y * Time.deltaTime * speed, -128, 128));
     }
 
 

@@ -55,6 +55,12 @@ public class GameManager : MonoBehaviour
 
     private void Start()
     {
+        GameObject obj = (GameObject)Instantiate(Resources.Load("Worker"), new Vector3(0, 0.5f, 0), Quaternion.identity);
+        allyUnits.Add(obj.transform);
+        obj = (GameObject)Instantiate(Resources.Load("Worker"), new Vector3(1f, 0.5f, 0), Quaternion.identity);
+        allyUnits.Add(obj.transform);
+
+        /*
         // For test purposes
         for (float i = 0; i < 15; i++)
         {
@@ -74,6 +80,7 @@ public class GameManager : MonoBehaviour
                 enemyUnits.Add(obj.transform);
             }
         }
+        */
     }
 
 
@@ -88,8 +95,6 @@ public class GameManager : MonoBehaviour
 
                 foreach (KeyValuePair<int, AgentManager> ag in agents)
                 {
-                    ag.Value.UnsetDestination();
-
                     if (focus)
                         ag.Value.AddDestination(grids[i], i, target, 1);
                     else
@@ -114,11 +119,7 @@ public class GameManager : MonoBehaviour
                 grids[i].ChangeTarget(target);
 
                 foreach (KeyValuePair<int, AgentManager> ag in agents)
-                {
-                    ag.Value.UnsetDestination();
-
                     ag.Value.AddDestination(grids[i], i, null, 2);
-                }
 
                 return;
             }
@@ -142,7 +143,10 @@ public class GameManager : MonoBehaviour
                     if (follow)
                         ag.Value.AddDestination(grids[i], i, target);
                     else if (resource && ag.Value.isWorker)
+                    {
                         ag.Value.AddDestination(grids[i], i, null, 3, target.GetComponent<ResourceManager>());
+                        target.GetComponent<ResourceManager>().MoveTowardsSprite();
+                    }
                     else
                         ag.Value.AddDestination(grids[i], i);
                 }

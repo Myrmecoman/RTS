@@ -77,7 +77,7 @@ public class AgentManager : MonoBehaviour
         float horizontalDist = Vector3.Distance(new Vector3(transform.position.x, 0, transform.position.z), new Vector3(worldGrid.StartPosition.x, 0, worldGrid.StartPosition.z));
         if (horizontalDist <= 0.05f && follow == null)
         {
-            UnsetDestination();
+            UnsetDestinationExceptResource();
             return;
         }
         
@@ -104,10 +104,8 @@ public class AgentManager : MonoBehaviour
     {
         RaycastHit hitLeft;
         RaycastHit hitRight;
-        // collide against everything except layer 7 (agents) and 11 (resource)
-        int layerMask = 1 << 7;
-        layerMask = 1 << 11;
-        layerMask = ~layerMask;
+
+        int layerMask = LayerMask.GetMask("wall", "ground", "building");
 
         if (horizontalDist > 0.05f &&
             worldGrid.StartPosition != null &&
@@ -221,7 +219,7 @@ public class AgentManager : MonoBehaviour
             SelectedDico.instance.DeslectDueToDestruction(GetInstanceID());
             UnsetDestination();
             Destroy(gameObject);
-        }    
+        }
     }
 
 
@@ -251,7 +249,25 @@ public class AgentManager : MonoBehaviour
 
     public void AddDestination(WorldGrid grid, int index, Transform follow = null, int action = 0 /* 1 = attack, 2 = patrol, 3 = collect-resource */, ResourceManager res = null)
     {
-        UnsetDestination();
+        if (action == 3 && isWorker)
+        {
+            int result = res.IsFreeSlot(gameObject.GetInstanceID());
+            if (result == 0)
+                UnsetDestinationExceptResource();
+            else if (result == 1)
+            {
+                UnsetDestination();
+                res.GetFreeSlot(gameObject.GetInstanceID(), transform);
+                this.res = res;
+            }
+            else
+                UnsetDestination();
+        }
+        else
+        {
+            UnsetDestination();
+            Debug.Log("FullUnset");
+        }
 
         worldGrid = grid;
         gridIndexe = index;
@@ -267,9 +283,6 @@ public class AgentManager : MonoBehaviour
             patrolCommand = true;
         else
             patrolCommand = false;
-
-        if (action == 3 && isWorker && res.GetFreeSlot(gameObject.GetInstanceID(), transform))
-            this.res = res;
     }
 
 
@@ -284,8 +297,26 @@ public class AgentManager : MonoBehaviour
             patrolCommand = false;
             holdPosition = false;
             rb.isKinematic = false;
-            if (res)
-                res.FreeSlot(gameObject.GetInstanceID());
+            if (res != null)
+            {
+                res.FreeSlot();
+                res = null;
+            }
+        }
+    }
+
+    
+    public void UnsetDestinationExceptResource()
+    {
+        if (hasDestination)
+        {
+            GameManager.instance.inUse[gridIndexe]--;
+            follow = null;
+            hasDestination = false;
+            attackCommand = false;
+            patrolCommand = false;
+            holdPosition = false;
+            rb.isKinematic = false;
         }
     }
 }

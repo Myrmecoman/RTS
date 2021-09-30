@@ -40,32 +40,33 @@ public class ResourceManager : MonoBehaviour
     }
 
 
-    public bool GetFreeSlot(int objId, Transform trans)
+    // 0 = already mining, 1 = accepted to mine, 2 = refused since occupied
+    public int IsFreeSlot(int objId)
     {
-        if (isOccupied == -1)
-        {
-            isOccupied = objId;
-            cooldown = harvestCooldown;
-            workerTransform = trans;
-            return true;
-        }
+        if (objId == isOccupied)
+            return 0;
 
-        Debug.Log("Not free");
-        return false;
+        if (isOccupied == -1)
+            return 1;
+
+        return 2;
     }
 
 
-    public void FreeSlot(int objId)
+    public void GetFreeSlot(int objId, Transform trans)
     {
-        if (isOccupied == objId)
-        {
-            isOccupied = -1;
-            cooldown = harvestCooldown;
-            workerTransform = null;
-            return;
-        }
+        isOccupied = objId;
+        cooldown = harvestCooldown;
+        workerTransform = trans;
+    }
 
-        Debug.Log("Not belonging to this resource");
+
+    public void FreeSlot()
+    {
+        Debug.Log("free");
+        isOccupied = -1;
+        cooldown = harvestCooldown;
+        workerTransform = null;
     }
 
 
