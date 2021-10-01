@@ -53,19 +53,19 @@ public class AgentManager : MonoBehaviour
 
         AgentManager foundTarget = CheckEnnemy();
 
-        if (attackCooldown <= 0 && (!hasDestination || attackCommand || holdPosition) && foundTarget != null)
+        if (attackCooldown <= 0 && (!hasDestination || attackCommand || holdPosition) && foundTarget != null && res == null)
         {
             // attack target
             Attack(foundTarget);
             return;
         }
 
-        if ((attackCommand || holdPosition) && foundTarget != null)
+        if ((attackCommand || holdPosition) && foundTarget != null && res == null)
         {
             rb.isKinematic = true;
             return;
         }
-        else
+        else if (res == null)
             rb.isKinematic = false;
 
         if (!hasDestination)
@@ -78,6 +78,8 @@ public class AgentManager : MonoBehaviour
         if (horizontalDist <= 0.05f && follow == null)
         {
             UnsetDestinationExceptResource();
+            if (res != null)
+                HoldPosition();
             return;
         }
         
@@ -194,7 +196,7 @@ public class AgentManager : MonoBehaviour
 
     public void HoldPosition()
     {
-        UnsetDestination();
+        UnsetDestinationExceptResource();
         holdPosition = true;
         rb.isKinematic = true;
     }
@@ -253,7 +255,9 @@ public class AgentManager : MonoBehaviour
         {
             int result = res.IsFreeSlot(gameObject.GetInstanceID());
             if (result == 0)
+            {
                 UnsetDestinationExceptResource();
+            }
             else if (result == 1)
             {
                 UnsetDestination();
@@ -266,7 +270,6 @@ public class AgentManager : MonoBehaviour
         else
         {
             UnsetDestination();
-            Debug.Log("FullUnset");
         }
 
         worldGrid = grid;
@@ -303,6 +306,20 @@ public class AgentManager : MonoBehaviour
                 res = null;
             }
         }
+        else
+        {
+            follow = null;
+            hasDestination = false;
+            attackCommand = false;
+            patrolCommand = false;
+            holdPosition = false;
+            rb.isKinematic = false;
+            if (res != null)
+            {
+                res.FreeSlot();
+                res = null;
+            }
+        }
     }
 
     
@@ -311,6 +328,15 @@ public class AgentManager : MonoBehaviour
         if (hasDestination)
         {
             GameManager.instance.inUse[gridIndexe]--;
+            follow = null;
+            hasDestination = false;
+            attackCommand = false;
+            patrolCommand = false;
+            holdPosition = false;
+            rb.isKinematic = false;
+        }
+        else
+        {
             follow = null;
             hasDestination = false;
             attackCommand = false;

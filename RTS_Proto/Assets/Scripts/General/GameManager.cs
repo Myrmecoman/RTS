@@ -55,12 +55,6 @@ public class GameManager : MonoBehaviour
 
     private void Start()
     {
-        GameObject obj = (GameObject)Instantiate(Resources.Load("Worker"), new Vector3(0, 0.5f, 0), Quaternion.identity);
-        allyUnits.Add(obj.transform);
-        obj = (GameObject)Instantiate(Resources.Load("Worker"), new Vector3(1f, 0.5f, 0), Quaternion.identity);
-        allyUnits.Add(obj.transform);
-
-        /*
         // For test purposes
         for (float i = 0; i < 15; i++)
         {
@@ -80,7 +74,6 @@ public class GameManager : MonoBehaviour
                 enemyUnits.Add(obj.transform);
             }
         }
-        */
     }
 
 

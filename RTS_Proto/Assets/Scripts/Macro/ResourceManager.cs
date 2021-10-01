@@ -23,7 +23,7 @@ public class ResourceManager : MonoBehaviour
     private void Update()
     {
         if (isOccupied != -1 && workerTransform != null &&
-            Vector3.Distance(new Vector3(workerTransform.position.x, transform.position.y, workerTransform.position.z), transform.position) < 0.1f)
+            Vector3.Distance(new Vector3(workerTransform.position.x, transform.position.y, workerTransform.position.z), transform.position) < 0.05f)
         {
             cooldown -= Time.deltaTime;
 
@@ -63,7 +63,7 @@ public class ResourceManager : MonoBehaviour
 
     public void FreeSlot()
     {
-        Debug.Log("free");
+        //Debug.Log("free");
         isOccupied = -1;
         cooldown = harvestCooldown;
         workerTransform = null;
