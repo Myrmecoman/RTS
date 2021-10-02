@@ -60,7 +60,7 @@ public class GameManager : MonoBehaviour
         {
             for (float j = 0; j < 15; j++)
             {
-                GameObject obj = (GameObject) Instantiate(Resources.Load("Worker"), new Vector3(i * 1.5f, 0.5f, j * 1.5f), Quaternion.identity);
+                GameObject obj = (GameObject) Instantiate(Resources.Load("Worker"), new Vector3(i * 1.5f, 0, j * 1.5f), Quaternion.identity);
                 allyUnits.Add(obj.transform);
             }
         }
@@ -69,7 +69,7 @@ public class GameManager : MonoBehaviour
         {
             for (float j = 0; j < 15; j++)
             {
-                GameObject obj = (GameObject)Instantiate(Resources.Load("Agent"), new Vector3(i * 1.5f, 0.5f, j * 1.5f + 30), Quaternion.identity);
+                GameObject obj = (GameObject)Instantiate(Resources.Load("Agent"), new Vector3(i * 1.5f, 0, j * 1.5f + 30), Quaternion.identity);
                 obj.GetComponent<AgentManager>().isAlly = false;
                 enemyUnits.Add(obj.transform);
             }
