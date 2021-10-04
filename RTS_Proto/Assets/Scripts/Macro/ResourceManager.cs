@@ -63,7 +63,6 @@ public class ResourceManager : MonoBehaviour
 
     public void FreeSlot()
     {
-        //Debug.Log("free");
         isOccupied = -1;
         cooldown = harvestCooldown;
         workerTransform = null;

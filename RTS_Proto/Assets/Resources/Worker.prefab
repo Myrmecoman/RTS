@@ -343,13 +343,13 @@ MonoBehaviour:
   sightRange: 10
   supply: 1
   attackDamage: 5
-  attackRange: 5
+  attackRange: 2
   attackSpeed: 1
   health: 50
   armor: 0
-  speed: 3
+  speed: 3.5
   canAttackGround: 1
-  canAttackAir: 1
+  canAttackAir: 0
   isWorker: 1
   sprite: {fileID: 5366904356999944363}
   moveTowardsSprite: {fileID: 6903691019313286077}

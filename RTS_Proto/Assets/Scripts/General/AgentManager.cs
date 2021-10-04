@@ -46,8 +46,6 @@ public class AgentManager : MonoBehaviour
     {
         // NEED TO FIND OUT WHEN DESTINATION IS REACHED
 
-        AdjustHeight();
-
         if (attackCooldown > 0)
             attackCooldown -= Time.deltaTime;
 
@@ -89,21 +87,13 @@ public class AgentManager : MonoBehaviour
     }
 
 
-    private void AdjustHeight()
-    {
-        RaycastHit verifyHeight;
-        // collide against ground only
-        int layerMaskHeight = LayerMask.GetMask("ground");
-        if (Physics.Raycast(transform.position, Vector3.down, out verifyHeight, 1000f, layerMaskHeight))
-        {
-            if (verifyHeight.distance > 0.01f)
-                transform.position = new Vector3(transform.position.x, transform.position.y - (verifyHeight.distance + 0.01f), transform.position.z);
-        }
-    }
-
-
     private void MoveAndRotate(ref DijkstraTile currentTile, ref float horizontalDist)
     {
+        // control height
+        RaycastHit verifyHeight;
+        Physics.Raycast(transform.position, Vector3.down, out verifyHeight, 1000f, LayerMask.GetMask("ground"));
+        float heightDist = verifyHeight.distance * 10;
+
         RaycastHit hitLeft;
         RaycastHit hitRight;
 
@@ -125,7 +115,7 @@ public class AgentManager : MonoBehaviour
                     Vector3 Ynull = new Vector3(worldGrid.StartPosition.x, transform.position.y, worldGrid.StartPosition.z);
                     Vector3 moveDir = (Ynull - transform.position).normalized;
 
-                    rb.MovePosition(transform.position + new Vector3(moveDir.x, 0, moveDir.z) * Time.fixedDeltaTime * speed);
+                    rb.MovePosition(transform.position + new Vector3(moveDir.x, -heightDist, moveDir.z) * Time.fixedDeltaTime * speed);
                     if (moveDir != Vector3.zero)
                         transform.LookAt(new Vector3(worldGrid.StartPosition.x, transform.position.y, worldGrid.StartPosition.z), Vector3.up);
                 }
@@ -134,7 +124,7 @@ public class AgentManager : MonoBehaviour
                     Vector3 Ynull = new Vector3(follow.position.x, transform.position.y, follow.position.z);
                     Vector3 moveDir = (Ynull - transform.position).normalized;
 
-                    rb.MovePosition(transform.position + new Vector3(moveDir.x, 0, moveDir.z) * Time.fixedDeltaTime * speed);
+                    rb.MovePosition(transform.position + new Vector3(moveDir.x, -heightDist, moveDir.z) * Time.fixedDeltaTime * speed);
                     if (moveDir != Vector3.zero)
                         transform.LookAt(new Vector3(follow.position.x, transform.position.y, follow.position.z), Vector3.up);
                 }
@@ -147,7 +137,7 @@ public class AgentManager : MonoBehaviour
                     int2 flowVector = lastValidTile.gridPos - currentTile.gridPos;
                     Vector3 moveDir = new Vector3(flowVector.x, 0, flowVector.y).normalized;
 
-                    rb.MovePosition(transform.position + moveDir * Time.fixedDeltaTime * speed);
+                    rb.MovePosition(transform.position + (moveDir + Vector3.up * -heightDist) * Time.fixedDeltaTime * speed);
                     if (moveDir != Vector3.zero)
                         transform.forward = moveDir;
                 }
@@ -157,7 +147,7 @@ public class AgentManager : MonoBehaviour
                     int2 flowVector = currentTile.FlowFieldVector;
                     Vector3 moveDir = new Vector3(flowVector.x, 0, flowVector.y).normalized;
 
-                    rb.MovePosition(transform.position + moveDir * Time.fixedDeltaTime * speed);
+                    rb.MovePosition(transform.position + (moveDir + Vector3.up * -heightDist) * Time.fixedDeltaTime * speed);
                     if (moveDir != Vector3.zero)
                         transform.forward = moveDir;
                 }

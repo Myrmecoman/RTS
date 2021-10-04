@@ -1,6 +1,7 @@
 using UnityEngine;
 using UnityEngine.InputSystem;
 
+
 public class Input_Receiver : MonoBehaviour
 {
     public static Input_Receiver instance;
@@ -11,6 +12,7 @@ public class Input_Receiver : MonoBehaviour
     [HideInInspector] public char lastKeyPressed = '\0';
 
     private Controls controls;
+
 
     #region Enable/Disable
 
@@ -25,6 +27,7 @@ public class Input_Receiver : MonoBehaviour
     }
 
     #endregion
+
 
     private void Awake()
     {
@@ -54,12 +57,12 @@ public class Input_Receiver : MonoBehaviour
             if (controls.TopDownControls.Attack.triggered && SelectedDico.instance.selectedTable.Count != 0)
             {
                 lastKeyPressed = 'A'; // A is for attack
-                Debug.Log("Attack pressed");
+                //Debug.Log("Attack pressed");
             }
             else if (controls.TopDownControls.Patrol.triggered && SelectedDico.instance.selectedTable.Count != 0)
             {
                 lastKeyPressed = 'R'; // R is for patrol
-                Debug.Log("Patrol pressed");
+                //Debug.Log("Patrol pressed");
             }
             else
                 lastKeyPressed = '\0';
@@ -79,5 +82,19 @@ public class Input_Receiver : MonoBehaviour
             Debug.LogError("Error on last key pressed: " + lastKeyPressed);
 
         lastKeyPressed = '\0';
+    }
+
+
+    public void setLastInputToAttack()
+    {
+        lastKeyPressed = 'A'; // A is for attack
+        //Debug.Log("Attack pressed");
+    }
+
+
+    public void setLastInputToPatrol()
+    {
+        lastKeyPressed = 'R'; // R is for patrol
+        //Debug.Log("Patrol pressed");
     }
 }
