@@ -347,7 +347,7 @@ MonoBehaviour:
   attackSpeed: 1
   health: 50
   armor: 0
-  speed: 3.5
+  speed: 15
   canAttackGround: 1
   canAttackAir: 0
   isWorker: 1

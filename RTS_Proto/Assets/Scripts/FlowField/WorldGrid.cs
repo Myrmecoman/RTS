@@ -170,7 +170,7 @@ public class WorldGrid : MonoBehaviour
                 Vector3 worldPoint = bottomLeft + Vector3.right * (x * fNodeDiameter + fNodeRadius) + Vector3.forward * (y * fNodeDiameter + fNodeRadius);
                 DijkstraTile tile = new DijkstraTile(new int2(x, y));
 
-                if (Physics.CheckCapsule(worldPoint - Vector3.up * 100, worldPoint + Vector3.up * 100, fNodeRadius - 0.0001f /* in case of single point collision */, WallMask))
+                if (Physics.CheckCapsule(worldPoint - Vector3.up * 100, worldPoint + Vector3.up * 100, fNodeRadius - 0.001f /* in case of single point collision */, WallMask))
                     tile.weight = int.MaxValue;
 
                 NodeArray[iGridSizeY * x + y] = tile; // Create a new node in the array
@@ -185,7 +185,7 @@ public class WorldGrid : MonoBehaviour
                 Vector3 worldPoint = bottomLeft + Vector3.right * (x * imprecisefNodeDiameter + imprecisefNodeRadius) + Vector3.forward * (y * imprecisefNodeDiameter + imprecisefNodeRadius);
                 DijkstraTile tile = new DijkstraTile(new int2(x, y));
 
-                if (Physics.CheckCapsule(worldPoint - Vector3.up * 100, worldPoint + Vector3.up * 100, imprecisefNodeRadius - 0.0001f /* in case of single point collision */, WallMask))
+                if (Physics.CheckCapsule(worldPoint - Vector3.up * 100, worldPoint + Vector3.up * 100, imprecisefNodeRadius - 0.001f /* in case of single point collision */, WallMask))
                     tile.weight = int.MaxValue;
 
                 impreciseNodeArray[impreciseiGridSizeY * x + y] = tile; // Create a new node in the array
@@ -219,7 +219,7 @@ public class WorldGrid : MonoBehaviour
                 Vector3 worldPoint = bottomLeft + Vector3.right * (x * imprecisefNodeDiameter + imprecisefNodeRadius) + Vector3.forward * (y * imprecisefNodeDiameter + imprecisefNodeRadius);
 
                 //Instantiate(Resources.Load("debugSphere"), worldPoint + Vector3.up * 2, Quaternion.identity);
-                if (Physics.CheckCapsule(worldPoint - Vector3.up * 100, worldPoint + Vector3.up * 100, imprecisefNodeRadius - 0.0001f /* in case of single point collision */, WallMask))
+                if (Physics.CheckCapsule(worldPoint - Vector3.up * 100, worldPoint + Vector3.up * 100, imprecisefNodeRadius - 0.001f /* in case of single point collision */, WallMask))
                 {
                     DijkstraTile tile = new DijkstraTile(new int2(x, y));
                     tile.weight = int.MaxValue;
@@ -238,7 +238,7 @@ public class WorldGrid : MonoBehaviour
                     Vector3 worldPoint = bottomLeft + Vector3.right * (x * fNodeDiameter + fNodeRadius) + Vector3.forward * (y * fNodeDiameter + fNodeRadius);
 
                     //Instantiate(Resources.Load("debugSphere"), worldPoint + Vector3.up, Quaternion.identity);
-                    if (Physics.CheckCapsule(worldPoint - Vector3.up * 100, worldPoint + Vector3.up * 100, fNodeRadius - 0.0001f /* in case of single point collision */, WallMask))
+                    if (Physics.CheckCapsule(worldPoint - Vector3.up * 100, worldPoint + Vector3.up * 100, fNodeRadius - 0.001f /* in case of single point collision */, WallMask))
                     {
                         DijkstraTile tile = new DijkstraTile(new int2(x, y));
                         tile.weight = int.MaxValue;
@@ -275,7 +275,7 @@ public class WorldGrid : MonoBehaviour
                 Vector3 worldPoint = bottomLeft + Vector3.right * (x * imprecisefNodeDiameter + imprecisefNodeRadius) + Vector3.forward * (y * imprecisefNodeDiameter + imprecisefNodeRadius);
 
                 //Instantiate(Resources.Load("debugSphere"), worldPoint + Vector3.up * 2, Quaternion.identity);
-                if (!Physics.CheckCapsule(worldPoint - Vector3.up * 100, worldPoint + Vector3.up * 100, imprecisefNodeRadius - 0.0001f /* in case of single point collision */, WallMask))
+                if (!Physics.CheckCapsule(worldPoint - Vector3.up * 100, worldPoint + Vector3.up * 100, imprecisefNodeRadius - 0.001f /* in case of single point collision */, WallMask))
                 {
                     DijkstraTile tile = new DijkstraTile(new int2(x, y));
                     impreciseNodeArray[impreciseiGridSizeY * x + y] = tile;
@@ -293,7 +293,7 @@ public class WorldGrid : MonoBehaviour
                     Vector3 worldPoint = bottomLeft + Vector3.right * (x * fNodeDiameter + fNodeRadius) + Vector3.forward * (y * fNodeDiameter + fNodeRadius);
 
                     //Instantiate(Resources.Load("debugSphere"), worldPoint + Vector3.up, Quaternion.identity);
-                    if (!Physics.CheckCapsule(worldPoint - Vector3.up * 100, worldPoint + Vector3.up * 100, fNodeRadius - 0.0001f /* in case of single point collision */, WallMask))
+                    if (!Physics.CheckCapsule(worldPoint - Vector3.up * 100, worldPoint + Vector3.up * 100, fNodeRadius - 0.001f /* in case of single point collision */, WallMask))
                     {
                         DijkstraTile tile = new DijkstraTile(new int2(x, y));
                         NodeArray[iGridSizeY * x + y] = tile;
