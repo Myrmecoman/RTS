@@ -72,18 +72,32 @@ public class GlobalSelection : MonoBehaviour
                 int layerMask = LayerMask.GetMask("agent", "building");
                 if (Physics.Raycast(ray,out hit, 1000f, layerMask))
                 {
-                    AgentManager hitAgent = hit.transform.GetComponent<AgentManager>();
-                    BuildingManager hitBuilding = hit.transform.GetComponent<BuildingManager>();
-                    if ((hitAgent != null && hitAgent.isAlly) || (hitBuilding != null && hitBuilding.isAlly))
+                    Selectable hitSelectable = hit.transform.GetComponent<Selectable>();
+                    if (hitSelectable != null && hitSelectable.isAlly)
                     {
-                        if (StackActionHold) //inclusive select
+                        if (hit.transform.GetComponent<AgentManager>())
                         {
-                            selected_table.AddSelected(hit.transform.GetComponent<AgentManager>());
+                            if (StackActionHold) //inclusive select
+                            {
+                                selected_table.AddSelected(hit.transform.GetComponent<AgentManager>());
+                            }
+                            else //exclusive selected
+                            {
+                                selected_table.DeselectAll();
+                                selected_table.AddSelected(hit.transform.GetComponent<AgentManager>());
+                            }
                         }
-                        else //exclusive selected
+                        else if (hit.transform.GetComponent<BuildingManager>())
                         {
-                            selected_table.DeselectAll();
-                            selected_table.AddSelected(hit.transform.GetComponent<AgentManager>());
+                            if (StackActionHold) //inclusive select
+                            {
+                                selected_table.AddSelected(hit.transform.GetComponent<BuildingManager>());
+                            }
+                            else //exclusive selected
+                            {
+                                selected_table.DeselectAll();
+                                selected_table.AddSelected(hit.transform.GetComponent<BuildingManager>());
+                            }
                         }
                     }
                 }

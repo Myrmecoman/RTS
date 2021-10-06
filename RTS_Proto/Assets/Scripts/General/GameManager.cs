@@ -11,8 +11,8 @@ public class GameManager : MonoBehaviour
     public float fNodeRadius; // This stores how big each square on the graph will be
     public WorldGrid singleGrid;
 
-    [HideInInspector] public int minerals = 0;
-    [HideInInspector] public int gas = 0;
+    [HideInInspector] public int minerals = 5000;
+    [HideInInspector] public int gas = 5000;
 
     private static int arraysSize = 100;
     [HideInInspector] public WorldGrid[] grids = new WorldGrid[arraysSize];
@@ -77,7 +77,7 @@ public class GameManager : MonoBehaviour
     }
 
 
-    public void AttackCommand(Dictionary<int, AgentManager> agents, Transform target, bool focus = false)
+    public void AttackCommand(Dictionary<int, Selectable> agents, Transform target, bool focus = false)
     {
         for (int i = 0; i < arraysSize; i++)
         {
@@ -86,7 +86,7 @@ public class GameManager : MonoBehaviour
                 inUse[i] = agents.Count;
                 grids[i].ChangeTarget(target);
 
-                foreach (KeyValuePair<int, AgentManager> ag in agents)
+                foreach (KeyValuePair<int, Selectable> ag in agents)
                 {
                     if (focus)
                         ag.Value.AddDestination(grids[i], i, target, 1);
@@ -102,7 +102,7 @@ public class GameManager : MonoBehaviour
     }
 
 
-    public void PatrolCommand(Dictionary<int, AgentManager> agents, Transform target)
+    public void PatrolCommand(Dictionary<int, Selectable> agents, Transform target)
     {
         for (int i = 0; i < arraysSize; i++)
         {
@@ -111,7 +111,7 @@ public class GameManager : MonoBehaviour
                 inUse[i] = agents.Count;
                 grids[i].ChangeTarget(target);
 
-                foreach (KeyValuePair<int, AgentManager> ag in agents)
+                foreach (KeyValuePair<int, Selectable> ag in agents)
                     ag.Value.AddDestination(grids[i], i, null, 2);
 
                 return;
@@ -122,7 +122,7 @@ public class GameManager : MonoBehaviour
     }
 
 
-    public void MoveCommand(Dictionary<int, AgentManager> agents, Transform target, bool follow = false, bool resource = false)
+    public void MoveCommand(Dictionary<int, Selectable> agents, Transform target, bool follow = false, bool resource = false)
     {
         for (int i = 0; i < arraysSize; i++)
         {
@@ -131,7 +131,7 @@ public class GameManager : MonoBehaviour
                 inUse[i] = agents.Count;
                 grids[i].ChangeTarget(target);
 
-                foreach (KeyValuePair<int, AgentManager> ag in agents)
+                foreach (KeyValuePair<int, Selectable> ag in agents)
                 {
                     if (follow)
                         ag.Value.AddDestination(grids[i], i, target);

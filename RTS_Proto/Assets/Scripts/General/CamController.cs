@@ -56,7 +56,7 @@ public class CamController : MonoBehaviour
         if (SelectedDico.instance.selectedTable.Count == 0)
             return;
 
-        foreach (KeyValuePair<int, AgentManager> ag in SelectedDico.instance.selectedTable)
+        foreach (KeyValuePair<int, Selectable> ag in SelectedDico.instance.selectedTable)
             ag.Value.HoldPosition();
     }
 

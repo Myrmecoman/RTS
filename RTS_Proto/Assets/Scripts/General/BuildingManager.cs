@@ -1,16 +1,13 @@
 using UnityEngine;
 
-public class BuildingManager : MonoBehaviour
+public class BuildingManager : Selectable
 {
     public string buildingName;
     public float buildTime = 1f;
-    public GameObject moveTowardsSprite;
     public string[] unitsNames;
     public int[] unitsPrices;
     public float[] unitsBuildTime;
     public bool isBuilding = false;
-
-    [HideInInspector] public bool isAlly = true;
 
 
     private void Start()
@@ -28,12 +25,6 @@ public class BuildingManager : MonoBehaviour
     }
 
 
-    public void MoveTowardsSprite()
-    {
-        moveTowardsSprite.SetActive(true);
-    }
-
-
     private void OnDestroy()
     {
         //double delay = Time.realtimeSinceStartupAsDouble;
@@ -41,5 +32,16 @@ public class BuildingManager : MonoBehaviour
         for (int i = 0; i < 100; i++)
             GameManager.instance.grids[i].RemoveGridColliders(transform.position);
         //Debug.Log("update grids colliders time : " + (Time.realtimeSinceStartupAsDouble - delay));
+    }
+
+
+    public override void AddDestination(WorldGrid grid, int index, Transform follow = null, int action = 0, ResourceManager res = null)
+    {
+        Debug.LogError("not implemented yet");
+    }
+
+    public override void HoldPosition()
+    {
+        Debug.LogError("Trying to hold position a building");
     }
 }

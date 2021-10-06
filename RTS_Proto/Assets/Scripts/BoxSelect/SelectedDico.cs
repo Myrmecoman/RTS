@@ -5,7 +5,7 @@ public class SelectedDico : MonoBehaviour
 {
     public static SelectedDico instance;
 
-    [HideInInspector] public Dictionary<int, AgentManager> selectedTable = new Dictionary<int, AgentManager>();
+    [HideInInspector] public Dictionary<int, Selectable> selectedTable = new Dictionary<int, Selectable>();
 
 
     private void Awake()
@@ -18,7 +18,7 @@ public class SelectedDico : MonoBehaviour
     }
 
 
-    public void AddSelected(AgentManager go)
+    public void AddSelected(Selectable go)
     {
         int id = go.GetInstanceID();
 
@@ -46,7 +46,7 @@ public class SelectedDico : MonoBehaviour
 
     public void DeselectAll()
     {
-        foreach(KeyValuePair<int, AgentManager> pair in selectedTable)
+        foreach(KeyValuePair<int, Selectable> pair in selectedTable)
         {
             if(pair.Value != null)
             {

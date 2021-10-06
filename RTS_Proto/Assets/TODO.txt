@@ -1,7 +1,6 @@
 There is a bug where placing a building while computing path will fail.
 
 Implem patrol.
-Ramps.
 Implem fast idle state (flocking).
 Display units state in UI (all states display);
 Produce units in buildings.

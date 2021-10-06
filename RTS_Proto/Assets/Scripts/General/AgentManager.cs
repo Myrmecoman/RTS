@@ -2,7 +2,7 @@
 using UnityEngine;
 
 
-public class AgentManager : MonoBehaviour
+public class AgentManager : Selectable
 {
     public int sightRange = 10;
     public int supply = 1;
@@ -14,14 +14,10 @@ public class AgentManager : MonoBehaviour
     public float speed = 1.0f;
     public bool canAttackGround = true;
     public bool canAttackAir = true;
-    public bool isWorker = false;
 
-    public SpriteRenderer sprite;
-    public GameObject moveTowardsSprite;
     public Transform leftMostPart;
     public Transform rightMostPart;
 
-    [HideInInspector] public bool isAlly = true;
     [HideInInspector] public WorldGrid worldGrid;
     [HideInInspector] public int gridIndexe;
     [HideInInspector] public bool hasDestination = false;
@@ -184,7 +180,7 @@ public class AgentManager : MonoBehaviour
     }
 
 
-    public void HoldPosition()
+    public override void HoldPosition()
     {
         UnsetDestinationExceptResource();
         holdPosition = true;
@@ -215,31 +211,7 @@ public class AgentManager : MonoBehaviour
     }
 
 
-    private bool IsSameObj(int objID)
-    {
-        return gameObject.GetInstanceID() == objID;
-    }
-
-
-    public void Select()
-    {
-        sprite.enabled = true;
-    }
-
-
-    public void UnSelect()
-    {
-        sprite.enabled = false;
-    }
-
-
-    public void MoveTowardsSprite()
-    {
-        moveTowardsSprite.SetActive(true);
-    }
-
-
-    public void AddDestination(WorldGrid grid, int index, Transform follow = null, int action = 0 /* 1 = attack, 2 = patrol, 3 = collect-resource */, ResourceManager res = null)
+    public override void AddDestination(WorldGrid grid, int index, Transform follow = null, int action = 0 /* 1 = attack, 2 = patrol, 3 = collect-resource */, ResourceManager res = null)
     {
         if (action == 3 && isWorker)
         {

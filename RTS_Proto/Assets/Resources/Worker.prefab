@@ -340,6 +340,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5bc7878f8db6ee645b0d9c91a227be10, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  sprite: {fileID: 5366904356999944363}
+  moveTowardsSprite: {fileID: 6903691019313286077}
   sightRange: 10
   supply: 1
   attackDamage: 5
@@ -347,12 +349,10 @@ MonoBehaviour:
   attackSpeed: 1
   health: 50
   armor: 0
-  speed: 15
+  speed: 3.5
   canAttackGround: 1
   canAttackAir: 0
   isWorker: 1
-  sprite: {fileID: 5366904356999944363}
-  moveTowardsSprite: {fileID: 6903691019313286077}
   leftMostPart: {fileID: 3336420663718053628}
   rightMostPart: {fileID: 3565624072842346212}
   isAlly: 1
