@@ -73,6 +73,30 @@ public class @Controls : IInputActionCollection, IDisposable
                     ""expectedControlType"": ""Button"",
                     ""processors"": """",
                     ""interactions"": """"
+                },
+                {
+                    ""name"": ""AddToGroup"",
+                    ""type"": ""Button"",
+                    ""id"": ""7338b123-9376-41e4-8309-74bbe2784e37"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """"
+                },
+                {
+                    ""name"": ""RemoveFromGroup"",
+                    ""type"": ""Button"",
+                    ""id"": ""6bfa3bdf-0f32-4e4d-b5be-d39db1d28a0e"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """"
+                },
+                {
+                    ""name"": ""AddAndRemoveFromOtherGroups"",
+                    ""type"": ""Button"",
+                    ""id"": ""03bd2721-80f5-4eb9-868f-933097a4b3f1"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """"
                 }
             ],
             ""bindings"": [
@@ -101,7 +125,7 @@ public class @Controls : IInputActionCollection, IDisposable
                 {
                     ""name"": """",
                     ""id"": ""4d608903-53db-4a10-9c6b-78092028fe0d"",
-                    ""path"": ""<Keyboard>/shift"",
+                    ""path"": ""<Keyboard>/leftShift"",
                     ""interactions"": """",
                     ""processors"": """",
                     ""groups"": ""PC"",
@@ -152,6 +176,39 @@ public class @Controls : IInputActionCollection, IDisposable
                     ""action"": ""Patrol"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""25fff336-d460-47ce-9dbd-a6d412e391b9"",
+                    ""path"": ""<Keyboard>/leftShift"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""PC"",
+                    ""action"": ""AddToGroup"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""66b9d496-d832-4062-b043-c429f8c2c9bc"",
+                    ""path"": ""<Keyboard>/leftCtrl"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""PC"",
+                    ""action"": ""RemoveFromGroup"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""2abe8233-05c3-43d6-aa02-eb696ae696be"",
+                    ""path"": ""<Keyboard>/leftAlt"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""PC"",
+                    ""action"": ""AddAndRemoveFromOtherGroups"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
                 }
             ]
         }
@@ -184,6 +241,9 @@ public class @Controls : IInputActionCollection, IDisposable
         m_TopDownControls_Zoom = m_TopDownControls.FindAction("Zoom", throwIfNotFound: true);
         m_TopDownControls_BoxSelect = m_TopDownControls.FindAction("BoxSelect", throwIfNotFound: true);
         m_TopDownControls_StackAction = m_TopDownControls.FindAction("StackAction", throwIfNotFound: true);
+        m_TopDownControls_AddToGroup = m_TopDownControls.FindAction("AddToGroup", throwIfNotFound: true);
+        m_TopDownControls_RemoveFromGroup = m_TopDownControls.FindAction("RemoveFromGroup", throwIfNotFound: true);
+        m_TopDownControls_AddAndRemoveFromOtherGroups = m_TopDownControls.FindAction("AddAndRemoveFromOtherGroups", throwIfNotFound: true);
     }
 
     public void Dispose()
@@ -240,6 +300,9 @@ public class @Controls : IInputActionCollection, IDisposable
     private readonly InputAction m_TopDownControls_Zoom;
     private readonly InputAction m_TopDownControls_BoxSelect;
     private readonly InputAction m_TopDownControls_StackAction;
+    private readonly InputAction m_TopDownControls_AddToGroup;
+    private readonly InputAction m_TopDownControls_RemoveFromGroup;
+    private readonly InputAction m_TopDownControls_AddAndRemoveFromOtherGroups;
     public struct TopDownControlsActions
     {
         private @Controls m_Wrapper;
@@ -251,6 +314,9 @@ public class @Controls : IInputActionCollection, IDisposable
         public InputAction @Zoom => m_Wrapper.m_TopDownControls_Zoom;
         public InputAction @BoxSelect => m_Wrapper.m_TopDownControls_BoxSelect;
         public InputAction @StackAction => m_Wrapper.m_TopDownControls_StackAction;
+        public InputAction @AddToGroup => m_Wrapper.m_TopDownControls_AddToGroup;
+        public InputAction @RemoveFromGroup => m_Wrapper.m_TopDownControls_RemoveFromGroup;
+        public InputAction @AddAndRemoveFromOtherGroups => m_Wrapper.m_TopDownControls_AddAndRemoveFromOtherGroups;
         public InputActionMap Get() { return m_Wrapper.m_TopDownControls; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -281,6 +347,15 @@ public class @Controls : IInputActionCollection, IDisposable
                 @StackAction.started -= m_Wrapper.m_TopDownControlsActionsCallbackInterface.OnStackAction;
                 @StackAction.performed -= m_Wrapper.m_TopDownControlsActionsCallbackInterface.OnStackAction;
                 @StackAction.canceled -= m_Wrapper.m_TopDownControlsActionsCallbackInterface.OnStackAction;
+                @AddToGroup.started -= m_Wrapper.m_TopDownControlsActionsCallbackInterface.OnAddToGroup;
+                @AddToGroup.performed -= m_Wrapper.m_TopDownControlsActionsCallbackInterface.OnAddToGroup;
+                @AddToGroup.canceled -= m_Wrapper.m_TopDownControlsActionsCallbackInterface.OnAddToGroup;
+                @RemoveFromGroup.started -= m_Wrapper.m_TopDownControlsActionsCallbackInterface.OnRemoveFromGroup;
+                @RemoveFromGroup.performed -= m_Wrapper.m_TopDownControlsActionsCallbackInterface.OnRemoveFromGroup;
+                @RemoveFromGroup.canceled -= m_Wrapper.m_TopDownControlsActionsCallbackInterface.OnRemoveFromGroup;
+                @AddAndRemoveFromOtherGroups.started -= m_Wrapper.m_TopDownControlsActionsCallbackInterface.OnAddAndRemoveFromOtherGroups;
+                @AddAndRemoveFromOtherGroups.performed -= m_Wrapper.m_TopDownControlsActionsCallbackInterface.OnAddAndRemoveFromOtherGroups;
+                @AddAndRemoveFromOtherGroups.canceled -= m_Wrapper.m_TopDownControlsActionsCallbackInterface.OnAddAndRemoveFromOtherGroups;
             }
             m_Wrapper.m_TopDownControlsActionsCallbackInterface = instance;
             if (instance != null)
@@ -306,6 +381,15 @@ public class @Controls : IInputActionCollection, IDisposable
                 @StackAction.started += instance.OnStackAction;
                 @StackAction.performed += instance.OnStackAction;
                 @StackAction.canceled += instance.OnStackAction;
+                @AddToGroup.started += instance.OnAddToGroup;
+                @AddToGroup.performed += instance.OnAddToGroup;
+                @AddToGroup.canceled += instance.OnAddToGroup;
+                @RemoveFromGroup.started += instance.OnRemoveFromGroup;
+                @RemoveFromGroup.performed += instance.OnRemoveFromGroup;
+                @RemoveFromGroup.canceled += instance.OnRemoveFromGroup;
+                @AddAndRemoveFromOtherGroups.started += instance.OnAddAndRemoveFromOtherGroups;
+                @AddAndRemoveFromOtherGroups.performed += instance.OnAddAndRemoveFromOtherGroups;
+                @AddAndRemoveFromOtherGroups.canceled += instance.OnAddAndRemoveFromOtherGroups;
             }
         }
     }
@@ -328,5 +412,8 @@ public class @Controls : IInputActionCollection, IDisposable
         void OnZoom(InputAction.CallbackContext context);
         void OnBoxSelect(InputAction.CallbackContext context);
         void OnStackAction(InputAction.CallbackContext context);
+        void OnAddToGroup(InputAction.CallbackContext context);
+        void OnRemoveFromGroup(InputAction.CallbackContext context);
+        void OnAddAndRemoveFromOtherGroups(InputAction.CallbackContext context);
     }
 }

@@ -5,3 +5,5 @@ Implem fast idle state (flocking).
 Display units state in UI (all states display);
 Produce units in buildings.
 Set rally points.
+Implem fog of war.
+Implem control groups.

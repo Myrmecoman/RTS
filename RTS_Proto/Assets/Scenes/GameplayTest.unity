@@ -263,7 +263,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c5c320a8b836a344190d5969bdaa1e62, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  cam_controller: {fileID: 963194230}
+  camController: {fileID: 963194230}
   selection: {fileID: 353563226}
   lastKeyPressed: 0
 --- !u!114 &353563229

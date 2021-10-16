@@ -35,7 +35,7 @@ public class BuildingManager : Selectable
     }
 
 
-    public override void AddDestination(WorldGrid grid, int index, Transform follow = null, int action = 0, ResourceManager res = null)
+    public override void AddDestination(WorldGrid grid, int index, Transform follow = null, int action = 0 /* 1 = attack, 2 = patrol, 3 = collect-resource */, ResourceManager res = null)
     {
         Debug.LogError("not implemented yet");
     }

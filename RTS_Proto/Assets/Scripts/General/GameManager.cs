@@ -83,16 +83,23 @@ public class GameManager : MonoBehaviour
         {
             if (inUse[i] == 0)
             {
-                inUse[i] = agents.Count;
+                int actualAgents = 0;
                 grids[i].ChangeTarget(target);
 
                 foreach (KeyValuePair<int, Selectable> ag in agents)
                 {
-                    if (focus)
-                        ag.Value.AddDestination(grids[i], i, target, 1);
-                    else
-                        ag.Value.AddDestination(grids[i], i, null, 1);
+                    if (ag.Value.GetComponent<AgentManager>())
+                    {
+                        actualAgents++;
+
+                        if (focus)
+                            ag.Value.AddDestination(grids[i], i, target, 1);
+                        else
+                            ag.Value.AddDestination(grids[i], i, null, 1);
+                    }
                 }
+
+                inUse[i] = actualAgents;
 
                 return;
             }
@@ -108,11 +115,19 @@ public class GameManager : MonoBehaviour
         {
             if (inUse[i] == 0)
             {
-                inUse[i] = agents.Count;
+                int actualAgents = 0;
                 grids[i].ChangeTarget(target);
 
                 foreach (KeyValuePair<int, Selectable> ag in agents)
-                    ag.Value.AddDestination(grids[i], i, null, 2);
+                {
+                    if (ag.Value.GetComponent<AgentManager>())
+                    {
+                        actualAgents++;
+                        ag.Value.AddDestination(grids[i], i, null, 2);
+                    }
+                }
+
+                inUse[i] = actualAgents;
 
                 return;
             }

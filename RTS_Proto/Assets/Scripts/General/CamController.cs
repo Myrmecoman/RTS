@@ -190,6 +190,7 @@ public class CamController : MonoBehaviour
         transform.eulerAngles = new Vector3(45 + (transform.position.y - 10), transform.eulerAngles.y, transform.eulerAngles.z);
     }
 
+
     public Vector2 MoveCam()
     {
         Vector2 keyArrows = Vector2.zero;

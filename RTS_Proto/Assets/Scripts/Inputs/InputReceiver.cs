@@ -2,11 +2,11 @@ using UnityEngine;
 using UnityEngine.InputSystem;
 
 
-public class Input_Receiver : MonoBehaviour
+public class InputReceiver : MonoBehaviour
 {
-    public static Input_Receiver instance;
+    public static InputReceiver instance;
 
-    public CamController cam_controller;
+    public CamController camController;
     public GlobalSelection selection;
 
     [HideInInspector] public char lastKeyPressed = '\0';
@@ -39,11 +39,11 @@ public class Input_Receiver : MonoBehaviour
 
         controls = new Controls();
 
-        controls.TopDownControls.Zoom.performed += _ => cam_controller.Zoom(_.ReadValue<Vector2>());
+        controls.TopDownControls.Zoom.performed += _ => camController.Zoom(_.ReadValue<Vector2>());
 
-        controls.TopDownControls.HoldPosition.performed += _ => cam_controller.HoldPosition();
+        controls.TopDownControls.HoldPosition.performed += _ => camController.HoldPosition();
 
-        controls.TopDownControls.MoveCommand.performed += _ => cam_controller.MoveCommand();
+        controls.TopDownControls.MoveCommand.performed += _ => camController.MoveCommand();
 
         controls.TopDownControls.StackAction.performed += _ => selection.StackActionHold = true;
         controls.TopDownControls.StackAction.canceled += _ => selection.StackActionHold = false;
@@ -55,46 +55,34 @@ public class Input_Receiver : MonoBehaviour
         if (Keyboard.current.anyKey.wasPressedThisFrame)
         {
             if (controls.TopDownControls.Attack.triggered && SelectedDico.instance.selectedTable.Count != 0)
-            {
                 lastKeyPressed = 'A'; // A is for attack
-                //Debug.Log("Attack pressed");
-            }
             else if (controls.TopDownControls.Patrol.triggered && SelectedDico.instance.selectedTable.Count != 0)
-            {
                 lastKeyPressed = 'R'; // R is for patrol
-                //Debug.Log("Patrol pressed");
-            }
             else
                 lastKeyPressed = '\0';
         }
+
+        /*
+        if (Keyboard.current.anyKey.isPressed)
+        {
+            if (controls.TopDownControls.AddToGroup.triggered && SelectedDico.instance.selectedTable.Count != 0)
+                lastKeyPressed = 'S'; // S is for adding to group
+            else if (controls.TopDownControls.RemoveFromGroup.triggered && SelectedDico.instance.selectedTable.Count != 0)
+                lastKeyPressed = 'C'; // C is for removing from group
+            else if (controls.TopDownControls.AddAndRemoveFromOtherGroups.triggered && SelectedDico.instance.selectedTable.Count != 0)
+                lastKeyPressed = 'L'; // L is for adding to group and removing from others
+        }
+        */
     }
 
 
     public void ChooseAction()
     {
-        if (lastKeyPressed == '\0')
-            Debug.LogError("Error last key is \\0");
-        else if (lastKeyPressed == 'A')
-            cam_controller.AttackCommand();
+        if (lastKeyPressed == 'A')
+            camController.AttackCommand();
         else if (lastKeyPressed == 'R')
-            cam_controller.PatrolCommand();
-        else
-            Debug.LogError("Error on last key pressed: " + lastKeyPressed);
+            camController.PatrolCommand();
 
         lastKeyPressed = '\0';
-    }
-
-
-    public void setLastInputToAttack()
-    {
-        lastKeyPressed = 'A'; // A is for attack
-        //Debug.Log("Attack pressed");
-    }
-
-
-    public void setLastInputToPatrol()
-    {
-        lastKeyPressed = 'R'; // R is for patrol
-        //Debug.Log("Patrol pressed");
     }
 }

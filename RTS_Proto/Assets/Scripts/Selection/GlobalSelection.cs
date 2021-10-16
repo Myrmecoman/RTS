@@ -50,7 +50,7 @@ public class GlobalSelection : MonoBehaviour
         //2. while left mouse button held
         if (Mouse.current.leftButton.isPressed)
         {
-            if((p1 - new Vector3(Mouse.current.position.ReadValue().x, Mouse.current.position.ReadValue().y, 0)).magnitude > 20 && Input_Receiver.instance.lastKeyPressed == '\0')
+            if((p1 - new Vector3(Mouse.current.position.ReadValue().x, Mouse.current.position.ReadValue().y, 0)).magnitude > 20 && InputReceiver.instance.lastKeyPressed == '\0')
             {
                 dragSelect = true;
             }
@@ -61,9 +61,9 @@ public class GlobalSelection : MonoBehaviour
         {
             if(dragSelect == false) //single select
             {
-                if (Input_Receiver.instance.lastKeyPressed != '\0')
+                if (InputReceiver.instance.lastKeyPressed != '\0')
                 {
-                    Input_Receiver.instance.ChooseAction();
+                    InputReceiver.instance.ChooseAction();
                     return;
                 }
 

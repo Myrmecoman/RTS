@@ -55,4 +55,10 @@ public class SelectedDico : MonoBehaviour
         }
         selectedTable.Clear();
     }
+
+
+    public void UpdateUI()
+    {
+        // This is where UI is modified according to all selectables states, not a priority
+    }
 }

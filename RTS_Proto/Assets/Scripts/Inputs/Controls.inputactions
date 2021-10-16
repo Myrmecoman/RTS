@@ -60,6 +60,30 @@
                     "expectedControlType": "Button",
                     "processors": "",
                     "interactions": ""
+                },
+                {
+                    "name": "AddToGroup",
+                    "type": "Button",
+                    "id": "7338b123-9376-41e4-8309-74bbe2784e37",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": ""
+                },
+                {
+                    "name": "RemoveFromGroup",
+                    "type": "Button",
+                    "id": "6bfa3bdf-0f32-4e4d-b5be-d39db1d28a0e",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": ""
+                },
+                {
+                    "name": "AddAndRemoveFromOtherGroups",
+                    "type": "Button",
+                    "id": "03bd2721-80f5-4eb9-868f-933097a4b3f1",
+                    "expectedControlType": "Button",
+                    "processors": "",
+                    "interactions": ""
                 }
             ],
             "bindings": [
@@ -88,7 +112,7 @@
                 {
                     "name": "",
                     "id": "4d608903-53db-4a10-9c6b-78092028fe0d",
-                    "path": "<Keyboard>/shift",
+                    "path": "<Keyboard>/leftShift",
                     "interactions": "",
                     "processors": "",
                     "groups": "PC",
@@ -137,6 +161,39 @@
                     "processors": "",
                     "groups": "PC",
                     "action": "Patrol",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "25fff336-d460-47ce-9dbd-a6d412e391b9",
+                    "path": "<Keyboard>/leftShift",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "PC",
+                    "action": "AddToGroup",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "66b9d496-d832-4062-b043-c429f8c2c9bc",
+                    "path": "<Keyboard>/leftCtrl",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "PC",
+                    "action": "RemoveFromGroup",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "2abe8233-05c3-43d6-aa02-eb696ae696be",
+                    "path": "<Keyboard>/leftAlt",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "PC",
+                    "action": "AddAndRemoveFromOtherGroups",
                     "isComposite": false,
                     "isPartOfComposite": false
                 }
