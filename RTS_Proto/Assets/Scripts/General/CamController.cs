@@ -35,7 +35,6 @@ public class CamController : MonoBehaviour
         cam = GetComponent<Camera>();
         Cursor.visible = true;
         Cursor.lockState = CursorLockMode.Confined;
-        UpdateHeight();
     }
 
 
@@ -177,17 +176,9 @@ public class CamController : MonoBehaviour
     public void Zoom(Vector2 value)
     {
         if (value.y > 0)
-            transform.position = new Vector3(transform.position.x, Mathf.Clamp(transform.position.y - 2f, 10f, 50f), transform.position.z);
+            cam.fieldOfView = Mathf.Clamp(cam.fieldOfView - 3, 30, 60);
         else
-            transform.position = new Vector3(transform.position.x, Mathf.Clamp(transform.position.y + 2f, 10f, 50f), transform.position.z);
-
-        UpdateHeight();
-    }
-
-
-    private void UpdateHeight()
-    {
-        transform.eulerAngles = new Vector3(45 + (transform.position.y - 10), transform.eulerAngles.y, transform.eulerAngles.z);
+            cam.fieldOfView = Mathf.Clamp(cam.fieldOfView + 3, 30, 60);
     }
 
 
