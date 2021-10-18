@@ -8,10 +8,15 @@ public class InputReceiver : MonoBehaviour
 
     public CamController camController;
     public GlobalSelection selection;
+    public SelectedDico selectedDico;
+    public AllGroups allGroups;
 
     [HideInInspector] public char lastKeyPressed = '\0';
 
     private Controls controls;
+    private bool addGroupHold = false;
+    private bool removeFromGroup = false;
+    private bool addAndRemoveFromOtherGroups = false;
 
 
     #region Enable/Disable
@@ -47,6 +52,26 @@ public class InputReceiver : MonoBehaviour
 
         controls.TopDownControls.StackAction.performed += _ => selection.StackActionHold = true;
         controls.TopDownControls.StackAction.canceled += _ => selection.StackActionHold = false;
+
+        controls.TopDownControls.AddToGroup.performed += _ => addGroupHold = true;
+        controls.TopDownControls.AddToGroup.canceled += _ => addGroupHold = false;
+
+        controls.TopDownControls.RemoveFromGroup.performed += _ => removeFromGroup = true;
+        controls.TopDownControls.RemoveFromGroup.canceled += _ => removeFromGroup = false;
+
+        controls.TopDownControls.AddAndRemoveFromOtherGroups.performed += _ => addAndRemoveFromOtherGroups = true;
+        controls.TopDownControls.AddAndRemoveFromOtherGroups.canceled += _ => addAndRemoveFromOtherGroups = false;
+
+        controls.TopDownControls.Group1.performed += _ => ChooseGroupAction(1);
+        controls.TopDownControls.Group2.performed += _ => ChooseGroupAction(2);
+        controls.TopDownControls.Group3.performed += _ => ChooseGroupAction(3);
+        controls.TopDownControls.Group4.performed += _ => ChooseGroupAction(4);
+        controls.TopDownControls.Group5.performed += _ => ChooseGroupAction(5);
+        controls.TopDownControls.Group6.performed += _ => ChooseGroupAction(6);
+        controls.TopDownControls.Group7.performed += _ => ChooseGroupAction(7);
+        controls.TopDownControls.Group8.performed += _ => ChooseGroupAction(8);
+        controls.TopDownControls.Group9.performed += _ => ChooseGroupAction(9);
+        controls.TopDownControls.Group0.performed += _ => ChooseGroupAction(0);
     }
 
 
@@ -61,18 +86,6 @@ public class InputReceiver : MonoBehaviour
             else
                 lastKeyPressed = '\0';
         }
-
-        /*
-        if (Keyboard.current.anyKey.isPressed)
-        {
-            if (controls.TopDownControls.AddToGroup.triggered && SelectedDico.instance.selectedTable.Count != 0)
-                lastKeyPressed = 'S'; // S is for adding to group
-            else if (controls.TopDownControls.RemoveFromGroup.triggered && SelectedDico.instance.selectedTable.Count != 0)
-                lastKeyPressed = 'C'; // C is for removing from group
-            else if (controls.TopDownControls.AddAndRemoveFromOtherGroups.triggered && SelectedDico.instance.selectedTable.Count != 0)
-                lastKeyPressed = 'L'; // L is for adding to group and removing from others
-        }
-        */
     }
 
 
@@ -84,5 +97,18 @@ public class InputReceiver : MonoBehaviour
             camController.PatrolCommand();
 
         lastKeyPressed = '\0';
+    }
+
+
+    private void ChooseGroupAction(int groupNb)
+    {
+        if (addGroupHold)
+            allGroups.AddToGroup(selectedDico.selectedTable, groupNb);
+        else if (removeFromGroup)
+            allGroups.RemoveFromGroup(selectedDico.selectedTable, groupNb);
+        else if (addAndRemoveFromOtherGroups)
+            allGroups.AddAndRemoveFromOtherGroups(selectedDico.selectedTable, groupNb);
+        else
+            selectedDico.SelectGroup(groupNb);
     }
 }

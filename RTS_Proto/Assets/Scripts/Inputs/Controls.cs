@@ -97,6 +97,86 @@ public class @Controls : IInputActionCollection, IDisposable
                     ""expectedControlType"": ""Button"",
                     ""processors"": """",
                     ""interactions"": """"
+                },
+                {
+                    ""name"": ""Group1"",
+                    ""type"": ""Button"",
+                    ""id"": ""5ba0610e-bacb-49c1-a819-10962916f0fe"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """"
+                },
+                {
+                    ""name"": ""Group2"",
+                    ""type"": ""Button"",
+                    ""id"": ""db6c1f88-ce37-44cc-89a4-db3c1bdc4f93"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """"
+                },
+                {
+                    ""name"": ""Group3"",
+                    ""type"": ""Button"",
+                    ""id"": ""eb66788e-6fda-4f98-957b-8124e404e471"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """"
+                },
+                {
+                    ""name"": ""Group4"",
+                    ""type"": ""Button"",
+                    ""id"": ""3517e6e9-5f8c-4ac0-960f-8c4041d58472"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """"
+                },
+                {
+                    ""name"": ""Group5"",
+                    ""type"": ""Button"",
+                    ""id"": ""14d8bf97-7673-49e7-af10-1acd5db515e2"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """"
+                },
+                {
+                    ""name"": ""Group6"",
+                    ""type"": ""Button"",
+                    ""id"": ""80305b3c-cd48-45c9-a753-c85d74b174bd"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """"
+                },
+                {
+                    ""name"": ""Group7"",
+                    ""type"": ""Button"",
+                    ""id"": ""0846d5b1-2bed-49d6-a0eb-cd49ba187431"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """"
+                },
+                {
+                    ""name"": ""Group8"",
+                    ""type"": ""Button"",
+                    ""id"": ""27aac874-1243-47dc-9822-3c71bc7e74b6"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """"
+                },
+                {
+                    ""name"": ""Group9"",
+                    ""type"": ""Button"",
+                    ""id"": ""fcf96da0-4547-4041-80fd-3e900d3fac97"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """"
+                },
+                {
+                    ""name"": ""Group0"",
+                    ""type"": ""Button"",
+                    ""id"": ""89b171ec-0d7e-401a-b68b-180c96049c66"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """"
                 }
             ],
             ""bindings"": [
@@ -209,6 +289,116 @@ public class @Controls : IInputActionCollection, IDisposable
                     ""action"": ""AddAndRemoveFromOtherGroups"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""ee12ebf5-74a5-49d2-8b99-ff9f1c76f4ca"",
+                    ""path"": ""<Keyboard>/1"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""PC"",
+                    ""action"": ""Group1"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""0ea585d5-82eb-48e8-8c49-93efee43fd50"",
+                    ""path"": ""<Keyboard>/2"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""PC"",
+                    ""action"": ""Group2"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""bd8adde1-3b82-4654-8d6d-d75459c1fa78"",
+                    ""path"": ""<Keyboard>/3"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""PC"",
+                    ""action"": ""Group3"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""0cc755ee-9e7a-4e6d-88fe-32341f660f5a"",
+                    ""path"": ""<Keyboard>/4"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""PC"",
+                    ""action"": ""Group4"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""53538392-585b-4f5e-a08d-6f44cc44c247"",
+                    ""path"": ""<Keyboard>/5"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""PC"",
+                    ""action"": ""Group5"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""58c4fba8-f8f7-457b-82d0-b3dc18f37ba3"",
+                    ""path"": ""<Keyboard>/6"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""PC"",
+                    ""action"": ""Group6"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""a49adf9b-cb45-40e5-92ad-68b7c0cc3e07"",
+                    ""path"": ""<Keyboard>/7"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""PC"",
+                    ""action"": ""Group7"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""7f91e0de-8c6b-4371-9084-1202fbbe60d8"",
+                    ""path"": ""<Keyboard>/8"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""PC"",
+                    ""action"": ""Group8"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""9856dabb-0590-45be-8729-80da9d0bc832"",
+                    ""path"": ""<Keyboard>/9"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""PC"",
+                    ""action"": ""Group9"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""af7d1275-235c-4e15-b763-89a1e9a7e32e"",
+                    ""path"": ""<Keyboard>/0"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""PC"",
+                    ""action"": ""Group0"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
                 }
             ]
         }
@@ -244,6 +434,16 @@ public class @Controls : IInputActionCollection, IDisposable
         m_TopDownControls_AddToGroup = m_TopDownControls.FindAction("AddToGroup", throwIfNotFound: true);
         m_TopDownControls_RemoveFromGroup = m_TopDownControls.FindAction("RemoveFromGroup", throwIfNotFound: true);
         m_TopDownControls_AddAndRemoveFromOtherGroups = m_TopDownControls.FindAction("AddAndRemoveFromOtherGroups", throwIfNotFound: true);
+        m_TopDownControls_Group1 = m_TopDownControls.FindAction("Group1", throwIfNotFound: true);
+        m_TopDownControls_Group2 = m_TopDownControls.FindAction("Group2", throwIfNotFound: true);
+        m_TopDownControls_Group3 = m_TopDownControls.FindAction("Group3", throwIfNotFound: true);
+        m_TopDownControls_Group4 = m_TopDownControls.FindAction("Group4", throwIfNotFound: true);
+        m_TopDownControls_Group5 = m_TopDownControls.FindAction("Group5", throwIfNotFound: true);
+        m_TopDownControls_Group6 = m_TopDownControls.FindAction("Group6", throwIfNotFound: true);
+        m_TopDownControls_Group7 = m_TopDownControls.FindAction("Group7", throwIfNotFound: true);
+        m_TopDownControls_Group8 = m_TopDownControls.FindAction("Group8", throwIfNotFound: true);
+        m_TopDownControls_Group9 = m_TopDownControls.FindAction("Group9", throwIfNotFound: true);
+        m_TopDownControls_Group0 = m_TopDownControls.FindAction("Group0", throwIfNotFound: true);
     }
 
     public void Dispose()
@@ -303,6 +503,16 @@ public class @Controls : IInputActionCollection, IDisposable
     private readonly InputAction m_TopDownControls_AddToGroup;
     private readonly InputAction m_TopDownControls_RemoveFromGroup;
     private readonly InputAction m_TopDownControls_AddAndRemoveFromOtherGroups;
+    private readonly InputAction m_TopDownControls_Group1;
+    private readonly InputAction m_TopDownControls_Group2;
+    private readonly InputAction m_TopDownControls_Group3;
+    private readonly InputAction m_TopDownControls_Group4;
+    private readonly InputAction m_TopDownControls_Group5;
+    private readonly InputAction m_TopDownControls_Group6;
+    private readonly InputAction m_TopDownControls_Group7;
+    private readonly InputAction m_TopDownControls_Group8;
+    private readonly InputAction m_TopDownControls_Group9;
+    private readonly InputAction m_TopDownControls_Group0;
     public struct TopDownControlsActions
     {
         private @Controls m_Wrapper;
@@ -317,6 +527,16 @@ public class @Controls : IInputActionCollection, IDisposable
         public InputAction @AddToGroup => m_Wrapper.m_TopDownControls_AddToGroup;
         public InputAction @RemoveFromGroup => m_Wrapper.m_TopDownControls_RemoveFromGroup;
         public InputAction @AddAndRemoveFromOtherGroups => m_Wrapper.m_TopDownControls_AddAndRemoveFromOtherGroups;
+        public InputAction @Group1 => m_Wrapper.m_TopDownControls_Group1;
+        public InputAction @Group2 => m_Wrapper.m_TopDownControls_Group2;
+        public InputAction @Group3 => m_Wrapper.m_TopDownControls_Group3;
+        public InputAction @Group4 => m_Wrapper.m_TopDownControls_Group4;
+        public InputAction @Group5 => m_Wrapper.m_TopDownControls_Group5;
+        public InputAction @Group6 => m_Wrapper.m_TopDownControls_Group6;
+        public InputAction @Group7 => m_Wrapper.m_TopDownControls_Group7;
+        public InputAction @Group8 => m_Wrapper.m_TopDownControls_Group8;
+        public InputAction @Group9 => m_Wrapper.m_TopDownControls_Group9;
+        public InputAction @Group0 => m_Wrapper.m_TopDownControls_Group0;
         public InputActionMap Get() { return m_Wrapper.m_TopDownControls; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -356,6 +576,36 @@ public class @Controls : IInputActionCollection, IDisposable
                 @AddAndRemoveFromOtherGroups.started -= m_Wrapper.m_TopDownControlsActionsCallbackInterface.OnAddAndRemoveFromOtherGroups;
                 @AddAndRemoveFromOtherGroups.performed -= m_Wrapper.m_TopDownControlsActionsCallbackInterface.OnAddAndRemoveFromOtherGroups;
                 @AddAndRemoveFromOtherGroups.canceled -= m_Wrapper.m_TopDownControlsActionsCallbackInterface.OnAddAndRemoveFromOtherGroups;
+                @Group1.started -= m_Wrapper.m_TopDownControlsActionsCallbackInterface.OnGroup1;
+                @Group1.performed -= m_Wrapper.m_TopDownControlsActionsCallbackInterface.OnGroup1;
+                @Group1.canceled -= m_Wrapper.m_TopDownControlsActionsCallbackInterface.OnGroup1;
+                @Group2.started -= m_Wrapper.m_TopDownControlsActionsCallbackInterface.OnGroup2;
+                @Group2.performed -= m_Wrapper.m_TopDownControlsActionsCallbackInterface.OnGroup2;
+                @Group2.canceled -= m_Wrapper.m_TopDownControlsActionsCallbackInterface.OnGroup2;
+                @Group3.started -= m_Wrapper.m_TopDownControlsActionsCallbackInterface.OnGroup3;
+                @Group3.performed -= m_Wrapper.m_TopDownControlsActionsCallbackInterface.OnGroup3;
+                @Group3.canceled -= m_Wrapper.m_TopDownControlsActionsCallbackInterface.OnGroup3;
+                @Group4.started -= m_Wrapper.m_TopDownControlsActionsCallbackInterface.OnGroup4;
+                @Group4.performed -= m_Wrapper.m_TopDownControlsActionsCallbackInterface.OnGroup4;
+                @Group4.canceled -= m_Wrapper.m_TopDownControlsActionsCallbackInterface.OnGroup4;
+                @Group5.started -= m_Wrapper.m_TopDownControlsActionsCallbackInterface.OnGroup5;
+                @Group5.performed -= m_Wrapper.m_TopDownControlsActionsCallbackInterface.OnGroup5;
+                @Group5.canceled -= m_Wrapper.m_TopDownControlsActionsCallbackInterface.OnGroup5;
+                @Group6.started -= m_Wrapper.m_TopDownControlsActionsCallbackInterface.OnGroup6;
+                @Group6.performed -= m_Wrapper.m_TopDownControlsActionsCallbackInterface.OnGroup6;
+                @Group6.canceled -= m_Wrapper.m_TopDownControlsActionsCallbackInterface.OnGroup6;
+                @Group7.started -= m_Wrapper.m_TopDownControlsActionsCallbackInterface.OnGroup7;
+                @Group7.performed -= m_Wrapper.m_TopDownControlsActionsCallbackInterface.OnGroup7;
+                @Group7.canceled -= m_Wrapper.m_TopDownControlsActionsCallbackInterface.OnGroup7;
+                @Group8.started -= m_Wrapper.m_TopDownControlsActionsCallbackInterface.OnGroup8;
+                @Group8.performed -= m_Wrapper.m_TopDownControlsActionsCallbackInterface.OnGroup8;
+                @Group8.canceled -= m_Wrapper.m_TopDownControlsActionsCallbackInterface.OnGroup8;
+                @Group9.started -= m_Wrapper.m_TopDownControlsActionsCallbackInterface.OnGroup9;
+                @Group9.performed -= m_Wrapper.m_TopDownControlsActionsCallbackInterface.OnGroup9;
+                @Group9.canceled -= m_Wrapper.m_TopDownControlsActionsCallbackInterface.OnGroup9;
+                @Group0.started -= m_Wrapper.m_TopDownControlsActionsCallbackInterface.OnGroup0;
+                @Group0.performed -= m_Wrapper.m_TopDownControlsActionsCallbackInterface.OnGroup0;
+                @Group0.canceled -= m_Wrapper.m_TopDownControlsActionsCallbackInterface.OnGroup0;
             }
             m_Wrapper.m_TopDownControlsActionsCallbackInterface = instance;
             if (instance != null)
@@ -390,6 +640,36 @@ public class @Controls : IInputActionCollection, IDisposable
                 @AddAndRemoveFromOtherGroups.started += instance.OnAddAndRemoveFromOtherGroups;
                 @AddAndRemoveFromOtherGroups.performed += instance.OnAddAndRemoveFromOtherGroups;
                 @AddAndRemoveFromOtherGroups.canceled += instance.OnAddAndRemoveFromOtherGroups;
+                @Group1.started += instance.OnGroup1;
+                @Group1.performed += instance.OnGroup1;
+                @Group1.canceled += instance.OnGroup1;
+                @Group2.started += instance.OnGroup2;
+                @Group2.performed += instance.OnGroup2;
+                @Group2.canceled += instance.OnGroup2;
+                @Group3.started += instance.OnGroup3;
+                @Group3.performed += instance.OnGroup3;
+                @Group3.canceled += instance.OnGroup3;
+                @Group4.started += instance.OnGroup4;
+                @Group4.performed += instance.OnGroup4;
+                @Group4.canceled += instance.OnGroup4;
+                @Group5.started += instance.OnGroup5;
+                @Group5.performed += instance.OnGroup5;
+                @Group5.canceled += instance.OnGroup5;
+                @Group6.started += instance.OnGroup6;
+                @Group6.performed += instance.OnGroup6;
+                @Group6.canceled += instance.OnGroup6;
+                @Group7.started += instance.OnGroup7;
+                @Group7.performed += instance.OnGroup7;
+                @Group7.canceled += instance.OnGroup7;
+                @Group8.started += instance.OnGroup8;
+                @Group8.performed += instance.OnGroup8;
+                @Group8.canceled += instance.OnGroup8;
+                @Group9.started += instance.OnGroup9;
+                @Group9.performed += instance.OnGroup9;
+                @Group9.canceled += instance.OnGroup9;
+                @Group0.started += instance.OnGroup0;
+                @Group0.performed += instance.OnGroup0;
+                @Group0.canceled += instance.OnGroup0;
             }
         }
     }
@@ -415,5 +695,15 @@ public class @Controls : IInputActionCollection, IDisposable
         void OnAddToGroup(InputAction.CallbackContext context);
         void OnRemoveFromGroup(InputAction.CallbackContext context);
         void OnAddAndRemoveFromOtherGroups(InputAction.CallbackContext context);
+        void OnGroup1(InputAction.CallbackContext context);
+        void OnGroup2(InputAction.CallbackContext context);
+        void OnGroup3(InputAction.CallbackContext context);
+        void OnGroup4(InputAction.CallbackContext context);
+        void OnGroup5(InputAction.CallbackContext context);
+        void OnGroup6(InputAction.CallbackContext context);
+        void OnGroup7(InputAction.CallbackContext context);
+        void OnGroup8(InputAction.CallbackContext context);
+        void OnGroup9(InputAction.CallbackContext context);
+        void OnGroup0(InputAction.CallbackContext context);
     }
 }

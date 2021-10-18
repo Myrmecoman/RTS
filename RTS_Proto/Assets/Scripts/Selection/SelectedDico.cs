@@ -1,6 +1,7 @@
 ﻿using System.Collections.Generic;
 using UnityEngine;
 
+
 public class SelectedDico : MonoBehaviour
 {
     public static SelectedDico instance;
@@ -41,6 +42,9 @@ public class SelectedDico : MonoBehaviour
     {
         if (selectedTable.ContainsKey(id))
             selectedTable.Remove(id);
+
+        foreach (var g in AllGroups.instance.controlGroups)
+            g.Remove(id);
     }
 
 
@@ -54,6 +58,14 @@ public class SelectedDico : MonoBehaviour
             }
         }
         selectedTable.Clear();
+    }
+
+
+    public void SelectGroup(int groupId)
+    {
+        DeselectAll();
+        foreach(var s in AllGroups.instance.controlGroups[groupId])
+            AddSelected(s.Value);
     }
 
 
