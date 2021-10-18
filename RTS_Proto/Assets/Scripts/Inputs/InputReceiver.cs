@@ -1,6 +1,7 @@
 using UnityEngine;
+using UnityEngine.EventSystems;
 using UnityEngine.InputSystem;
-
+using UnityEngine.UI;
 
 public class InputReceiver : MonoBehaviour
 {
@@ -10,6 +11,7 @@ public class InputReceiver : MonoBehaviour
     public GlobalSelection selection;
     public SelectedDico selectedDico;
     public AllGroups allGroups;
+    public Button[] buttonGroups = new Button[10];
 
     [HideInInspector] public char lastKeyPressed = '\0';
 
@@ -62,16 +64,26 @@ public class InputReceiver : MonoBehaviour
         controls.TopDownControls.AddAndRemoveFromOtherGroups.performed += _ => addAndRemoveFromOtherGroups = true;
         controls.TopDownControls.AddAndRemoveFromOtherGroups.canceled += _ => addAndRemoveFromOtherGroups = false;
 
-        controls.TopDownControls.Group1.performed += _ => ChooseGroupAction(1);
-        controls.TopDownControls.Group2.performed += _ => ChooseGroupAction(2);
-        controls.TopDownControls.Group3.performed += _ => ChooseGroupAction(3);
-        controls.TopDownControls.Group4.performed += _ => ChooseGroupAction(4);
-        controls.TopDownControls.Group5.performed += _ => ChooseGroupAction(5);
-        controls.TopDownControls.Group6.performed += _ => ChooseGroupAction(6);
-        controls.TopDownControls.Group7.performed += _ => ChooseGroupAction(7);
-        controls.TopDownControls.Group8.performed += _ => ChooseGroupAction(8);
-        controls.TopDownControls.Group9.performed += _ => ChooseGroupAction(9);
-        controls.TopDownControls.Group0.performed += _ => ChooseGroupAction(0);
+        controls.TopDownControls.Group1.performed += _ => { ChooseGroupAction(1); buttonGroups[1].Select(); };
+        controls.TopDownControls.Group1.canceled += _ => EventSystem.current.SetSelectedGameObject(null);
+        controls.TopDownControls.Group2.performed += _ => { ChooseGroupAction(2); buttonGroups[2].Select(); };
+        controls.TopDownControls.Group2.canceled += _ => EventSystem.current.SetSelectedGameObject(null);
+        controls.TopDownControls.Group3.performed += _ => { ChooseGroupAction(3); buttonGroups[3].Select(); };
+        controls.TopDownControls.Group3.canceled += _ => EventSystem.current.SetSelectedGameObject(null);
+        controls.TopDownControls.Group4.performed += _ => { ChooseGroupAction(4); buttonGroups[4].Select(); };
+        controls.TopDownControls.Group4.canceled += _ => EventSystem.current.SetSelectedGameObject(null);
+        controls.TopDownControls.Group5.performed += _ => { ChooseGroupAction(5); buttonGroups[5].Select(); };
+        controls.TopDownControls.Group5.canceled += _ => EventSystem.current.SetSelectedGameObject(null);
+        controls.TopDownControls.Group6.performed += _ => { ChooseGroupAction(6); buttonGroups[6].Select(); };
+        controls.TopDownControls.Group6.canceled += _ => EventSystem.current.SetSelectedGameObject(null);
+        controls.TopDownControls.Group7.performed += _ => { ChooseGroupAction(7); buttonGroups[7].Select(); };
+        controls.TopDownControls.Group7.canceled += _ => EventSystem.current.SetSelectedGameObject(null);
+        controls.TopDownControls.Group8.performed += _ => { ChooseGroupAction(8); buttonGroups[8].Select(); };
+        controls.TopDownControls.Group8.canceled += _ => EventSystem.current.SetSelectedGameObject(null);
+        controls.TopDownControls.Group9.performed += _ => { ChooseGroupAction(9); buttonGroups[9].Select(); };
+        controls.TopDownControls.Group9.canceled += _ => EventSystem.current.SetSelectedGameObject(null);
+        controls.TopDownControls.Group0.performed += _ => { ChooseGroupAction(0); buttonGroups[0].Select(); };
+        controls.TopDownControls.Group0.canceled += _ => EventSystem.current.SetSelectedGameObject(null);
     }
 
 
@@ -100,7 +112,7 @@ public class InputReceiver : MonoBehaviour
     }
 
 
-    private void ChooseGroupAction(int groupNb)
+    public void ChooseGroupAction(int groupNb)
     {
         if (addGroupHold)
             allGroups.AddToGroup(selectedDico.selectedTable, groupNb);

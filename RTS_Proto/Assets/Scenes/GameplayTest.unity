@@ -255,7 +255,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Navigation:
-    m_Mode: 3
+    m_Mode: 0
     m_WrapAround: 0
     m_SelectOnUp: {fileID: 0}
     m_SelectOnDown: {fileID: 0}
@@ -266,7 +266,7 @@ MonoBehaviour:
     m_NormalColor: {r: 0, g: 0.764151, b: 0.02636986, a: 1}
     m_HighlightedColor: {r: 0, g: 0.7647059, b: 0.02745098, a: 1}
     m_PressedColor: {r: 0, g: 0.509434, b: 0.018287404, a: 1}
-    m_SelectedColor: {r: 0.0047169924, g: 1, b: 0.040445156, a: 1}
+    m_SelectedColor: {r: 0, g: 0.50980395, b: 0.019607844, a: 1}
     m_DisabledColor: {r: 0.78431374, g: 0.78431374, b: 0.78431374, a: 0.5019608}
     m_ColorMultiplier: 1
     m_FadeDuration: 0.1
@@ -285,7 +285,19 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 108129332}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 353563228}
+        m_TargetAssemblyTypeName: InputReceiver, Assembly-CSharp
+        m_MethodName: ChooseGroupAction
+        m_Mode: 3
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 3
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &108129332
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -388,6 +400,17 @@ MonoBehaviour:
   selection: {fileID: 353563226}
   selectedDico: {fileID: 353563230}
   allGroups: {fileID: 353563231}
+  buttonGroups:
+  - {fileID: 1258724393}
+  - {fileID: 857379666}
+  - {fileID: 859930997}
+  - {fileID: 108129331}
+  - {fileID: 2081535171}
+  - {fileID: 354394583}
+  - {fileID: 552638195}
+  - {fileID: 492462047}
+  - {fileID: 1813323900}
+  - {fileID: 604562466}
   lastKeyPressed: 0
 --- !u!114 &353563229
 MonoBehaviour:
@@ -586,7 +609,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Navigation:
-    m_Mode: 3
+    m_Mode: 0
     m_WrapAround: 0
     m_SelectOnUp: {fileID: 0}
     m_SelectOnDown: {fileID: 0}
@@ -597,7 +620,7 @@ MonoBehaviour:
     m_NormalColor: {r: 0, g: 0.764151, b: 0.02636986, a: 1}
     m_HighlightedColor: {r: 0, g: 0.7647059, b: 0.02745098, a: 1}
     m_PressedColor: {r: 0, g: 0.509434, b: 0.018287404, a: 1}
-    m_SelectedColor: {r: 0.0047169924, g: 1, b: 0.040445156, a: 1}
+    m_SelectedColor: {r: 0, g: 0.50980395, b: 0.019607844, a: 1}
     m_DisabledColor: {r: 0.78431374, g: 0.78431374, b: 0.78431374, a: 0.5019608}
     m_ColorMultiplier: 1
     m_FadeDuration: 0.1
@@ -616,7 +639,19 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 354394584}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 353563228}
+        m_TargetAssemblyTypeName: InputReceiver, Assembly-CSharp
+        m_MethodName: ChooseGroupAction
+        m_Mode: 3
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 5
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &354394584
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -781,7 +816,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Navigation:
-    m_Mode: 3
+    m_Mode: 0
     m_WrapAround: 0
     m_SelectOnUp: {fileID: 0}
     m_SelectOnDown: {fileID: 0}
@@ -792,7 +827,7 @@ MonoBehaviour:
     m_NormalColor: {r: 0, g: 0.764151, b: 0.02636986, a: 1}
     m_HighlightedColor: {r: 0, g: 0.7647059, b: 0.02745098, a: 1}
     m_PressedColor: {r: 0, g: 0.509434, b: 0.018287404, a: 1}
-    m_SelectedColor: {r: 0.0047169924, g: 1, b: 0.040445156, a: 1}
+    m_SelectedColor: {r: 0, g: 0.50980395, b: 0.019607844, a: 1}
     m_DisabledColor: {r: 0.78431374, g: 0.78431374, b: 0.78431374, a: 0.5019608}
     m_ColorMultiplier: 1
     m_FadeDuration: 0.1
@@ -811,7 +846,19 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 492462048}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 353563228}
+        m_TargetAssemblyTypeName: InputReceiver, Assembly-CSharp
+        m_MethodName: ChooseGroupAction
+        m_Mode: 3
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 7
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &492462048
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -901,7 +948,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Navigation:
-    m_Mode: 3
+    m_Mode: 0
     m_WrapAround: 0
     m_SelectOnUp: {fileID: 0}
     m_SelectOnDown: {fileID: 0}
@@ -912,7 +959,7 @@ MonoBehaviour:
     m_NormalColor: {r: 0, g: 0.764151, b: 0.02636986, a: 1}
     m_HighlightedColor: {r: 0, g: 0.7647059, b: 0.02745098, a: 1}
     m_PressedColor: {r: 0, g: 0.509434, b: 0.018287404, a: 1}
-    m_SelectedColor: {r: 0.0047169924, g: 1, b: 0.040445156, a: 1}
+    m_SelectedColor: {r: 0, g: 0.50980395, b: 0.019607844, a: 1}
     m_DisabledColor: {r: 0.78431374, g: 0.78431374, b: 0.78431374, a: 0.5019608}
     m_ColorMultiplier: 1
     m_FadeDuration: 0.1
@@ -931,7 +978,19 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 552638196}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 353563228}
+        m_TargetAssemblyTypeName: InputReceiver, Assembly-CSharp
+        m_MethodName: ChooseGroupAction
+        m_Mode: 3
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 6
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &552638196
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1013,8 +1072,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -20, y: -230}
-  m_SizeDelta: {x: 1150, y: 100}
+  m_AnchoredPosition: {x: -20, y: -190}
+  m_SizeDelta: {x: 1100, y: 40}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &598904644
 MonoBehaviour:
@@ -1091,7 +1150,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Navigation:
-    m_Mode: 3
+    m_Mode: 0
     m_WrapAround: 0
     m_SelectOnUp: {fileID: 0}
     m_SelectOnDown: {fileID: 0}
@@ -1102,7 +1161,7 @@ MonoBehaviour:
     m_NormalColor: {r: 0, g: 0.764151, b: 0.02636986, a: 1}
     m_HighlightedColor: {r: 0, g: 0.7647059, b: 0.02745098, a: 1}
     m_PressedColor: {r: 0, g: 0.509434, b: 0.018287404, a: 1}
-    m_SelectedColor: {r: 0.0047169924, g: 1, b: 0.040445156, a: 1}
+    m_SelectedColor: {r: 0, g: 0.50980395, b: 0.019607844, a: 1}
     m_DisabledColor: {r: 0.78431374, g: 0.78431374, b: 0.78431374, a: 0.5019608}
     m_ColorMultiplier: 1
     m_FadeDuration: 0.1
@@ -1121,7 +1180,19 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 604562467}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 353563228}
+        m_TargetAssemblyTypeName: InputReceiver, Assembly-CSharp
+        m_MethodName: ChooseGroupAction
+        m_Mode: 3
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 9
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &604562467
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -1888,7 +1959,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Navigation:
-    m_Mode: 3
+    m_Mode: 0
     m_WrapAround: 0
     m_SelectOnUp: {fileID: 0}
     m_SelectOnDown: {fileID: 0}
@@ -1899,7 +1970,7 @@ MonoBehaviour:
     m_NormalColor: {r: 0, g: 0.764151, b: 0.02636986, a: 1}
     m_HighlightedColor: {r: 0, g: 0.7647059, b: 0.02745098, a: 1}
     m_PressedColor: {r: 0, g: 0.509434, b: 0.018287404, a: 1}
-    m_SelectedColor: {r: 0.0047169924, g: 1, b: 0.040445156, a: 1}
+    m_SelectedColor: {r: 0, g: 0.50980395, b: 0.019607844, a: 1}
     m_DisabledColor: {r: 0.78431374, g: 0.78431374, b: 0.78431374, a: 0.5019608}
     m_ColorMultiplier: 1
     m_FadeDuration: 0.1
@@ -1918,7 +1989,19 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 857379667}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 353563228}
+        m_TargetAssemblyTypeName: InputReceiver, Assembly-CSharp
+        m_MethodName: ChooseGroupAction
+        m_Mode: 3
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 1
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &857379667
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2008,7 +2091,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Navigation:
-    m_Mode: 3
+    m_Mode: 0
     m_WrapAround: 0
     m_SelectOnUp: {fileID: 0}
     m_SelectOnDown: {fileID: 0}
@@ -2019,7 +2102,7 @@ MonoBehaviour:
     m_NormalColor: {r: 0, g: 0.764151, b: 0.02636986, a: 1}
     m_HighlightedColor: {r: 0, g: 0.7647059, b: 0.02745098, a: 1}
     m_PressedColor: {r: 0, g: 0.509434, b: 0.018287404, a: 1}
-    m_SelectedColor: {r: 0.0047169924, g: 1, b: 0.040445156, a: 1}
+    m_SelectedColor: {r: 0, g: 0.50980395, b: 0.019607844, a: 1}
     m_DisabledColor: {r: 0.78431374, g: 0.78431374, b: 0.78431374, a: 0.5019608}
     m_ColorMultiplier: 1
     m_FadeDuration: 0.1
@@ -2038,7 +2121,19 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 859930998}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 353563228}
+        m_TargetAssemblyTypeName: InputReceiver, Assembly-CSharp
+        m_MethodName: ChooseGroupAction
+        m_Mode: 3
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 2
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &859930998
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2696,7 +2791,7 @@ GameObject:
   - component: {fileID: 1258724394}
   - component: {fileID: 1258724393}
   m_Layer: 5
-  m_Name: Group10
+  m_Name: Group0
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -2734,7 +2829,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Navigation:
-    m_Mode: 3
+    m_Mode: 0
     m_WrapAround: 0
     m_SelectOnUp: {fileID: 0}
     m_SelectOnDown: {fileID: 0}
@@ -2745,7 +2840,7 @@ MonoBehaviour:
     m_NormalColor: {r: 0, g: 0.764151, b: 0.02636986, a: 1}
     m_HighlightedColor: {r: 0, g: 0.7647059, b: 0.02745098, a: 1}
     m_PressedColor: {r: 0, g: 0.509434, b: 0.018287404, a: 1}
-    m_SelectedColor: {r: 0.0047169924, g: 1, b: 0.040445156, a: 1}
+    m_SelectedColor: {r: 0, g: 0.50980395, b: 0.019607844, a: 1}
     m_DisabledColor: {r: 0.78431374, g: 0.78431374, b: 0.78431374, a: 0.5019608}
     m_ColorMultiplier: 1
     m_FadeDuration: 0.1
@@ -2764,7 +2859,19 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 1258724394}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 353563228}
+        m_TargetAssemblyTypeName: InputReceiver, Assembly-CSharp
+        m_MethodName: ChooseGroupAction
+        m_Mode: 3
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &1258724394
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3578,7 +3685,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Navigation:
-    m_Mode: 3
+    m_Mode: 0
     m_WrapAround: 0
     m_SelectOnUp: {fileID: 0}
     m_SelectOnDown: {fileID: 0}
@@ -3589,7 +3696,7 @@ MonoBehaviour:
     m_NormalColor: {r: 0, g: 0.764151, b: 0.02636986, a: 1}
     m_HighlightedColor: {r: 0, g: 0.7647059, b: 0.02745098, a: 1}
     m_PressedColor: {r: 0, g: 0.509434, b: 0.018287404, a: 1}
-    m_SelectedColor: {r: 0.0047169924, g: 1, b: 0.040445156, a: 1}
+    m_SelectedColor: {r: 0, g: 0.50980395, b: 0.019607844, a: 1}
     m_DisabledColor: {r: 0.78431374, g: 0.78431374, b: 0.78431374, a: 0.5019608}
     m_ColorMultiplier: 1
     m_FadeDuration: 0.1
@@ -3608,7 +3715,19 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 1813323901}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 353563228}
+        m_TargetAssemblyTypeName: InputReceiver, Assembly-CSharp
+        m_MethodName: ChooseGroupAction
+        m_Mode: 3
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 8
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &1813323901
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3978,7 +4097,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   m_Navigation:
-    m_Mode: 3
+    m_Mode: 0
     m_WrapAround: 0
     m_SelectOnUp: {fileID: 0}
     m_SelectOnDown: {fileID: 0}
@@ -3989,7 +4108,7 @@ MonoBehaviour:
     m_NormalColor: {r: 0, g: 0.764151, b: 0.02636986, a: 1}
     m_HighlightedColor: {r: 0, g: 0.7647059, b: 0.02745098, a: 1}
     m_PressedColor: {r: 0, g: 0.509434, b: 0.018287404, a: 1}
-    m_SelectedColor: {r: 0.0047169924, g: 1, b: 0.040445156, a: 1}
+    m_SelectedColor: {r: 0, g: 0.50980395, b: 0.019607844, a: 1}
     m_DisabledColor: {r: 0.78431374, g: 0.78431374, b: 0.78431374, a: 0.5019608}
     m_ColorMultiplier: 1
     m_FadeDuration: 0.1
@@ -4008,7 +4127,19 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 2081535172}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 353563228}
+        m_TargetAssemblyTypeName: InputReceiver, Assembly-CSharp
+        m_MethodName: ChooseGroupAction
+        m_Mode: 3
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 4
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &2081535172
 MonoBehaviour:
   m_ObjectHideFlags: 0

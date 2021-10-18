@@ -1,7 +1,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
-
+using UnityEngine.UI;
 
 public class AllGroups : MonoBehaviour
 {
@@ -56,6 +56,5 @@ public class AllGroups : MonoBehaviour
     {
         SelectedDico.instance.DeselectAll();
         SelectedDico.instance.selectedTable = controlGroups[groupNb].ToDictionary(entry => entry.Key, entry => entry.Value); // Deep copy
-        SelectedDico.instance.UpdateUI();
     }
 }

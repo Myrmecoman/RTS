@@ -62,8 +62,6 @@ public class CamController : MonoBehaviour
 
     public void AttackCommand()
     {
-        Debug.Log("Attacking");
-
         if (SelectedDico.instance.selectedTable.Count == 0)
             return;
 
