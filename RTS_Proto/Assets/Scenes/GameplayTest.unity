@@ -350,6 +350,7 @@ GameObject:
   - component: {fileID: 353563226}
   - component: {fileID: 353563230}
   - component: {fileID: 353563231}
+  - component: {fileID: 353563232}
   m_Layer: 0
   m_Name: GameManager
   m_TagString: Untagged
@@ -400,6 +401,7 @@ MonoBehaviour:
   selection: {fileID: 353563226}
   selectedDico: {fileID: 353563230}
   allGroups: {fileID: 353563231}
+  allCameras: {fileID: 353563232}
   buttonGroups:
   - {fileID: 1258724393}
   - {fileID: 857379666}
@@ -556,6 +558,18 @@ MonoBehaviour:
   m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 71d5cf272cdf56946ba8e0600632ad59, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &353563232
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 353563225}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 0a2139229a056e54681ee085229440d9, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
 --- !u!1 &354394581
@@ -1072,7 +1086,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -20, y: -190}
+  m_AnchoredPosition: {x: -20, y: -290}
   m_SizeDelta: {x: 1100, y: 40}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &598904644
@@ -2539,7 +2553,7 @@ Camera:
     height: 1
   near clip plane: 0.3
   far clip plane: 1000
-  field of view: 60
+  field of view: 70
   orthographic: 0
   orthographic size: 5
   m_Depth: -1
@@ -2565,7 +2579,7 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 963194225}
   m_LocalRotation: {x: 0.5, y: -0, z: -0.000000009115411, w: 0.86602545}
-  m_LocalPosition: {x: 0, y: 40, z: 0}
+  m_LocalPosition: {x: 0, y: 30, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_Children: []
   m_Father: {fileID: 811907503}

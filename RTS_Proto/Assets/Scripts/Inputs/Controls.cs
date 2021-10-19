@@ -177,6 +177,94 @@ public class @Controls : IInputActionCollection, IDisposable
                     ""expectedControlType"": ""Button"",
                     ""processors"": """",
                     ""interactions"": """"
+                },
+                {
+                    ""name"": ""AddOrReplaceCamera"",
+                    ""type"": ""Button"",
+                    ""id"": ""8ac01832-3d45-488b-80b8-57548400cd3f"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """"
+                },
+                {
+                    ""name"": ""CamBase1"",
+                    ""type"": ""Button"",
+                    ""id"": ""251ec99c-d057-4b92-b795-d243591b3e07"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """"
+                },
+                {
+                    ""name"": ""CamBase2"",
+                    ""type"": ""Button"",
+                    ""id"": ""32ca2f82-eeeb-4261-b347-90cc558d5c67"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """"
+                },
+                {
+                    ""name"": ""CamBase3"",
+                    ""type"": ""Button"",
+                    ""id"": ""92f3552f-4a7d-40fb-b56d-27e2e04d016f"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """"
+                },
+                {
+                    ""name"": ""CamBase4"",
+                    ""type"": ""Button"",
+                    ""id"": ""126f86c9-9100-4614-994b-b2fed8d3312f"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """"
+                },
+                {
+                    ""name"": ""CamBase5"",
+                    ""type"": ""Button"",
+                    ""id"": ""22c1be50-5562-4836-9d8f-d78c772d4232"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """"
+                },
+                {
+                    ""name"": ""CamBase6"",
+                    ""type"": ""Button"",
+                    ""id"": ""547ca704-7a8a-47c3-9d76-e18ce7146ef8"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """"
+                },
+                {
+                    ""name"": ""CamBase7"",
+                    ""type"": ""Button"",
+                    ""id"": ""33cc00bb-76a9-4b79-b428-111ba3bdf9a0"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """"
+                },
+                {
+                    ""name"": ""CamBase8"",
+                    ""type"": ""Button"",
+                    ""id"": ""aca25dd7-8a23-430c-88a2-c69e86532bd3"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """"
+                },
+                {
+                    ""name"": ""CamBase9"",
+                    ""type"": ""Button"",
+                    ""id"": ""0b1b7ebb-e58a-46a1-9b25-5de982663c51"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """"
+                },
+                {
+                    ""name"": ""CamBase10"",
+                    ""type"": ""Button"",
+                    ""id"": ""badd191e-ecc9-4d5b-8845-60c0fe347295"",
+                    ""expectedControlType"": ""Button"",
+                    ""processors"": """",
+                    ""interactions"": """"
                 }
             ],
             ""bindings"": [
@@ -399,6 +487,127 @@ public class @Controls : IInputActionCollection, IDisposable
                     ""action"": ""Group0"",
                     ""isComposite"": false,
                     ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""52e63b2a-c28e-4b04-b518-c8d796114b55"",
+                    ""path"": ""<Keyboard>/f1"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""PC"",
+                    ""action"": ""CamBase1"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""25f63af4-5380-4741-a36c-c5e204e119c9"",
+                    ""path"": ""<Keyboard>/f2"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""PC"",
+                    ""action"": ""CamBase2"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""99acd8eb-272f-445a-8c14-7019518a508c"",
+                    ""path"": ""<Keyboard>/f3"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""PC"",
+                    ""action"": ""CamBase3"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""0fa7067a-7232-412b-81ff-277ae95a9d1a"",
+                    ""path"": ""<Keyboard>/f4"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""PC"",
+                    ""action"": ""CamBase4"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""0ee8216d-ec7d-4a6f-82bd-591d66757451"",
+                    ""path"": ""<Keyboard>/f5"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""PC"",
+                    ""action"": ""CamBase5"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""3892de59-e0bc-48cf-8988-6d38b9fad2ce"",
+                    ""path"": ""<Keyboard>/f6"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""PC"",
+                    ""action"": ""CamBase6"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""f320b0d5-3f63-4f9a-aa71-eecafba071f3"",
+                    ""path"": ""<Keyboard>/f7"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""PC"",
+                    ""action"": ""CamBase7"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""a0801e7e-3bc8-42a3-a344-1f15dafcd3fe"",
+                    ""path"": ""<Keyboard>/f8"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""PC"",
+                    ""action"": ""CamBase8"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""ccde0a0f-0843-4b29-9d39-6bea3664fc9e"",
+                    ""path"": ""<Keyboard>/f9"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""PC"",
+                    ""action"": ""CamBase9"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""4b415e5d-ba8b-4660-9654-9be29b02ae6d"",
+                    ""path"": ""<Keyboard>/f10"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""PC"",
+                    ""action"": ""CamBase10"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
+                },
+                {
+                    ""name"": """",
+                    ""id"": ""7e5fc132-f6c4-4824-892e-183c866ff366"",
+                    ""path"": ""<Keyboard>/leftShift"",
+                    ""interactions"": """",
+                    ""processors"": """",
+                    ""groups"": ""PC"",
+                    ""action"": ""AddOrReplaceCamera"",
+                    ""isComposite"": false,
+                    ""isPartOfComposite"": false
                 }
             ]
         }
@@ -444,6 +653,17 @@ public class @Controls : IInputActionCollection, IDisposable
         m_TopDownControls_Group8 = m_TopDownControls.FindAction("Group8", throwIfNotFound: true);
         m_TopDownControls_Group9 = m_TopDownControls.FindAction("Group9", throwIfNotFound: true);
         m_TopDownControls_Group0 = m_TopDownControls.FindAction("Group0", throwIfNotFound: true);
+        m_TopDownControls_AddOrReplaceCamera = m_TopDownControls.FindAction("AddOrReplaceCamera", throwIfNotFound: true);
+        m_TopDownControls_CamBase1 = m_TopDownControls.FindAction("CamBase1", throwIfNotFound: true);
+        m_TopDownControls_CamBase2 = m_TopDownControls.FindAction("CamBase2", throwIfNotFound: true);
+        m_TopDownControls_CamBase3 = m_TopDownControls.FindAction("CamBase3", throwIfNotFound: true);
+        m_TopDownControls_CamBase4 = m_TopDownControls.FindAction("CamBase4", throwIfNotFound: true);
+        m_TopDownControls_CamBase5 = m_TopDownControls.FindAction("CamBase5", throwIfNotFound: true);
+        m_TopDownControls_CamBase6 = m_TopDownControls.FindAction("CamBase6", throwIfNotFound: true);
+        m_TopDownControls_CamBase7 = m_TopDownControls.FindAction("CamBase7", throwIfNotFound: true);
+        m_TopDownControls_CamBase8 = m_TopDownControls.FindAction("CamBase8", throwIfNotFound: true);
+        m_TopDownControls_CamBase9 = m_TopDownControls.FindAction("CamBase9", throwIfNotFound: true);
+        m_TopDownControls_CamBase10 = m_TopDownControls.FindAction("CamBase10", throwIfNotFound: true);
     }
 
     public void Dispose()
@@ -513,6 +733,17 @@ public class @Controls : IInputActionCollection, IDisposable
     private readonly InputAction m_TopDownControls_Group8;
     private readonly InputAction m_TopDownControls_Group9;
     private readonly InputAction m_TopDownControls_Group0;
+    private readonly InputAction m_TopDownControls_AddOrReplaceCamera;
+    private readonly InputAction m_TopDownControls_CamBase1;
+    private readonly InputAction m_TopDownControls_CamBase2;
+    private readonly InputAction m_TopDownControls_CamBase3;
+    private readonly InputAction m_TopDownControls_CamBase4;
+    private readonly InputAction m_TopDownControls_CamBase5;
+    private readonly InputAction m_TopDownControls_CamBase6;
+    private readonly InputAction m_TopDownControls_CamBase7;
+    private readonly InputAction m_TopDownControls_CamBase8;
+    private readonly InputAction m_TopDownControls_CamBase9;
+    private readonly InputAction m_TopDownControls_CamBase10;
     public struct TopDownControlsActions
     {
         private @Controls m_Wrapper;
@@ -537,6 +768,17 @@ public class @Controls : IInputActionCollection, IDisposable
         public InputAction @Group8 => m_Wrapper.m_TopDownControls_Group8;
         public InputAction @Group9 => m_Wrapper.m_TopDownControls_Group9;
         public InputAction @Group0 => m_Wrapper.m_TopDownControls_Group0;
+        public InputAction @AddOrReplaceCamera => m_Wrapper.m_TopDownControls_AddOrReplaceCamera;
+        public InputAction @CamBase1 => m_Wrapper.m_TopDownControls_CamBase1;
+        public InputAction @CamBase2 => m_Wrapper.m_TopDownControls_CamBase2;
+        public InputAction @CamBase3 => m_Wrapper.m_TopDownControls_CamBase3;
+        public InputAction @CamBase4 => m_Wrapper.m_TopDownControls_CamBase4;
+        public InputAction @CamBase5 => m_Wrapper.m_TopDownControls_CamBase5;
+        public InputAction @CamBase6 => m_Wrapper.m_TopDownControls_CamBase6;
+        public InputAction @CamBase7 => m_Wrapper.m_TopDownControls_CamBase7;
+        public InputAction @CamBase8 => m_Wrapper.m_TopDownControls_CamBase8;
+        public InputAction @CamBase9 => m_Wrapper.m_TopDownControls_CamBase9;
+        public InputAction @CamBase10 => m_Wrapper.m_TopDownControls_CamBase10;
         public InputActionMap Get() { return m_Wrapper.m_TopDownControls; }
         public void Enable() { Get().Enable(); }
         public void Disable() { Get().Disable(); }
@@ -606,6 +848,39 @@ public class @Controls : IInputActionCollection, IDisposable
                 @Group0.started -= m_Wrapper.m_TopDownControlsActionsCallbackInterface.OnGroup0;
                 @Group0.performed -= m_Wrapper.m_TopDownControlsActionsCallbackInterface.OnGroup0;
                 @Group0.canceled -= m_Wrapper.m_TopDownControlsActionsCallbackInterface.OnGroup0;
+                @AddOrReplaceCamera.started -= m_Wrapper.m_TopDownControlsActionsCallbackInterface.OnAddOrReplaceCamera;
+                @AddOrReplaceCamera.performed -= m_Wrapper.m_TopDownControlsActionsCallbackInterface.OnAddOrReplaceCamera;
+                @AddOrReplaceCamera.canceled -= m_Wrapper.m_TopDownControlsActionsCallbackInterface.OnAddOrReplaceCamera;
+                @CamBase1.started -= m_Wrapper.m_TopDownControlsActionsCallbackInterface.OnCamBase1;
+                @CamBase1.performed -= m_Wrapper.m_TopDownControlsActionsCallbackInterface.OnCamBase1;
+                @CamBase1.canceled -= m_Wrapper.m_TopDownControlsActionsCallbackInterface.OnCamBase1;
+                @CamBase2.started -= m_Wrapper.m_TopDownControlsActionsCallbackInterface.OnCamBase2;
+                @CamBase2.performed -= m_Wrapper.m_TopDownControlsActionsCallbackInterface.OnCamBase2;
+                @CamBase2.canceled -= m_Wrapper.m_TopDownControlsActionsCallbackInterface.OnCamBase2;
+                @CamBase3.started -= m_Wrapper.m_TopDownControlsActionsCallbackInterface.OnCamBase3;
+                @CamBase3.performed -= m_Wrapper.m_TopDownControlsActionsCallbackInterface.OnCamBase3;
+                @CamBase3.canceled -= m_Wrapper.m_TopDownControlsActionsCallbackInterface.OnCamBase3;
+                @CamBase4.started -= m_Wrapper.m_TopDownControlsActionsCallbackInterface.OnCamBase4;
+                @CamBase4.performed -= m_Wrapper.m_TopDownControlsActionsCallbackInterface.OnCamBase4;
+                @CamBase4.canceled -= m_Wrapper.m_TopDownControlsActionsCallbackInterface.OnCamBase4;
+                @CamBase5.started -= m_Wrapper.m_TopDownControlsActionsCallbackInterface.OnCamBase5;
+                @CamBase5.performed -= m_Wrapper.m_TopDownControlsActionsCallbackInterface.OnCamBase5;
+                @CamBase5.canceled -= m_Wrapper.m_TopDownControlsActionsCallbackInterface.OnCamBase5;
+                @CamBase6.started -= m_Wrapper.m_TopDownControlsActionsCallbackInterface.OnCamBase6;
+                @CamBase6.performed -= m_Wrapper.m_TopDownControlsActionsCallbackInterface.OnCamBase6;
+                @CamBase6.canceled -= m_Wrapper.m_TopDownControlsActionsCallbackInterface.OnCamBase6;
+                @CamBase7.started -= m_Wrapper.m_TopDownControlsActionsCallbackInterface.OnCamBase7;
+                @CamBase7.performed -= m_Wrapper.m_TopDownControlsActionsCallbackInterface.OnCamBase7;
+                @CamBase7.canceled -= m_Wrapper.m_TopDownControlsActionsCallbackInterface.OnCamBase7;
+                @CamBase8.started -= m_Wrapper.m_TopDownControlsActionsCallbackInterface.OnCamBase8;
+                @CamBase8.performed -= m_Wrapper.m_TopDownControlsActionsCallbackInterface.OnCamBase8;
+                @CamBase8.canceled -= m_Wrapper.m_TopDownControlsActionsCallbackInterface.OnCamBase8;
+                @CamBase9.started -= m_Wrapper.m_TopDownControlsActionsCallbackInterface.OnCamBase9;
+                @CamBase9.performed -= m_Wrapper.m_TopDownControlsActionsCallbackInterface.OnCamBase9;
+                @CamBase9.canceled -= m_Wrapper.m_TopDownControlsActionsCallbackInterface.OnCamBase9;
+                @CamBase10.started -= m_Wrapper.m_TopDownControlsActionsCallbackInterface.OnCamBase10;
+                @CamBase10.performed -= m_Wrapper.m_TopDownControlsActionsCallbackInterface.OnCamBase10;
+                @CamBase10.canceled -= m_Wrapper.m_TopDownControlsActionsCallbackInterface.OnCamBase10;
             }
             m_Wrapper.m_TopDownControlsActionsCallbackInterface = instance;
             if (instance != null)
@@ -670,6 +945,39 @@ public class @Controls : IInputActionCollection, IDisposable
                 @Group0.started += instance.OnGroup0;
                 @Group0.performed += instance.OnGroup0;
                 @Group0.canceled += instance.OnGroup0;
+                @AddOrReplaceCamera.started += instance.OnAddOrReplaceCamera;
+                @AddOrReplaceCamera.performed += instance.OnAddOrReplaceCamera;
+                @AddOrReplaceCamera.canceled += instance.OnAddOrReplaceCamera;
+                @CamBase1.started += instance.OnCamBase1;
+                @CamBase1.performed += instance.OnCamBase1;
+                @CamBase1.canceled += instance.OnCamBase1;
+                @CamBase2.started += instance.OnCamBase2;
+                @CamBase2.performed += instance.OnCamBase2;
+                @CamBase2.canceled += instance.OnCamBase2;
+                @CamBase3.started += instance.OnCamBase3;
+                @CamBase3.performed += instance.OnCamBase3;
+                @CamBase3.canceled += instance.OnCamBase3;
+                @CamBase4.started += instance.OnCamBase4;
+                @CamBase4.performed += instance.OnCamBase4;
+                @CamBase4.canceled += instance.OnCamBase4;
+                @CamBase5.started += instance.OnCamBase5;
+                @CamBase5.performed += instance.OnCamBase5;
+                @CamBase5.canceled += instance.OnCamBase5;
+                @CamBase6.started += instance.OnCamBase6;
+                @CamBase6.performed += instance.OnCamBase6;
+                @CamBase6.canceled += instance.OnCamBase6;
+                @CamBase7.started += instance.OnCamBase7;
+                @CamBase7.performed += instance.OnCamBase7;
+                @CamBase7.canceled += instance.OnCamBase7;
+                @CamBase8.started += instance.OnCamBase8;
+                @CamBase8.performed += instance.OnCamBase8;
+                @CamBase8.canceled += instance.OnCamBase8;
+                @CamBase9.started += instance.OnCamBase9;
+                @CamBase9.performed += instance.OnCamBase9;
+                @CamBase9.canceled += instance.OnCamBase9;
+                @CamBase10.started += instance.OnCamBase10;
+                @CamBase10.performed += instance.OnCamBase10;
+                @CamBase10.canceled += instance.OnCamBase10;
             }
         }
     }
@@ -705,5 +1013,16 @@ public class @Controls : IInputActionCollection, IDisposable
         void OnGroup8(InputAction.CallbackContext context);
         void OnGroup9(InputAction.CallbackContext context);
         void OnGroup0(InputAction.CallbackContext context);
+        void OnAddOrReplaceCamera(InputAction.CallbackContext context);
+        void OnCamBase1(InputAction.CallbackContext context);
+        void OnCamBase2(InputAction.CallbackContext context);
+        void OnCamBase3(InputAction.CallbackContext context);
+        void OnCamBase4(InputAction.CallbackContext context);
+        void OnCamBase5(InputAction.CallbackContext context);
+        void OnCamBase6(InputAction.CallbackContext context);
+        void OnCamBase7(InputAction.CallbackContext context);
+        void OnCamBase8(InputAction.CallbackContext context);
+        void OnCamBase9(InputAction.CallbackContext context);
+        void OnCamBase10(InputAction.CallbackContext context);
     }
 }

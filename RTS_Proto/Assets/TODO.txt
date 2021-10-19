@@ -2,8 +2,9 @@ There is a bug where placing a building while computing path will fail.
 
 Implem patrol.
 Implem fast idle state (flocking).
-Display units state in UI (all states display);
+Display units state in UI (all states display).
 Produce units in buildings.
 Set rally points.
 Implem fog of war.
-Implem control groups.
+Control groups image and camera position.
+Camera base.

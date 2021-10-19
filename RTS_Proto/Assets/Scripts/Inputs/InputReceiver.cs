@@ -11,11 +11,13 @@ public class InputReceiver : MonoBehaviour
     public GlobalSelection selection;
     public SelectedDico selectedDico;
     public AllGroups allGroups;
+    public AllCameras allCameras;
     public Button[] buttonGroups = new Button[10];
 
     [HideInInspector] public char lastKeyPressed = '\0';
 
     private Controls controls;
+    private bool addCameraHold = false;
     private bool addGroupHold = false;
     private bool removeFromGroup = false;
     private bool addAndRemoveFromOtherGroups = false;
@@ -52,6 +54,7 @@ public class InputReceiver : MonoBehaviour
 
         controls.TopDownControls.MoveCommand.performed += _ => camController.MoveCommand();
 
+        // CONTROL GROUPS
         controls.TopDownControls.StackAction.performed += _ => selection.StackActionHold = true;
         controls.TopDownControls.StackAction.canceled += _ => selection.StackActionHold = false;
 
@@ -84,6 +87,23 @@ public class InputReceiver : MonoBehaviour
         controls.TopDownControls.Group9.canceled += _ => EventSystem.current.SetSelectedGameObject(null);
         controls.TopDownControls.Group0.performed += _ => { ChooseGroupAction(0); buttonGroups[0].Select(); };
         controls.TopDownControls.Group0.canceled += _ => EventSystem.current.SetSelectedGameObject(null);
+        // END OF CONTROL GROUPS
+
+        // CAMERAS
+        controls.TopDownControls.AddOrReplaceCamera.performed += _ => addCameraHold = true;
+        controls.TopDownControls.AddOrReplaceCamera.canceled += _ => addCameraHold = false;
+
+        controls.TopDownControls.CamBase1.performed += _ => ChooseCameraAction(0);
+        controls.TopDownControls.CamBase2.performed += _ => ChooseCameraAction(1);
+        controls.TopDownControls.CamBase3.performed += _ => ChooseCameraAction(2);
+        controls.TopDownControls.CamBase4.performed += _ => ChooseCameraAction(3);
+        controls.TopDownControls.CamBase5.performed += _ => ChooseCameraAction(4);
+        controls.TopDownControls.CamBase6.performed += _ => ChooseCameraAction(5);
+        controls.TopDownControls.CamBase7.performed += _ => ChooseCameraAction(6);
+        controls.TopDownControls.CamBase8.performed += _ => ChooseCameraAction(7);
+        controls.TopDownControls.CamBase9.performed += _ => ChooseCameraAction(8);
+        controls.TopDownControls.CamBase10.performed += _ => ChooseCameraAction(9);
+        // END OF CAMERA
     }
 
 
@@ -122,5 +142,14 @@ public class InputReceiver : MonoBehaviour
             allGroups.AddAndRemoveFromOtherGroups(selectedDico.selectedTable, groupNb);
         else
             selectedDico.SelectGroup(groupNb);
+    }
+
+
+    public void ChooseCameraAction(int camNb)
+    {
+        if (addCameraHold)
+            allCameras.SetCameraPosition(camNb, camController.transform.localPosition);
+        else
+            allCameras.GoToCameraPosition(camNb);
     }
 }

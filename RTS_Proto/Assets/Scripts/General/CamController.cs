@@ -174,9 +174,9 @@ public class CamController : MonoBehaviour
     public void Zoom(Vector2 value)
     {
         if (value.y > 0)
-            cam.fieldOfView = Mathf.Clamp(cam.fieldOfView - 3, 30, 60);
+            cam.fieldOfView = Mathf.Clamp(cam.fieldOfView - 3, 40, 70);
         else
-            cam.fieldOfView = Mathf.Clamp(cam.fieldOfView + 3, 30, 60);
+            cam.fieldOfView = Mathf.Clamp(cam.fieldOfView + 3, 40, 70);
     }
 
 
