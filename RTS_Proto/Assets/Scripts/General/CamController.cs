@@ -12,10 +12,10 @@ public class CamController : MonoBehaviour
     public GameObject moveCommandObj;
     public GameObject attackCommandObj;
     public GameObject patrolCommandObj;
+    public Camera cam;
 
     [HideInInspector] public bool HoldingStack = false;
 
-    private Camera cam;
     private GameObject lastCommandSprite = null;
 
 
@@ -32,7 +32,6 @@ public class CamController : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        cam = GetComponent<Camera>();
         Cursor.visible = true;
         Cursor.lockState = CursorLockMode.Confined;
     }

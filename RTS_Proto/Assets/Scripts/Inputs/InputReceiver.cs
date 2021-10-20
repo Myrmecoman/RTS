@@ -21,6 +21,8 @@ public class InputReceiver : MonoBehaviour
     private bool addGroupHold = false;
     private bool removeFromGroup = false;
     private bool addAndRemoveFromOtherGroups = false;
+    private int lastGroupSelected = -1;
+    private double groupTimer = 0;
 
 
     #region Enable/Disable
@@ -89,7 +91,7 @@ public class InputReceiver : MonoBehaviour
         controls.TopDownControls.Group0.canceled += _ => EventSystem.current.SetSelectedGameObject(null);
         // END OF CONTROL GROUPS
 
-        // CAMERAS
+        // CAMERAS LOCATIONS
         controls.TopDownControls.AddOrReplaceCamera.performed += _ => addCameraHold = true;
         controls.TopDownControls.AddOrReplaceCamera.canceled += _ => addCameraHold = false;
 
@@ -103,12 +105,15 @@ public class InputReceiver : MonoBehaviour
         controls.TopDownControls.CamBase8.performed += _ => ChooseCameraAction(7);
         controls.TopDownControls.CamBase9.performed += _ => ChooseCameraAction(8);
         controls.TopDownControls.CamBase10.performed += _ => ChooseCameraAction(9);
-        // END OF CAMERA
+        // END OF CAMERA LOCATIONS
     }
 
 
     private void Update()
     {
+        if (groupTimer > 0)
+            groupTimer -= Time.deltaTime;
+
         if (Keyboard.current.anyKey.wasPressedThisFrame)
         {
             if (controls.TopDownControls.Attack.triggered && SelectedDico.instance.selectedTable.Count != 0)
@@ -140,12 +145,20 @@ public class InputReceiver : MonoBehaviour
             allGroups.RemoveFromGroup(selectedDico.selectedTable, groupNb);
         else if (addAndRemoveFromOtherGroups)
             allGroups.AddAndRemoveFromOtherGroups(selectedDico.selectedTable, groupNb);
-        else
+        else if (lastGroupSelected != groupNb || groupTimer <= 0)
             selectedDico.SelectGroup(groupNb);
+        else
+        {
+            Vector2 newLoaction = GroupCentroidFinder.GetPlanarCentroid(allGroups.controlGroups[groupNb]);
+            camController.transform.position = new Vector3(newLoaction.x, camController.transform.position.y, newLoaction.y);
+        }
+
+        lastGroupSelected = groupNb;
+        groupTimer = 0.4;
     }
 
 
-    public void ChooseCameraAction(int camNb)
+    private void ChooseCameraAction(int camNb)
     {
         if (addCameraHold)
             allCameras.SetCameraPosition(camNb, camController.transform.localPosition);
