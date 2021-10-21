@@ -58,10 +58,9 @@ public class WorldGrid : MonoBehaviour
 
     private void Update()
     {
+        // if we follow a target && we do not compute again the same path (every 0.5 sec)
         if (TrStartPosition != null && TrStartPosition.position != StartPosition && Time.realtimeSinceStartup - delay > 0.5f)
-        {
             ChangeTarget(TrStartPosition);
-        }
 
         if (computingJobs)
         {

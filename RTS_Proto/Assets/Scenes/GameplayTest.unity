@@ -432,8 +432,8 @@ MonoBehaviour:
   vGridWorldSize: {x: 256, y: 256}
   fNodeRadius: 0.5
   singleGrid: {fileID: 2307963398867471092, guid: bd05e8614e5a3204bae4c11281f1c43f, type: 3}
-  minerals: 0
-  gas: 0
+  minerals: 5000
+  gas: 5000
   grids:
   - {fileID: 0}
   - {fileID: 0}

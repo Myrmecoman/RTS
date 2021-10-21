@@ -9,10 +9,9 @@ public class GameManager : MonoBehaviour
     public LayerMask WallMask; // This is the mask that the program will look for when trying to find obstructions to the path
     public Vector2 vGridWorldSize; // A vector2 to store the width and height of the graph in world units
     public float fNodeRadius; // This stores how big each square on the graph will be
-    public WorldGrid singleGrid;
-
-    [HideInInspector] public int minerals = 5000;
-    [HideInInspector] public int gas = 5000;
+    public WorldGrid singleGrid; // Grid parameters
+    public int minerals = 0;
+    public int gas = 0;
 
     private static int arraysSize = 100;
     [HideInInspector] public WorldGrid[] grids = new WorldGrid[arraysSize];
@@ -22,7 +21,6 @@ public class GameManager : MonoBehaviour
     [HideInInspector] public KdTree<Transform> allyBuildings;
     [HideInInspector] public KdTree<Transform> enemyUnits;
     [HideInInspector] public KdTree<Transform> enemyBuildings;
-
 
 
     private void Awake()
