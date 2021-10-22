@@ -1,4 +1,5 @@
-﻿using Unity.Collections;
+﻿using System.Collections;
+using Unity.Collections;
 using Unity.Jobs;
 using Unity.Mathematics;
 using UnityEngine;
@@ -193,13 +194,13 @@ public class WorldGrid : MonoBehaviour
     }
 
 
-    public void AddGridColliders(Vector3 centerPos)
+    public IEnumerator AddGridColliders(Vector3 centerPos)
     {
-        int largestBuildingRadius = (int) (2 / fNodeRadius);
-        int impreciseLargestBuildingRadius = (int)(2 / imprecisefNodeRadius);
+        int largestBuildingRadius = (int) (2 / fNodeRadius) + 1;
+        int impreciseLargestBuildingRadius = (int)(2 / imprecisefNodeRadius) + 1;
 
-        float ixPos = ((centerPos.x + vGridWorldSize.x / 2) / vGridWorldSize.x);
-        float iyPos = ((centerPos.z + vGridWorldSize.y / 2) / vGridWorldSize.y);
+        float ixPos = (centerPos.x + vGridWorldSize.x / 2) / vGridWorldSize.x;
+        float iyPos = (centerPos.z + vGridWorldSize.y / 2) / vGridWorldSize.y;
 
         ixPos = Mathf.Clamp01(ixPos);
         iyPos = Mathf.Clamp01(iyPos);
@@ -227,35 +228,37 @@ public class WorldGrid : MonoBehaviour
             }
         }
 
-        if (!computingJobs)
-        {
-            for (int x = ix - largestBuildingRadius; x < ix + largestBuildingRadius; x++)
-            {
-                for (int y = iy - largestBuildingRadius; y < iy + largestBuildingRadius; y++)
-                {
-                    //Get the world coordinates from the bottom left of the graph
-                    Vector3 worldPoint = bottomLeft + Vector3.right * (x * fNodeDiameter + fNodeRadius) + Vector3.forward * (y * fNodeDiameter + fNodeRadius);
+        yield return new WaitUntil(isItFinished);
 
-                    //Instantiate(Resources.Load("debugSphere"), worldPoint + Vector3.up, Quaternion.identity);
-                    if (Physics.CheckCapsule(worldPoint - Vector3.up * 100, worldPoint + Vector3.up * 100, fNodeRadius - 0.001f /* in case of single point collision */, WallMask))
-                    {
-                        DijkstraTile tile = new DijkstraTile(new int2(x, y));
-                        tile.weight = int.MaxValue;
-                        NodeArray[iGridSizeY * x + y] = tile;
-                    }
+        ix = Mathf.RoundToInt((iGridSizeX - 1) * ixPos);
+        iy = Mathf.RoundToInt((iGridSizeY - 1) * iyPos);
+
+        for (int x = ix - largestBuildingRadius; x < ix + largestBuildingRadius; x++)
+        {
+            for (int y = iy - largestBuildingRadius; y < iy + largestBuildingRadius; y++)
+            {
+                //Get the world coordinates from the bottom left of the graph
+                Vector3 worldPoint = bottomLeft + Vector3.right * (x * fNodeDiameter + fNodeRadius) + Vector3.forward * (y * fNodeDiameter + fNodeRadius);
+
+                //Instantiate(Resources.Load("debugSphere"), worldPoint + Vector3.up, Quaternion.identity);
+                if (Physics.CheckCapsule(worldPoint - Vector3.up * 100, worldPoint + Vector3.up * 100, fNodeRadius - 0.001f /* in case of single point collision */, WallMask))
+                {
+                    DijkstraTile tile = new DijkstraTile(new int2(x, y));
+                    tile.weight = int.MaxValue;
+                    NodeArray[iGridSizeY * x + y] = tile;
                 }
             }
         }
     }
 
 
-    public void RemoveGridColliders(Vector3 centerPos)
+    public IEnumerator RemoveGridColliders(Vector3 centerPos)
     {
-        int largestBuildingRadius = (int)(2 / fNodeRadius);
-        int impreciseLargestBuildingRadius = (int)(2 / imprecisefNodeRadius);
+        int largestBuildingRadius = (int)(2 / fNodeRadius) + 1;
+        int impreciseLargestBuildingRadius = (int)(2 / imprecisefNodeRadius) + 1;
 
-        float ixPos = ((centerPos.x + vGridWorldSize.x / 2) / vGridWorldSize.x);
-        float iyPos = ((centerPos.z + vGridWorldSize.y / 2) / vGridWorldSize.y);
+        float ixPos = (centerPos.x + vGridWorldSize.x / 2) / vGridWorldSize.x;
+        float iyPos = (centerPos.z + vGridWorldSize.y / 2) / vGridWorldSize.y;
 
         ixPos = Mathf.Clamp01(ixPos);
         iyPos = Mathf.Clamp01(iyPos);
@@ -282,24 +285,32 @@ public class WorldGrid : MonoBehaviour
             }
         }
 
-        if (!computingJobs)
-        {
-            for (int x = ix - largestBuildingRadius; x < ix + largestBuildingRadius; x++)
-            {
-                for (int y = iy - largestBuildingRadius; y < iy + largestBuildingRadius; y++)
-                {
-                    //Get the world coordinates from the bottom left of the graph
-                    Vector3 worldPoint = bottomLeft + Vector3.right * (x * fNodeDiameter + fNodeRadius) + Vector3.forward * (y * fNodeDiameter + fNodeRadius);
+        yield return new WaitUntil(isItFinished);
 
-                    //Instantiate(Resources.Load("debugSphere"), worldPoint + Vector3.up, Quaternion.identity);
-                    if (!Physics.CheckCapsule(worldPoint - Vector3.up * 100, worldPoint + Vector3.up * 100, fNodeRadius - 0.001f /* in case of single point collision */, WallMask))
-                    {
-                        DijkstraTile tile = new DijkstraTile(new int2(x, y));
-                        NodeArray[iGridSizeY * x + y] = tile;
-                    }
+        ix = Mathf.RoundToInt((iGridSizeX - 1) * ixPos);
+        iy = Mathf.RoundToInt((iGridSizeY - 1) * iyPos);
+
+        for (int x = ix - largestBuildingRadius; x < ix + largestBuildingRadius; x++)
+        {
+            for (int y = iy - largestBuildingRadius; y < iy + largestBuildingRadius; y++)
+            {
+                //Get the world coordinates from the bottom left of the graph
+                Vector3 worldPoint = bottomLeft + Vector3.right * (x * fNodeDiameter + fNodeRadius) + Vector3.forward * (y * fNodeDiameter + fNodeRadius);
+
+                //Instantiate(Resources.Load("debugSphere"), worldPoint + Vector3.up, Quaternion.identity);
+                if (!Physics.CheckCapsule(worldPoint - Vector3.up * 100, worldPoint + Vector3.up * 100, fNodeRadius - 0.001f /* in case of single point collision */, WallMask))
+                {
+                    DijkstraTile tile = new DijkstraTile(new int2(x, y));
+                    NodeArray[iGridSizeY * x + y] = tile;
                 }
             }
         }
+    }
+
+
+    private bool isItFinished()
+    {
+        return !computingJobs;
     }
 
 
@@ -338,7 +349,7 @@ public class WorldGrid : MonoBehaviour
     // Function that draws the wireframe
     private void OnDrawGizmos()
     {
-        if (debugNb != 1)
+        if (debugNb != 1 || computingJobs)
             return;
 
         if (impreciseNodeArray != null) // If the grid is not empty

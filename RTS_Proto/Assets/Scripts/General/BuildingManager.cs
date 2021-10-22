@@ -14,14 +14,11 @@ public class BuildingManager : Selectable
     {
         //double delay = Time.realtimeSinceStartupAsDouble;
         for (int i = 0; i < 100; i++)
-            GameManager.instance.grids[i].AddGridColliders(transform.position);
+        {
+            GameObject newhandler = (GameObject)Instantiate(Resources.Load("CoroutineHandler"), null);
+            newhandler.GetComponent<CoroutineHandler>().CallCoroutine(GameManager.instance.grids[i].AddGridColliders(transform.position));
+        }
         //Debug.Log("update grids colliders time : " + (Time.realtimeSinceStartupAsDouble - delay));
-    }
-
-
-    private void Update()
-    {
-        
     }
 
 
@@ -30,15 +27,19 @@ public class BuildingManager : Selectable
         //double delay = Time.realtimeSinceStartupAsDouble;
         GetComponent<MeshCollider>().enabled = false;
         for (int i = 0; i < 100; i++)
-            GameManager.instance.grids[i].RemoveGridColliders(transform.position);
+        {
+            GameObject newhandler = (GameObject) Instantiate(Resources.Load("CoroutineHandler"), null);
+            newhandler.GetComponent<CoroutineHandler>().CallCoroutine(GameManager.instance.grids[i].RemoveGridColliders(transform.position));
+        }
         //Debug.Log("update grids colliders time : " + (Time.realtimeSinceStartupAsDouble - delay));
     }
 
 
     public override void AddDestination(WorldGrid grid, int index, Transform follow = null, int action = 0 /* 1 = attack, 2 = patrol, 3 = collect-resource */, ResourceManager res = null)
     {
-        Debug.LogError("not implemented yet");
+        Debug.LogError("Not implemented yet");
     }
+
 
     public override void HoldPosition()
     {

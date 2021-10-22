@@ -53,25 +53,8 @@ public class GameManager : MonoBehaviour
 
     private void Start()
     {
-        // For test purposes
-        for (float i = 0; i < 15; i++)
-        {
-            for (float j = 0; j < 15; j++)
-            {
-                GameObject obj = (GameObject) Instantiate(Resources.Load("Worker"), new Vector3(i * 1.5f, 0, j * 1.5f), Quaternion.identity);
-                allyUnits.Add(obj.transform);
-            }
-        }
-
-        for (float i = 0; i < 15; i++)
-        {
-            for (float j = 0; j < 15; j++)
-            {
-                GameObject obj = (GameObject)Instantiate(Resources.Load("Agent"), new Vector3(i * 1.5f, 0, j * 1.5f + 30), Quaternion.identity);
-                obj.GetComponent<AgentManager>().isAlly = false;
-                enemyUnits.Add(obj.transform);
-            }
-        }
+        GameObject obj = (GameObject) Instantiate(Resources.Load("Worker"), new Vector3(0, 0, 0), Quaternion.identity);
+        allyUnits.Add(obj.transform);
     }
 
 
