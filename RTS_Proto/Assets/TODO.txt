@@ -1,4 +1,6 @@
-Implem fast idle state (flocking).
+There is a bug where unit chooses to go straight when the wall collider is too low.
+
+Implem fast idle state and flocking.
 Display units state in UI (all states display).
 Produce units in buildings.
 Set rally points.

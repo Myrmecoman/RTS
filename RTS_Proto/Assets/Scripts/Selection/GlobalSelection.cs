@@ -155,9 +155,9 @@ public class GlobalSelection : MonoBehaviour
     {
         if(dragSelect == true)
         {
-            var rect = Utils.GetScreenRect(p1, new Vector3(Mouse.current.position.ReadValue().x, Mouse.current.position.ReadValue().y, 0));
-            Utils.DrawScreenRect(rect, new Color(0.8f, 0.8f, 0.95f, 0.25f));
-            Utils.DrawScreenRectBorder(rect, 2, new Color(0.8f, 0.8f, 0.95f));
+            var rect = RectDrawer.GetScreenRect(p1, new Vector3(Mouse.current.position.ReadValue().x, Mouse.current.position.ReadValue().y, 0));
+            RectDrawer.DrawScreenRect(rect, new Color(0.8f, 0.8f, 0.95f, 0.25f));
+            RectDrawer.DrawScreenRectBorder(rect, 2, new Color(0.8f, 0.8f, 0.95f));
         }
     }
 

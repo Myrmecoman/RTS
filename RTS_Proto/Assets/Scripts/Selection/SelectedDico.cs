@@ -16,6 +16,8 @@ public class SelectedDico : MonoBehaviour
             instance = this;
         else
             Destroy(gameObject);
+
+        UpdateUI();
     }
 
 
@@ -28,6 +30,8 @@ public class SelectedDico : MonoBehaviour
             selectedTable.Add(id, go);
             go.Select();
         }
+
+        UpdateUI();
     }
 
 
@@ -35,6 +39,8 @@ public class SelectedDico : MonoBehaviour
     {
         selectedTable[id].UnSelect();
         selectedTable.Remove(id);
+
+        UpdateUI();
     }
 
 
@@ -45,19 +51,19 @@ public class SelectedDico : MonoBehaviour
 
         foreach (var g in AllGroups.instance.controlGroups)
             g.Remove(id);
+
+        UpdateUI();
     }
 
 
     public void DeselectAll()
     {
         foreach(KeyValuePair<int, Selectable> pair in selectedTable)
-        {
-            if(pair.Value != null)
-            {
-                selectedTable[pair.Key].UnSelect();
-            }
-        }
+            selectedTable[pair.Key].UnSelect();
+
         selectedTable.Clear();
+
+        UpdateUI();
     }
 
 
@@ -66,11 +72,40 @@ public class SelectedDico : MonoBehaviour
         DeselectAll();
         foreach(var s in AllGroups.instance.controlGroups[groupId])
             AddSelected(s.Value);
+
+        UpdateUI();
     }
 
 
-    public void UpdateUI()
+    // Called everywhere to update to any change
+    private void UpdateUI()
     {
-        // This is where UI is modified according to all selectables states, not a priority
+        // Check if we have anything
+        if (selectedTable.Count == 0)
+        {
+            // disable UI and return
+            return;
+        }
+
+        // Check if we have a unit, it has priority over buildings
+        bool haveUnit = false;
+
+        foreach (var s in selectedTable)
+        {
+            if (s.Value.GetComponent<AgentManager>())
+            {
+                haveUnit = true;
+                break;
+            }
+        }
+
+        if (haveUnit) // have a unit
+        {
+
+        }
+        else // have a building
+        {
+
+        }
     }
 }
