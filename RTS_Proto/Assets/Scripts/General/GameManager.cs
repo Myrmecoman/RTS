@@ -42,11 +42,7 @@ public class GameManager : MonoBehaviour
             grids[i].WallMask = WallMask;
             grids[i].vGridWorldSize = vGridWorldSize;
             grids[i].fNodeRadius = fNodeRadius;
-
-            #if (UNITY_EDITOR)
-            if (i == 0)
-                grids[i].debugNb = 1;
-            #endif
+            grids[i].gridId = i;
         }
     }
 
@@ -62,6 +58,7 @@ public class GameManager : MonoBehaviour
             }
         }
 
+        /*
         for (int x = 0; x < 10; x++)
         {
             for (int y = 0; y < 10; y++)
@@ -71,6 +68,7 @@ public class GameManager : MonoBehaviour
                 enemyUnits.Add(obj.transform);
             }
         }
+        */
     }
 
 

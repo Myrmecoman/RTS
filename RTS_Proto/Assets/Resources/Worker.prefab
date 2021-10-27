@@ -342,6 +342,8 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   sprite: {fileID: 5366904356999944363}
   moveTowardsSprite: {fileID: 6903691019313286077}
+  isWorker: 1
+  isAlly: 1
   sightRange: 10
   supply: 1
   attackDamage: 5
@@ -352,10 +354,8 @@ MonoBehaviour:
   speed: 3.5
   canAttackGround: 1
   canAttackAir: 0
-  isWorker: 1
-  leftMostPart: {fileID: 3336420663718053628}
-  rightMostPart: {fileID: 3565624072842346212}
-  isAlly: 1
+  leftPart: {fileID: 3336420663718053628}
+  rightPart: {fileID: 3565624072842346212}
   worldGrid: {fileID: 0}
   gridIndexe: 0
   hasDestination: 0

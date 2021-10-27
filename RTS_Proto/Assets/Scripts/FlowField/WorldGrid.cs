@@ -12,9 +12,7 @@ public class WorldGrid : MonoBehaviour
     [HideInInspector] public bool computingJobs = false; // Tells if we have access to precise pathfinding
     [HideInInspector] private Transform TrStartPosition; // Keep a transform in case of changes (follow)
     [HideInInspector] public Vector3 StartPosition; // This is where the program will start the pathfinding from
-    #if (UNITY_EDITOR)
-    [HideInInspector] public int debugNb;
-    #endif
+    [HideInInspector] public int gridId;
 
     private NativeArray<DijkstraTile> NodeArray; // The array of nodes that the A Star algorithm uses
     private float fNodeDiameter; // Twice the amount of the radius (Set in the start function)
@@ -161,22 +159,6 @@ public class WorldGrid : MonoBehaviour
         NodeArray = new NativeArray<DijkstraTile>(iGridSizeX * iGridSizeY, Allocator.Persistent);
         impreciseNodeArray = new NativeArray<DijkstraTile>(impreciseiGridSizeX * impreciseiGridSizeY, Allocator.Persistent);
 
-        //Loop through the arrays
-        for (int x = 0; x < iGridSizeX; x++)
-        {
-            for (int y = 0; y < iGridSizeY; y++)
-            {
-                //Get the world coordinates from the bottom left of the graph
-                Vector3 worldPoint = bottomLeft + Vector3.right * (x * fNodeDiameter + fNodeRadius) + Vector3.forward * (y * fNodeDiameter + fNodeRadius);
-                DijkstraTile tile = new DijkstraTile(new int2(x, y));
-
-                if (Physics.CheckCapsule(worldPoint - Vector3.up * 100, worldPoint + Vector3.up * 100, fNodeRadius - 0.01f /* in case of single point collision */, WallMask))
-                    tile.weight = int.MaxValue;
-
-                NodeArray[iGridSizeY * x + y] = tile; // Create a new node in the array
-            }
-        }
-
         for (int x = 0; x < impreciseiGridSizeX; x++)
         {
             for (int y = 0; y < impreciseiGridSizeY; y++)
@@ -189,6 +171,25 @@ public class WorldGrid : MonoBehaviour
                     tile.weight = int.MaxValue;
 
                 impreciseNodeArray[impreciseiGridSizeY * x + y] = tile; // Create a new node in the array
+            }
+        }
+
+        for (int x = 0; x < iGridSizeX; x++)
+        {
+            for (int y = 0; y < iGridSizeY; y++)
+            {
+                //Get the world coordinates from the bottom left of the graph
+                Vector3 worldPoint = bottomLeft + Vector3.right * (x * fNodeDiameter + fNodeRadius) + Vector3.forward * (y * fNodeDiameter + fNodeRadius);
+                DijkstraTile tile = new DijkstraTile(new int2(x, y));
+
+                if (Physics.CheckCapsule(worldPoint - Vector3.up * 100, worldPoint + Vector3.up * 100, fNodeRadius - 0.01f /* in case of single point collision */, WallMask))
+                {
+                    tile.weight = int.MaxValue;
+                    if (gridId == 0)
+                        Instantiate(Resources.Load("RuntimeWallCollider"), worldPoint, Quaternion.identity);
+                }
+
+                NodeArray[iGridSizeY * x + y] = tile; // Create a new node in the array
             }
         }
     }
@@ -246,6 +247,8 @@ public class WorldGrid : MonoBehaviour
                     DijkstraTile tile = new DijkstraTile(new int2(x, y));
                     tile.weight = int.MaxValue;
                     NodeArray[iGridSizeY * x + y] = tile;
+                    if (gridId == 0 && !Physics.CheckCapsule(worldPoint - Vector3.up * 100, worldPoint - Vector3.up * 80, fNodeRadius - 0.01f /* in case of single point collision */, WallMask))
+                        Instantiate(Resources.Load("RuntimeWallCollider"), worldPoint, Quaternion.identity);
                 }
             }
         }
@@ -277,7 +280,7 @@ public class WorldGrid : MonoBehaviour
                 Vector3 worldPoint = bottomLeft + Vector3.right * (x * imprecisefNodeDiameter + imprecisefNodeRadius) + Vector3.forward * (y * imprecisefNodeDiameter + imprecisefNodeRadius);
 
                 //Instantiate(Resources.Load("debugSphere"), worldPoint + Vector3.up * 2, Quaternion.identity);
-                if (!Physics.CheckCapsule(worldPoint - Vector3.up * 100, worldPoint + Vector3.up * 100, imprecisefNodeRadius - 0.01f /* in case of single point collision */, WallMask))
+                if (Physics.CheckCapsule(worldPoint - Vector3.up * 100, worldPoint + Vector3.up * 100, imprecisefNodeRadius - 0.01f /* in case of single point collision */, WallMask))
                 {
                     DijkstraTile tile = new DijkstraTile(new int2(x, y));
                     impreciseNodeArray[impreciseiGridSizeY * x + y] = tile;
@@ -298,10 +301,13 @@ public class WorldGrid : MonoBehaviour
                 Vector3 worldPoint = bottomLeft + Vector3.right * (x * fNodeDiameter + fNodeRadius) + Vector3.forward * (y * fNodeDiameter + fNodeRadius);
 
                 //Instantiate(Resources.Load("debugSphere"), worldPoint + Vector3.up, Quaternion.identity);
-                if (!Physics.CheckCapsule(worldPoint - Vector3.up * 100, worldPoint + Vector3.up * 100, fNodeRadius - 0.01f /* in case of single point collision */, WallMask))
+                if (Physics.CheckCapsule(worldPoint - Vector3.up * 100, worldPoint + Vector3.up * 100, fNodeRadius - 0.01f /* in case of single point collision */, WallMask))
                 {
                     DijkstraTile tile = new DijkstraTile(new int2(x, y));
                     NodeArray[iGridSizeY * x + y] = tile;
+                    RaycastHit hit;
+                    if (gridId == 0 && Physics.Raycast(worldPoint - Vector3.up * 150, Vector3.up, out hit, 100, WallMask))
+                        Destroy(hit.transform.gameObject);
                 }
             }
         }
@@ -317,8 +323,8 @@ public class WorldGrid : MonoBehaviour
     // Gets the closest node to the given world position
     public DijkstraTile NodeFromWorldPoint(Vector3 a_vWorldPos)
     {
-        float ixPos = ((a_vWorldPos.x + vGridWorldSize.x / 2) / vGridWorldSize.x);
-        float iyPos = ((a_vWorldPos.z + vGridWorldSize.y / 2) / vGridWorldSize.y);
+        float ixPos = (a_vWorldPos.x + vGridWorldSize.x / 2) / vGridWorldSize.x;
+        float iyPos = (a_vWorldPos.z + vGridWorldSize.y / 2) / vGridWorldSize.y;
 
         ixPos = Mathf.Clamp01(ixPos);
         iyPos = Mathf.Clamp01(iyPos);
@@ -349,7 +355,7 @@ public class WorldGrid : MonoBehaviour
     // Function that draws the wireframe
     private void OnDrawGizmos()
     {
-        if (debugNb != 1 || computingJobs)
+        if (gridId != 0 || computingJobs)
             return;
 
         if (impreciseNodeArray != null) // If the grid is not empty

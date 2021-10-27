@@ -1,4 +1,4 @@
-There is a bug where unit chooses to go straight when the wall collider is too low.
+There is a bug where units get stuck on random walls (especially on ramps).
 
 Implem fast idle state and flocking.
 Display units state in UI (all states display).

@@ -15,8 +15,8 @@ public class AgentManager : Selectable
     public bool canAttackGround = true;
     public bool canAttackAir = true;
 
-    public Transform leftMostPart;
-    public Transform rightMostPart;
+    public Transform leftPart;
+    public Transform rightPart;
 
     [HideInInspector] public WorldGrid worldGrid;
     [HideInInspector] public int gridIndexe;
@@ -85,6 +85,10 @@ public class AgentManager : Selectable
 
     private void MoveAndRotate(ref DijkstraTile currentTile, ref float horizontalDist)
     {
+        Vector3 leftMostPart = new Vector3(leftPart.position.x, -50, leftPart.position.z);
+        Vector3 rightMostPart = new Vector3(rightPart.position.x, -50, rightPart.position.z);
+        Vector3 targetPosition = new Vector3(worldGrid.StartPosition.x, -50, worldGrid.StartPosition.z);
+
         // control height
         RaycastHit verifyHeight;
         Physics.Raycast(transform.position, Vector3.down, out verifyHeight, 1000f, LayerMask.GetMask("ground"));
@@ -93,17 +97,12 @@ public class AgentManager : Selectable
         RaycastHit hitLeft;
         RaycastHit hitRight;
 
-        int layerMask = LayerMask.GetMask("wall", "ground", "building");
+        int layerMask = LayerMask.GetMask("wall");
 
-        if (horizontalDist > 0.05f &&
-            worldGrid.StartPosition != null &&
-            Physics.Raycast(leftMostPart.position, worldGrid.StartPosition - leftMostPart.position, out hitLeft, 1000f, layerMask) &&
-            Physics.Raycast(rightMostPart.position, worldGrid.StartPosition - rightMostPart.position, out hitRight, 1000f, layerMask))
+        if (horizontalDist > 0.05f && worldGrid.StartPosition != null)
         {
-            if (hitLeft.distance / Vector3.Distance(leftMostPart.position, worldGrid.StartPosition) >= 0.99f &&
-                hitLeft.distance / Vector3.Distance(leftMostPart.position, worldGrid.StartPosition) <= 1.01f &&
-                hitRight.distance / Vector3.Distance(rightMostPart.position, worldGrid.StartPosition) >= 0.99f &&
-                hitRight.distance / Vector3.Distance(rightMostPart.position, worldGrid.StartPosition) <= 1.01f)
+            if (!Physics.Raycast(leftMostPart, targetPosition - leftMostPart, out hitLeft, 1000f, layerMask) &&
+                !Physics.Raycast(rightMostPart, targetPosition - rightMostPart, out hitRight, 1000f, layerMask))
             {
                 // Clear line of sight to target position
                 if (follow == null)
@@ -127,26 +126,13 @@ public class AgentManager : Selectable
             }
             else
             {
-                // Obstructed line of sight to target position
-                if (currentTile.FlowFieldVector.Equals(int2.zero))
-                {
-                    int2 flowVector = lastValidTile.gridPos - currentTile.gridPos;
-                    Vector3 moveDir = new Vector3(flowVector.x, 0, flowVector.y).normalized;
+                lastValidTile = currentTile;
+                int2 flowVector = currentTile.FlowFieldVector;
+                Vector3 moveDir = new Vector3(flowVector.x, 0, flowVector.y).normalized;
 
-                    rb.MovePosition(transform.position + (moveDir + Vector3.up * -heightDist) * Time.fixedDeltaTime * speed);
-                    if (moveDir != Vector3.zero)
-                        transform.forward = moveDir;
-                }
-                else
-                {
-                    lastValidTile = currentTile;
-                    int2 flowVector = currentTile.FlowFieldVector;
-                    Vector3 moveDir = new Vector3(flowVector.x, 0, flowVector.y).normalized;
-
-                    rb.MovePosition(transform.position + (moveDir + Vector3.up * -heightDist) * Time.fixedDeltaTime * speed);
-                    if (moveDir != Vector3.zero)
-                        transform.forward = moveDir;
-                }
+                rb.MovePosition(transform.position + (moveDir + Vector3.up * -heightDist) * Time.fixedDeltaTime * speed);
+                if (moveDir != Vector3.zero)
+                    transform.forward = moveDir;
             }
         }
     }
