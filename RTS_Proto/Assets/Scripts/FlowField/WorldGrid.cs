@@ -381,8 +381,15 @@ public class WorldGrid : MonoBehaviour
                     Vector3 worldPoint = bottomLeft + Vector3.right * (n.gridPos.x * fNodeDiameter + fNodeRadius) + Vector3.forward * (n.gridPos.y * fNodeDiameter + fNodeRadius);
                     Gizmos.DrawCube(worldPoint, new Vector3(1, 0.01f, 1) * fNodeDiameter);
                 }
+                Vector3 nodePos = new Vector3(-128 + n.gridPos.x * fNodeDiameter + fNodeRadius, 0.01f, -128 + n.gridPos.y * fNodeDiameter + fNodeRadius);
+                if (n.FlowFieldVector.x != 0 || n.FlowFieldVector.y != 0)
+                    Gizmos.DrawLine(nodePos, new Vector3(nodePos.x + ((n.FlowFieldVector.x > 0) ? 0.5f : -0.5f), 0.01f, nodePos.z + ((n.FlowFieldVector.y > 0) ? 0.5f : -0.5f)));
+                else
+                    Gizmos.DrawLine(nodePos, new Vector3(nodePos.x, 0.5f, nodePos.z));
             }
         }
+
+        //Gizmos.DrawLine(Vector3.zero, new Vector3(1, 0.01f, 1));
     }
     #endif
 }
