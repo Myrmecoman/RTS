@@ -85,6 +85,11 @@ public class AgentManager : Selectable
 
     private void MoveAndRotate(ref DijkstraTile currentTile, ref float horizontalDist)
     {
+        if (horizontalDist < 0.05f || worldGrid.StartPosition == null)
+            return;
+
+        bool gotInStraight = false;
+
         Vector3 leftMostPart = new Vector3(leftPart.position.x, -50, leftPart.position.z);
         Vector3 rightMostPart = new Vector3(rightPart.position.x, -50, rightPart.position.z);
         Vector3 targetPosition = new Vector3(worldGrid.StartPosition.x, -50, worldGrid.StartPosition.z);
@@ -96,45 +101,46 @@ public class AgentManager : Selectable
 
         RaycastHit hitLeft;
         RaycastHit hitRight;
-
         int layerMask = LayerMask.GetMask("wall");
 
-        if (horizontalDist > 0.05f && worldGrid.StartPosition != null)
+        if (!Physics.Raycast(leftMostPart, targetPosition - leftMostPart, out hitLeft, horizontalDist, layerMask) &&
+            !Physics.Raycast(rightMostPart, targetPosition - rightMostPart, out hitRight, horizontalDist, layerMask))
         {
-            if (!Physics.Raycast(leftMostPart, targetPosition - leftMostPart, out hitLeft, 1000f, layerMask) &&
-                !Physics.Raycast(rightMostPart, targetPosition - rightMostPart, out hitRight, 1000f, layerMask))
+            gotInStraight = true;
+            // Clear line of sight to target position
+            if (follow == null)
             {
-                // Clear line of sight to target position
-                if (follow == null)
-                {
-                    Vector3 Ynull = new Vector3(worldGrid.StartPosition.x, transform.position.y, worldGrid.StartPosition.z);
-                    Vector3 moveDir = (Ynull - transform.position).normalized;
+                Vector3 Ynull = new Vector3(worldGrid.StartPosition.x, transform.position.y, worldGrid.StartPosition.z);
+                Vector3 moveDir = (Ynull - transform.position).normalized;
 
-                    rb.MovePosition(transform.position + new Vector3(moveDir.x, -heightDist, moveDir.z) * Time.fixedDeltaTime * speed);
-                    if (moveDir != Vector3.zero)
-                        transform.LookAt(new Vector3(worldGrid.StartPosition.x, transform.position.y, worldGrid.StartPosition.z), Vector3.up);
-                }
-                else
-                {
-                    Vector3 Ynull = new Vector3(follow.position.x, transform.position.y, follow.position.z);
-                    Vector3 moveDir = (Ynull - transform.position).normalized;
-
-                    rb.MovePosition(transform.position + new Vector3(moveDir.x, -heightDist, moveDir.z) * Time.fixedDeltaTime * speed);
-                    if (moveDir != Vector3.zero)
-                        transform.LookAt(new Vector3(follow.position.x, transform.position.y, follow.position.z), Vector3.up);
-                }
+                rb.MovePosition(transform.position + new Vector3(moveDir.x, -heightDist, moveDir.z) * Time.fixedDeltaTime * speed);
+                if (moveDir != Vector3.zero)
+                    transform.LookAt(new Vector3(worldGrid.StartPosition.x, transform.position.y, worldGrid.StartPosition.z), Vector3.up);
             }
             else
             {
-                lastValidTile = currentTile;
-                int2 flowVector = currentTile.FlowFieldVector;
-                Vector3 moveDir = new Vector3(flowVector.x, 0, flowVector.y).normalized;
+                Vector3 Ynull = new Vector3(follow.position.x, transform.position.y, follow.position.z);
+                Vector3 moveDir = (Ynull - transform.position).normalized;
 
-                rb.MovePosition(transform.position + (moveDir + Vector3.up * -heightDist) * Time.fixedDeltaTime * speed);
+                rb.MovePosition(transform.position + new Vector3(moveDir.x, -heightDist, moveDir.z) * Time.fixedDeltaTime * speed);
                 if (moveDir != Vector3.zero)
-                    transform.forward = moveDir;
+                    transform.LookAt(new Vector3(follow.position.x, transform.position.y, follow.position.z), Vector3.up);
             }
         }
+        else
+        {
+            Debug.DrawRay(leftMostPart, targetPosition - leftMostPart);
+            Debug.DrawRay(rightMostPart, targetPosition - rightMostPart);
+            lastValidTile = currentTile;
+            int2 flowVector = currentTile.FlowFieldVector;
+            Vector3 moveDir = new Vector3(flowVector.x, 0, flowVector.y).normalized;
+
+            rb.MovePosition(transform.position + (moveDir + Vector3.up * -heightDist) * Time.fixedDeltaTime * speed);
+            if (moveDir != Vector3.zero)
+                transform.forward = moveDir;
+        }
+
+        Debug.Log("rapport : \nhasdestination = " + hasDestination + "\nhorizontal distance to target = " + horizontalDist + "\ndirect path = " + gotInStraight);
     }
 
 

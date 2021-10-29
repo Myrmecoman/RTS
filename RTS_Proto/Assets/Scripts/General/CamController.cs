@@ -40,6 +40,9 @@ public class CamController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        if (!Application.isFocused)
+            return;
+
         Vector2 move = MoveCam();
 
         transform.localPosition = new Vector3(

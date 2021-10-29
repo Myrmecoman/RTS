@@ -16,14 +16,18 @@ public struct FlowFieldGrid : IJobParallelFor
 
     public void Execute(int i)
     {
+        int2 pos;
+        int2 min;
+        int2 n;
         //skip current iteration if index has obstacle
         if (RdGrid[i].weight != int.MaxValue)
         {
-            int2 pos = new int2(i / gridSize.y, i % gridSize.y);
+            pos.x = i / gridSize.y;
+            pos.y = i % gridSize.y;
 
             bool minNotNull = false;
             int minDist = 0;
-            int2 min = int2.zero; // this may be incorrect
+            min = int2.zero; // this may be incorrect
 
             bool bleft = isValid(pos.x - 1, pos.y);
             int2 left = new int2(pos.x - 1, pos.y);
@@ -51,7 +55,7 @@ public struct FlowFieldGrid : IJobParallelFor
 
             if (bleft)
             {
-                int2 n = left;
+                n = left;
                 int dist = RdGrid[gridSize.y * n.x + n.y].weight - RdGrid[gridSize.y * pos.x + pos.y].weight;
                 if (dist < minDist)
                 {
@@ -61,9 +65,9 @@ public struct FlowFieldGrid : IJobParallelFor
                 }
             }
 
-            if (bleftup)
+            if (bleftup && bleft && bup)
             {
-                int2 n = leftup;
+                n = leftup;
                 int dist = RdGrid[gridSize.y * n.x + n.y].weight - RdGrid[gridSize.y * pos.x + pos.y].weight;
                 if (dist < minDist)
                 {
@@ -75,7 +79,7 @@ public struct FlowFieldGrid : IJobParallelFor
 
             if (bup)
             {
-                int2 n = up;
+                n = up;
                 int dist = RdGrid[gridSize.y * n.x + n.y].weight - RdGrid[gridSize.y * pos.x + pos.y].weight;
                 if (dist < minDist)
                 {
@@ -85,9 +89,9 @@ public struct FlowFieldGrid : IJobParallelFor
                 }
             }
 
-            if (bupright)
+            if (bupright && bup && bright)
             {
-                int2 n = upright;
+                n = upright;
                 int dist = RdGrid[gridSize.y * n.x + n.y].weight - RdGrid[gridSize.y * pos.x + pos.y].weight;
                 if (dist < minDist)
                 {
@@ -99,7 +103,7 @@ public struct FlowFieldGrid : IJobParallelFor
 
             if (bright)
             {
-                int2 n = right;
+                n = right;
                 int dist = RdGrid[gridSize.y * n.x + n.y].weight - RdGrid[gridSize.y * pos.x + pos.y].weight;
                 if (dist < minDist)
                 {
@@ -109,9 +113,9 @@ public struct FlowFieldGrid : IJobParallelFor
                 }
             }
 
-            if (bdownright)
+            if (bdownright && bdown && bright)
             {
-                int2 n = downright;
+                n = downright;
                 int dist = RdGrid[gridSize.y * n.x + n.y].weight - RdGrid[gridSize.y * pos.x + pos.y].weight;
                 if (dist < minDist)
                 {
@@ -123,7 +127,7 @@ public struct FlowFieldGrid : IJobParallelFor
 
             if (bdown)
             {
-                int2 n = down;
+                n = down;
                 int dist = RdGrid[gridSize.y * n.x + n.y].weight - RdGrid[gridSize.y * pos.x + pos.y].weight;
                 if (dist < minDist)
                 {
@@ -133,9 +137,9 @@ public struct FlowFieldGrid : IJobParallelFor
                 }
             }
 
-            if (bdownleft)
+            if (bdownleft && bdown && bleft)
             {
-                int2 n = downleft;
+                n = downleft;
                 int dist = RdGrid[gridSize.y * n.x + n.y].weight - RdGrid[gridSize.y * pos.x + pos.y].weight;
                 if (dist < minDist)
                 {

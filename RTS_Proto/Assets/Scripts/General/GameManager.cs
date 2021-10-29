@@ -49,6 +49,10 @@ public class GameManager : MonoBehaviour
 
     private void Start()
     {
+        GameObject obj = (GameObject)Instantiate(Resources.Load("Worker"), new Vector3(0, 0, 0), Quaternion.identity);
+        allyUnits.Add(obj.transform);
+
+        /*
         for (int x = 0; x < 10; x++)
         {
             for (int y = 0; y < 10; y++)
@@ -58,7 +62,6 @@ public class GameManager : MonoBehaviour
             }
         }
 
-        /*
         for (int x = 0; x < 10; x++)
         {
             for (int y = 0; y < 10; y++)
