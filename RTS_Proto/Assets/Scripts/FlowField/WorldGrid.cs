@@ -229,7 +229,7 @@ public class WorldGrid : MonoBehaviour
             }
         }
 
-        yield return new WaitUntil(isItFinished);
+        yield return new WaitUntil(IsItFinished);
 
         ix = Mathf.RoundToInt((iGridSizeX - 1) * ixPos);
         iy = Mathf.RoundToInt((iGridSizeY - 1) * iyPos);
@@ -288,7 +288,7 @@ public class WorldGrid : MonoBehaviour
             }
         }
 
-        yield return new WaitUntil(isItFinished);
+        yield return new WaitUntil(IsItFinished);
 
         ix = Mathf.RoundToInt((iGridSizeX - 1) * ixPos);
         iy = Mathf.RoundToInt((iGridSizeY - 1) * iyPos);
@@ -314,7 +314,7 @@ public class WorldGrid : MonoBehaviour
     }
 
 
-    private bool isItFinished()
+    private bool IsItFinished()
     {
         return !computingJobs;
     }
@@ -381,15 +381,16 @@ public class WorldGrid : MonoBehaviour
                     Vector3 worldPoint = bottomLeft + Vector3.right * (n.gridPos.x * fNodeDiameter + fNodeRadius) + Vector3.forward * (n.gridPos.y * fNodeDiameter + fNodeRadius);
                     Gizmos.DrawCube(worldPoint, new Vector3(1, 0.01f, 1) * fNodeDiameter);
                 }
+
+                Gizmos.color = Color.black;
                 Vector3 nodePos = new Vector3(-128 + n.gridPos.x * fNodeDiameter + fNodeRadius, 0.01f, -128 + n.gridPos.y * fNodeDiameter + fNodeRadius);
-                if (n.FlowFieldVector.x != 0 || n.FlowFieldVector.y != 0)
-                    Gizmos.DrawLine(nodePos, new Vector3(nodePos.x + ((n.FlowFieldVector.x > 0) ? 0.5f : -0.5f), 0.01f, nodePos.z + ((n.FlowFieldVector.y > 0) ? 0.5f : -0.5f)));
-                else
-                    Gizmos.DrawLine(nodePos, new Vector3(nodePos.x, 0.5f, nodePos.z));
+                float x = (n.FlowFieldVector.x > 0) ? 0.5f : -0.5f;
+                x = (n.FlowFieldVector.x == 0) ? 0 : x;
+                float y = (n.FlowFieldVector.y > 0) ? 0.5f : -0.5f;
+                y = (n.FlowFieldVector.y == 0) ? 0 : y;
+                Gizmos.DrawLine(nodePos, new Vector3(nodePos.x + x, 0.01f, nodePos.z + y));
             }
         }
-
-        //Gizmos.DrawLine(Vector3.zero, new Vector3(1, 0.01f, 1));
     }
     #endif
 }

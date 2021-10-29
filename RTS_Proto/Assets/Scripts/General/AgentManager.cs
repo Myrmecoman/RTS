@@ -27,7 +27,6 @@ public class AgentManager : Selectable
     private bool patrolCommand = false;
     private double attackCooldown;
     private Rigidbody rb;
-    private DijkstraTile lastValidTile;
     private Transform follow;
     private ResourceManager res = null;
      
@@ -65,8 +64,6 @@ public class AgentManager : Selectable
         if (!hasDestination)
             return;
 
-        DijkstraTile currentTile = worldGrid.NodeFromWorldPoint(transform.position);
-
         // Detecting if we reached our target position
         float horizontalDist = Vector3.Distance(new Vector3(transform.position.x, 0, transform.position.z), new Vector3(worldGrid.StartPosition.x, 0, worldGrid.StartPosition.z));
         if (horizontalDist <= 0.05f && follow == null)
@@ -77,18 +74,14 @@ public class AgentManager : Selectable
             return;
         }
         
-        MoveAndRotate(ref currentTile, ref horizontalDist);
-
-        lastValidTile = worldGrid.NodeFromWorldPoint(transform.position);
+        MoveAndRotate(ref horizontalDist);
     }
 
 
-    private void MoveAndRotate(ref DijkstraTile currentTile, ref float horizontalDist)
+    private void MoveAndRotate(ref float horizontalDist)
     {
         if (horizontalDist < 0.05f || worldGrid.StartPosition == null)
             return;
-
-        bool gotInStraight = false;
 
         Vector3 leftMostPart = new Vector3(leftPart.position.x, -50, leftPart.position.z);
         Vector3 rightMostPart = new Vector3(rightPart.position.x, -50, rightPart.position.z);
@@ -106,7 +99,6 @@ public class AgentManager : Selectable
         if (!Physics.Raycast(leftMostPart, targetPosition - leftMostPart, out hitLeft, horizontalDist, layerMask) &&
             !Physics.Raycast(rightMostPart, targetPosition - rightMostPart, out hitRight, horizontalDist, layerMask))
         {
-            gotInStraight = true;
             // Clear line of sight to target position
             if (follow == null)
             {
@@ -129,18 +121,15 @@ public class AgentManager : Selectable
         }
         else
         {
-            Debug.DrawRay(leftMostPart, targetPosition - leftMostPart);
-            Debug.DrawRay(rightMostPart, targetPosition - rightMostPart);
-            lastValidTile = currentTile;
-            int2 flowVector = currentTile.FlowFieldVector;
+            int2 flowVector = worldGrid.NodeFromWorldPoint(transform.position).FlowFieldVector;
             Vector3 moveDir = new Vector3(flowVector.x, 0, flowVector.y).normalized;
+
+            Debug.DrawRay(transform.position + Vector3.up, moveDir, Color.blue);
 
             rb.MovePosition(transform.position + (moveDir + Vector3.up * -heightDist) * Time.fixedDeltaTime * speed);
             if (moveDir != Vector3.zero)
                 transform.forward = moveDir;
         }
-
-        Debug.Log("rapport : \nhasdestination = " + hasDestination + "\nhorizontal distance to target = " + horizontalDist + "\ndirect path = " + gotInStraight);
     }
 
 
