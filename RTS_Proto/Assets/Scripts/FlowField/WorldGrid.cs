@@ -326,19 +326,16 @@ public class WorldGrid : MonoBehaviour
         float ixPos = (a_vWorldPos.x + vGridWorldSize.x / 2) / vGridWorldSize.x;
         float iyPos = (a_vWorldPos.z + vGridWorldSize.y / 2) / vGridWorldSize.y;
 
-        ixPos = Mathf.Clamp01(ixPos);
-        iyPos = Mathf.Clamp01(iyPos);
-
         if (!computingJobs)
         {
-            int ix = Mathf.RoundToInt((iGridSizeX - 1) * ixPos);
-            int iy = Mathf.RoundToInt((iGridSizeY - 1) * iyPos);
+            int ix = (int)(ixPos * iGridSizeX);
+            int iy = (int)(iyPos * iGridSizeY);
             return NodeArray[iGridSizeY * ix + iy];
         }
         else
         {
-            int ix = Mathf.RoundToInt((impreciseiGridSizeX - 1) * ixPos);
-            int iy = Mathf.RoundToInt((impreciseiGridSizeY - 1) * iyPos);
+            int ix = (int)(ixPos * impreciseiGridSizeX);
+            int iy = (int)(iyPos * impreciseiGridSizeY);
             return impreciseNodeArray[impreciseiGridSizeY * ix + iy];
         }
     }

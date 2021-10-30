@@ -124,8 +124,6 @@ public class AgentManager : Selectable
             int2 flowVector = worldGrid.NodeFromWorldPoint(transform.position).FlowFieldVector;
             Vector3 moveDir = new Vector3(flowVector.x, 0, flowVector.y).normalized;
 
-            Debug.DrawRay(transform.position + Vector3.up, moveDir, Color.blue);
-
             rb.MovePosition(transform.position + (moveDir + Vector3.up * -heightDist) * Time.fixedDeltaTime * speed);
             if (moveDir != Vector3.zero)
                 transform.forward = moveDir;
