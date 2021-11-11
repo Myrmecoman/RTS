@@ -104,34 +104,6 @@ public class GameManager : MonoBehaviour
     }
 
 
-    public void PatrolCommand(Dictionary<int, Selectable> agents, Transform target)
-    {
-        for (int i = 0; i < arraysSize; i++)
-        {
-            if (inUse[i] == 0)
-            {
-                int actualAgents = 0;
-                grids[i].ChangeTarget(target);
-
-                foreach (KeyValuePair<int, Selectable> ag in agents)
-                {
-                    if (ag.Value.GetComponent<AgentManager>())
-                    {
-                        actualAgents++;
-                        ag.Value.AddDestination(grids[i], i, null, 2);
-                    }
-                }
-
-                inUse[i] = actualAgents;
-
-                return;
-            }
-        }
-
-        Debug.Log("All grids already in use");
-    }
-
-
     public void MoveCommand(Dictionary<int, Selectable> agents, Transform target, bool follow = false, bool resource = false)
     {
         for (int i = 0; i < arraysSize; i++)

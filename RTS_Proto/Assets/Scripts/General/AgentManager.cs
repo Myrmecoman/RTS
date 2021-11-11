@@ -4,6 +4,7 @@ using UnityEngine;
 
 public class AgentManager : Selectable
 {
+    public UnitName unitName;
     public int sightRange = 10;
     public int supply = 1;
     public int attackDamage = 5;
@@ -24,7 +25,6 @@ public class AgentManager : Selectable
 
     private bool holdPosition = false;
     private bool attackCommand = false;
-    private bool patrolCommand = false;
     private double attackCooldown;
     private Rigidbody rb;
     private Transform follow;
@@ -222,11 +222,6 @@ public class AgentManager : Selectable
             attackCommand = true;
         else
             attackCommand = false;
-
-        if (action == 2)
-            patrolCommand = true;
-        else
-            patrolCommand = false;
     }
 
 
@@ -238,7 +233,6 @@ public class AgentManager : Selectable
             follow = null;
             hasDestination = false;
             attackCommand = false;
-            patrolCommand = false;
             holdPosition = false;
             rb.isKinematic = false;
             if (res != null)
@@ -252,7 +246,6 @@ public class AgentManager : Selectable
             follow = null;
             hasDestination = false;
             attackCommand = false;
-            patrolCommand = false;
             holdPosition = false;
             rb.isKinematic = false;
             if (res != null)
@@ -272,7 +265,6 @@ public class AgentManager : Selectable
             follow = null;
             hasDestination = false;
             attackCommand = false;
-            patrolCommand = false;
             holdPosition = false;
             rb.isKinematic = false;
         }
@@ -281,7 +273,6 @@ public class AgentManager : Selectable
             follow = null;
             hasDestination = false;
             attackCommand = false;
-            patrolCommand = false;
             holdPosition = false;
             rb.isKinematic = false;
         }

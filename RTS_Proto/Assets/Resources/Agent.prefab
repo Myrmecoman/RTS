@@ -247,6 +247,7 @@ MonoBehaviour:
   moveTowardsSprite: {fileID: 6704976275027894274}
   isWorker: 0
   isAlly: 1
+  unitName: 1
   sightRange: 10
   supply: 1
   attackDamage: 5

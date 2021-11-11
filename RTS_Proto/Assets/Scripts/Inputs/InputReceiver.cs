@@ -118,8 +118,6 @@ public class InputReceiver : MonoBehaviour
         {
             if (controls.TopDownControls.Attack.triggered && SelectedDico.instance.selectedTable.Count != 0)
                 lastKeyPressed = 'A'; // A is for attack
-            else if (controls.TopDownControls.Patrol.triggered && SelectedDico.instance.selectedTable.Count != 0)
-                lastKeyPressed = 'R'; // R is for patrol
             else
                 lastKeyPressed = '\0';
         }
@@ -130,8 +128,6 @@ public class InputReceiver : MonoBehaviour
     {
         if (lastKeyPressed == 'A')
             camController.AttackCommand();
-        else if (lastKeyPressed == 'R')
-            camController.PatrolCommand();
 
         lastKeyPressed = '\0';
     }

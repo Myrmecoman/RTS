@@ -100,41 +100,6 @@ public class CamController : MonoBehaviour
     }
 
 
-    public void PatrolCommand()
-    {
-        Debug.Log("Patroling");
-
-        if (SelectedDico.instance.selectedTable.Count == 0)
-            return;
-
-        Ray ray = cam.ScreenPointToRay(Mouse.current.position.ReadValue());
-        RaycastHit hit;
-        int layerMask = LayerMask.GetMask("ground", "building", "resource"); // cannot patrol on an agent
-        if (Physics.Raycast(ray, out hit, 1000f, layerMask))
-        {
-            if (lastCommandSprite != null)
-                Destroy(lastCommandSprite);
-
-            if (hit.transform.gameObject.tag == "ground")
-            {
-                lastCommandSprite = Instantiate(patrolCommandObj);
-                lastCommandSprite.transform.position = hit.point + new Vector3(0, 0.0001f, 0);
-                GameManager.instance.PatrolCommand(SelectedDico.instance.selectedTable, lastCommandSprite.transform);
-            }
-            else if (hit.transform.gameObject.tag == "building")
-            {
-                hit.collider.GetComponent<BuildingManager>().MoveTowardsSprite();
-                GameManager.instance.PatrolCommand(SelectedDico.instance.selectedTable, hit.transform);
-            }
-            else if (hit.transform.gameObject.tag == "resource")
-            {
-                hit.collider.GetComponent<ResourceManager>().MoveTowardsSprite();
-                GameManager.instance.PatrolCommand(SelectedDico.instance.selectedTable, hit.transform);
-            }
-        }
-    }
-
-
     public void MoveCommand()
     {
         if (SelectedDico.instance.selectedTable.Count == 0)
