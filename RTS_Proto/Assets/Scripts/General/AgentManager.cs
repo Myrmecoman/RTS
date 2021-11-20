@@ -28,7 +28,7 @@ public class AgentManager : Selectable
     private double attackCooldown;
     private Rigidbody rb;
     private Transform follow;
-    private ResourceManager res = null;
+    private ResourceManager ressource = null;
      
 
     private void Start()
@@ -46,19 +46,20 @@ public class AgentManager : Selectable
 
         AgentManager foundTarget = CheckEnnemy();
 
-        if (attackCooldown <= 0 && (!hasDestination || attackCommand || holdPosition) && foundTarget != null && res == null)
+        if (attackCooldown <= 0 && (!hasDestination || attackCommand || holdPosition) && foundTarget != null && ressource == null)
         {
             // attack target
             Attack(foundTarget);
             return;
         }
 
-        if ((attackCommand || holdPosition) && foundTarget != null && res == null)
+        if ((attackCommand || holdPosition) && foundTarget != null && ressource == null)
         {
+            // attacking, need to hold position
             rb.isKinematic = true;
             return;
         }
-        else if (res == null)
+        else if (ressource == null)
             rb.isKinematic = false;
 
         if (!hasDestination)
@@ -69,16 +70,16 @@ public class AgentManager : Selectable
         if (horizontalDist <= 0.05f && follow == null)
         {
             UnsetDestinationExceptResource();
-            if (res != null)
+            if (ressource != null)
                 HoldPosition();
             return;
         }
         
-        MoveAndRotate(ref horizontalDist);
+        MoveAndRotate(horizontalDist);
     }
 
 
-    private void MoveAndRotate(ref float horizontalDist)
+    private void MoveAndRotate(float horizontalDist)
     {
         if (horizontalDist < 0.05f || worldGrid.StartPosition == null)
             return;
@@ -203,7 +204,7 @@ public class AgentManager : Selectable
             {
                 UnsetDestination();
                 res.GetFreeSlot(gameObject.GetInstanceID(), transform);
-                this.res = res;
+                this.ressource = res;
             }
             else
                 UnsetDestination();
@@ -227,54 +228,31 @@ public class AgentManager : Selectable
 
     public void UnsetDestination()
     {
+        follow = null;
+        hasDestination = false;
+        attackCommand = false;
+        holdPosition = false;
+        rb.isKinematic = false;
+        if (ressource != null)
+        {
+            ressource.FreeSlot();
+            ressource = null;
+        }
+
         if (hasDestination)
-        {
             GameManager.instance.inUse[gridIndexe]--;
-            follow = null;
-            hasDestination = false;
-            attackCommand = false;
-            holdPosition = false;
-            rb.isKinematic = false;
-            if (res != null)
-            {
-                res.FreeSlot();
-                res = null;
-            }
-        }
-        else
-        {
-            follow = null;
-            hasDestination = false;
-            attackCommand = false;
-            holdPosition = false;
-            rb.isKinematic = false;
-            if (res != null)
-            {
-                res.FreeSlot();
-                res = null;
-            }
-        }
     }
 
     
     public void UnsetDestinationExceptResource()
     {
+        follow = null;
+        hasDestination = false;
+        attackCommand = false;
+        holdPosition = false;
+        rb.isKinematic = false;
+
         if (hasDestination)
-        {
             GameManager.instance.inUse[gridIndexe]--;
-            follow = null;
-            hasDestination = false;
-            attackCommand = false;
-            holdPosition = false;
-            rb.isKinematic = false;
-        }
-        else
-        {
-            follow = null;
-            hasDestination = false;
-            attackCommand = false;
-            holdPosition = false;
-            rb.isKinematic = false;
-        }
     }
 }
