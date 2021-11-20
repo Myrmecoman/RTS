@@ -4,7 +4,6 @@ using UnityEngine;
 
 public class AgentManager : Selectable
 {
-    public UnitName unitName;
     public int sightRange = 10;
     public int supply = 1;
     public int attackDamage = 5;

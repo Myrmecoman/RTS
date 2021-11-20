@@ -3,6 +3,7 @@ using UnityEngine;
 
 public abstract class Selectable : MonoBehaviour
 {
+    public Names unitName;
     public SpriteRenderer sprite;
     public GameObject moveTowardsSprite;
     public bool isWorker = false;

@@ -12,7 +12,7 @@ public class InputReceiver : MonoBehaviour
     public SelectedDico selectedDico;
     public AllGroups allGroups;
     public AllCameras allCameras;
-    public Button[] buttonGroups = new Button[10];
+    public Button[] buttonGroups;
 
     [HideInInspector] public char lastKeyPressed = '\0';
 

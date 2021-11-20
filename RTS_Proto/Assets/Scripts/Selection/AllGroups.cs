@@ -30,6 +30,8 @@ public class AllGroups : MonoBehaviour
             if (!controlGroups[groupNb].ContainsKey(i.Key))
                 controlGroups[groupNb].Add(i.Key, i.Value);
         }
+
+        UpdateGroupIcon(groupNb);
     }
 
 
@@ -40,6 +42,8 @@ public class AllGroups : MonoBehaviour
             if (controlGroups[groupNb].ContainsKey(i.Key))
                 controlGroups[groupNb].Remove(i.Key);
         }
+
+        UpdateGroupIcon(groupNb);
     }
 
 
@@ -56,5 +60,37 @@ public class AllGroups : MonoBehaviour
     {
         SelectedDico.instance.DeselectAll();
         SelectedDico.instance.selectedTable = controlGroups[groupNb].ToDictionary(entry => entry.Key, entry => entry.Value); // Deep copy
+    }
+
+
+    private void UpdateGroupIcon(int groupNb)
+    {
+        Image img = InputReceiver.instance.buttonGroups[groupNb].gameObject.GetComponentInChildren<Image>();
+
+        if (controlGroups[groupNb].Count == 0)
+        {
+            img.sprite = null;
+            img.color = new Color(img.color.r, img.color.g, img.color.b, 0);
+            return;
+        }
+
+        Names lowestName = (Names)int.MaxValue;
+        foreach (var i in controlGroups[groupNb])
+        {
+            if (i.Value.unitName < lowestName)
+                lowestName = i.Value.unitName;
+        }
+
+        string path = "icons/";
+        if (((int)lowestName) <= 1000)
+            path += "unitIcons/";
+        else if (((int)lowestName) <= 2000)
+            path += "buildingIcons/";
+        else
+            path += "otherIcons/";
+
+        path += lowestName.ToString();
+        img.sprite = Resources.Load<Sprite>(path);
+        img.color = new Color(img.color.r, img.color.g, img.color.b, 1);
     }
 }
