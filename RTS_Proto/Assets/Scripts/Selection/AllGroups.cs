@@ -65,7 +65,7 @@ public class AllGroups : MonoBehaviour
 
     private void UpdateGroupIcon(int groupNb)
     {
-        Image img = InputReceiver.instance.buttonGroups[groupNb].gameObject.GetComponentInChildren<Image>();
+        Image img = InputReceiver.instance.buttonGroups[groupNb].transform.GetChild(0).GetComponent<Image>();
 
         if (controlGroups[groupNb].Count == 0)
         {
