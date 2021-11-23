@@ -9,13 +9,11 @@ public class GameManager : MonoBehaviour
     public LayerMask WallMask; // This is the mask that the program will look for when trying to find obstructions to the path
     public Vector2 vGridWorldSize; // A vector2 to store the width and height of the graph in world units
     public float fNodeRadius; // This stores how big each square on the graph will be
-    public WorldGrid singleGrid; // Grid parameters
     public int minerals = 0;
     public int gas = 0;
 
-    private static int arraysSize = 100;
-    [HideInInspector] public WorldGrid[] grids = new WorldGrid[arraysSize];
-    [HideInInspector] public int[] inUse = new int[arraysSize];
+    [HideInInspector] public WorldGrid[] grids;
+    [HideInInspector] public bool[] inUse;
 
     [HideInInspector] public KdTree<Transform> allyUnits;
     [HideInInspector] public KdTree<Transform> allyBuildings;
@@ -31,14 +29,17 @@ public class GameManager : MonoBehaviour
         else
             Destroy(gameObject);
 
+        grids = new WorldGrid[10];
+        inUse = new bool[10];
+
         allyUnits = new KdTree<Transform>();
         allyBuildings = new KdTree<Transform>();
         enemyUnits = new KdTree<Transform>();
         enemyBuildings = new KdTree<Transform>();
 
-        for (int i = 0; i < arraysSize; i++)
+        for (int i = 0; i < inUse.Length; i++)
         {
-            grids[i] = Instantiate(singleGrid, transform);
+            grids[i] = ((GameObject)Instantiate(Resources.Load("worldGrid"), transform)).GetComponent<WorldGrid>();
             grids[i].WallMask = WallMask;
             grids[i].vGridWorldSize = vGridWorldSize;
             grids[i].fNodeRadius = fNodeRadius;
@@ -74,10 +75,11 @@ public class GameManager : MonoBehaviour
 
     public void AttackCommand(Dictionary<int, Selectable> agents, Transform target, bool focus = false)
     {
-        for (int i = 0; i < arraysSize; i++)
+        for (int i = 0; i < inUse.Length; i++)
         {
-            if (inUse[i] == 0)
+            if (!inUse[i])
             {
+                inUse[i] = true;
                 int actualAgents = 0;
                 grids[i].ChangeTarget(target);
 
@@ -88,13 +90,11 @@ public class GameManager : MonoBehaviour
                         actualAgents++;
 
                         if (focus)
-                            ag.Value.AddDestination(grids[i], i, target, 1);
+                            ag.Value.AddDestination(grids[i].NodeArray, grids[i].impreciseNodeArray, target.position, target, 1);
                         else
-                            ag.Value.AddDestination(grids[i], i, null, 1);
+                            ag.Value.AddDestination(grids[i].NodeArray, grids[i].impreciseNodeArray, target.position, null, 1);
                     }
                 }
-
-                inUse[i] = actualAgents;
 
                 return;
             }
@@ -106,24 +106,24 @@ public class GameManager : MonoBehaviour
 
     public void MoveCommand(Dictionary<int, Selectable> agents, Transform target, bool follow = false, bool resource = false)
     {
-        for (int i = 0; i < arraysSize; i++)
+        for (int i = 0; i < inUse.Length; i++)
         {
-            if (inUse[i] == 0)
+            if (!inUse[i])
             {
-                inUse[i] = agents.Count;
+                inUse[i] = true;
                 grids[i].ChangeTarget(target);
 
                 foreach (KeyValuePair<int, Selectable> ag in agents)
                 {
                     if (follow)
-                        ag.Value.AddDestination(grids[i], i, target);
+                        ag.Value.AddDestination(grids[i].NodeArray, grids[i].impreciseNodeArray, target.position, target);
                     else if (resource && ag.Value.isWorker)
                     {
-                        ag.Value.AddDestination(grids[i], i, null, 3, target.GetComponent<ResourceManager>());
+                        ag.Value.AddDestination(grids[i].NodeArray, grids[i].impreciseNodeArray, target.position, null, 3, target.GetComponent<ResourceManager>());
                         target.GetComponent<ResourceManager>().MoveTowardsSprite();
                     }
                     else
-                        ag.Value.AddDestination(grids[i], i);
+                        ag.Value.AddDestination(grids[i].NodeArray, grids[i].impreciseNodeArray, target.position);
                 }
 
                 return;
@@ -137,9 +137,9 @@ public class GameManager : MonoBehaviour
     public int NbCurrentlyFree()
     {
         int total = 0;
-        foreach (int i in inUse)
+        foreach (bool i in inUse)
         {
-            if (i == 0)
+            if (!i)
                 total++;
         }
         return total;

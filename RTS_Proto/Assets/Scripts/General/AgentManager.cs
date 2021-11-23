@@ -1,4 +1,5 @@
-﻿using Unity.Mathematics;
+﻿using Unity.Collections;
+using Unity.Mathematics;
 using UnityEngine;
 
 
@@ -18,8 +19,10 @@ public class AgentManager : Selectable
     public Transform leftPart;
     public Transform rightPart;
 
-    [HideInInspector] public WorldGrid worldGrid;
-    [HideInInspector] public int gridIndexe;
+    [HideInInspector] public DijkstraTile[] path;
+    [HideInInspector] public DijkstraTile[] pathImprecise;
+    [HideInInspector] public Vector3 destination;
+    [HideInInspector] public bool isFullPath = false;
     [HideInInspector] public bool hasDestination = false;
 
     private bool holdPosition = false;
@@ -32,6 +35,8 @@ public class AgentManager : Selectable
 
     private void Start()
     {
+        path = new DijkstraTile[(int)(GameManager.instance.vGridWorldSize.x * GameManager.instance.vGridWorldSize.y)];
+        pathImprecise = new DijkstraTile[(int)(GameManager.instance.vGridWorldSize.x / 2 * GameManager.instance.vGridWorldSize.y / 2)];
         rb = GetComponent<Rigidbody>();
     }
 
@@ -65,7 +70,7 @@ public class AgentManager : Selectable
             return;
 
         // Detecting if we reached our target position
-        float horizontalDist = Vector3.Distance(new Vector3(transform.position.x, 0, transform.position.z), new Vector3(worldGrid.StartPosition.x, 0, worldGrid.StartPosition.z));
+        float horizontalDist = Vector3.Distance(new Vector3(transform.position.x, 0, transform.position.z), new Vector3(destination.x, 0, destination.z));
         if (horizontalDist <= 0.05f && follow == null)
         {
             UnsetDestinationExceptResource();
@@ -80,12 +85,12 @@ public class AgentManager : Selectable
 
     private void MoveAndRotate(float horizontalDist)
     {
-        if (horizontalDist < 0.05f || worldGrid.StartPosition == null)
+        if (horizontalDist < 0.05f || destination == null)
             return;
 
         Vector3 leftMostPart = new Vector3(leftPart.position.x, -50, leftPart.position.z);
         Vector3 rightMostPart = new Vector3(rightPart.position.x, -50, rightPart.position.z);
-        Vector3 targetPosition = new Vector3(worldGrid.StartPosition.x, -50, worldGrid.StartPosition.z);
+        Vector3 targetPosition = new Vector3(destination.x, -50, destination.z);
 
         // control height
         RaycastHit verifyHeight;
@@ -102,12 +107,12 @@ public class AgentManager : Selectable
             // Clear line of sight to target position
             if (follow == null)
             {
-                Vector3 Ynull = new Vector3(worldGrid.StartPosition.x, transform.position.y, worldGrid.StartPosition.z);
+                Vector3 Ynull = new Vector3(destination.x, transform.position.y, destination.z);
                 Vector3 moveDir = (Ynull - transform.position).normalized;
 
                 rb.MovePosition(transform.position + new Vector3(moveDir.x, -heightDist, moveDir.z) * Time.fixedDeltaTime * speed);
                 if (moveDir != Vector3.zero)
-                    transform.LookAt(new Vector3(worldGrid.StartPosition.x, transform.position.y, worldGrid.StartPosition.z), Vector3.up);
+                    transform.LookAt(new Vector3(destination.x, transform.position.y, destination.z), Vector3.up);
             }
             else
             {
@@ -121,7 +126,7 @@ public class AgentManager : Selectable
         }
         else
         {
-            int2 flowVector = worldGrid.NodeFromWorldPoint(transform.position).FlowFieldVector;
+            int2 flowVector = NodeFromWorldPoint(transform.position).FlowFieldVector;
             Vector3 moveDir = new Vector3(flowVector.x, 0, flowVector.y).normalized;
 
             rb.MovePosition(transform.position + (moveDir + Vector3.up * -heightDist) * Time.fixedDeltaTime * speed);
@@ -190,8 +195,9 @@ public class AgentManager : Selectable
     }
 
 
-    public override void AddDestination(WorldGrid grid, int index, Transform follow = null, int action = 0 /* 1 = attack, 2 = patrol, 3 = collect-resource */, ResourceManager res = null)
+    public override void AddDestination(NativeArray<DijkstraTile> path, NativeArray<DijkstraTile> pathImprecise, Vector3 dest, Transform follow = null, int action = 0, ResourceManager res = null)
     {
+        // action : 1 = attack, 2 = patrol, 3 = collect-resource */
         if (action == 3 && isWorker)
         {
             int result = res.IsFreeSlot(gameObject.GetInstanceID());
@@ -203,22 +209,21 @@ public class AgentManager : Selectable
             {
                 UnsetDestination();
                 res.GetFreeSlot(gameObject.GetInstanceID(), transform);
-                this.ressource = res;
+                ressource = res;
             }
             else
                 UnsetDestination();
         }
         else
-        {
             UnsetDestination();
-        }
 
-        worldGrid = grid;
-        gridIndexe = index;
+        destination = dest;
+        NativeArray<DijkstraTile>.Copy(pathImprecise, this.pathImprecise);
+
         hasDestination = true;
         this.follow = follow;
 
-        if (action == 1 || action == 2)
+        if (action == 1)
             attackCommand = true;
         else
             attackCommand = false;
@@ -232,14 +237,12 @@ public class AgentManager : Selectable
         attackCommand = false;
         holdPosition = false;
         rb.isKinematic = false;
+        isFullPath = false;
         if (ressource != null)
         {
             ressource.FreeSlot();
             ressource = null;
         }
-
-        if (hasDestination)
-            GameManager.instance.inUse[gridIndexe]--;
     }
 
     
@@ -250,8 +253,27 @@ public class AgentManager : Selectable
         attackCommand = false;
         holdPosition = false;
         rb.isKinematic = false;
+        isFullPath = false;
+    }
 
-        if (hasDestination)
-            GameManager.instance.inUse[gridIndexe]--;
+
+    // Gets the closest node to the given world position
+    public DijkstraTile NodeFromWorldPoint(Vector3 a_vWorldPos)
+    {
+        float ixPos = (a_vWorldPos.x + GameManager.instance.vGridWorldSize.x / 2) / GameManager.instance.vGridWorldSize.x;
+        float iyPos = (a_vWorldPos.z + GameManager.instance.vGridWorldSize.y / 2) / GameManager.instance.vGridWorldSize.y;
+
+        if (!isFullPath)
+        {
+            int ix = (int)(ixPos * GameManager.instance.grids[0].iGridSizeX);
+            int iy = (int)(iyPos * GameManager.instance.grids[0].iGridSizeY);
+            return path[GameManager.instance.grids[0].iGridSizeY * ix + iy];
+        }
+        else
+        {
+            int ix = (int)(ixPos * GameManager.instance.grids[0].impreciseiGridSizeX);
+            int iy = (int)(iyPos * GameManager.instance.grids[0].impreciseiGridSizeY);
+            return pathImprecise[GameManager.instance.grids[0].impreciseiGridSizeY * ix + iy];
+        }
     }
 }

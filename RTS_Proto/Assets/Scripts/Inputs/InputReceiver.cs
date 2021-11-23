@@ -115,22 +115,6 @@ public class InputReceiver : MonoBehaviour
         if (groupTimer > 0)
             groupTimer -= Time.deltaTime;
 
-        /*
-         * 
-         * This code demonstrates that deep copy can be used per agent
-         * 
-        if (Keyboard.current.aKey.wasPressedThisFrame)
-        {
-            var arr = new NativeArray<DijkstraTile>(256 * 256, Allocator.Persistent);
-            var b = new DijkstraTile[256 * 256];
-
-            double delay = Time.realtimeSinceStartupAsDouble;
-            for (int i = 0; i < 1000; i++)
-                NativeArray<DijkstraTile>.Copy(arr, b);
-            Debug.Log("1000 allocations of 256*256 : " + (Time.realtimeSinceStartupAsDouble - delay) * 1000 + " ms");
-        }
-        */
-
         if (Keyboard.current.anyKey.wasPressedThisFrame)
         {
             if (controls.TopDownControls.Attack.triggered && SelectedDico.instance.selectedTable.Count != 0)

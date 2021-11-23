@@ -3169,7 +3169,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: 'grids available : 100'
+  m_Text: 'grids available : 10'
 --- !u!222 &1034880263
 CanvasRenderer:
   m_ObjectHideFlags: 0

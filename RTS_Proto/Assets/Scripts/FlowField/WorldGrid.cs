@@ -13,17 +13,16 @@ public class WorldGrid : MonoBehaviour
     [HideInInspector] private Transform TrStartPosition; // Keep a transform in case of changes (follow)
     [HideInInspector] public Vector3 StartPosition; // This is where the program will start the pathfinding from
     [HideInInspector] public int gridId;
+    [HideInInspector] public int iGridSizeX, iGridSizeY; // Size of the Grid in Array units
+    [HideInInspector] public int impreciseiGridSizeX, impreciseiGridSizeY;
+    [HideInInspector] public NativeArray<DijkstraTile> NodeArray; // The array of nodes that the A Star algorithm uses
+    [HideInInspector] public NativeArray<DijkstraTile> impreciseNodeArray; // imprecise version
 
-    private NativeArray<DijkstraTile> NodeArray; // The array of nodes that the A Star algorithm uses
+    // Variables for fast pathfinding
     private float fNodeDiameter; // Twice the amount of the radius (Set in the start function)
-    private int iGridSizeX, iGridSizeY; // Size of the Grid in Array units
     private Vector3 bottomLeft; // Get the real world position of the bottom left of the grid
-
-    // Variable for fast pathfinding
-    private NativeArray<DijkstraTile> impreciseNodeArray;
-    private float imprecisefNodeRadius;
-    private float imprecisefNodeDiameter;
-    private int impreciseiGridSizeX, impreciseiGridSizeY;
+    private float imprecisefNodeRadius; // imprecise version
+    private float imprecisefNodeDiameter; // imprecise version
 
     // Needed to manage jobs without blocking
     private double delay;
@@ -108,6 +107,7 @@ public class WorldGrid : MonoBehaviour
                         updateScheduled = false;
                         dijkstraScheduled = false;
                         flowScheduled = false;
+                        GameManager.instance.inUse[gridId] = false;
                         // Debug.Log("precise total : " + (Time.realtimeSinceStartup - delay));
                     }
                 }
@@ -120,7 +120,10 @@ public class WorldGrid : MonoBehaviour
     public void ChangeTarget(Transform newStartPosition)
     {
         if (newStartPosition.position == StartPosition)
+        {
+            GameManager.instance.inUse[gridId] = false;
             return;
+        }
 
         TrStartPosition = newStartPosition;
         StartPosition = newStartPosition.position;
