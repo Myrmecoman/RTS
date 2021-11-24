@@ -112,6 +112,7 @@ public class WorldGrid : MonoBehaviour
                         dijkstraScheduled = false;
                         flowScheduled = false;
                         GameManager.instance.inUse[gridId] = false;
+
                         foreach (var i in agents)
                             i.Value.FullPathDone(NodeArray);
                         // Debug.Log("precise total : " + (Time.realtimeSinceStartup - delay));
