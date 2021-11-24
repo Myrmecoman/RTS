@@ -1,4 +1,5 @@
 ﻿using System.Collections;
+using System.Collections.Generic;
 using Unity.Collections;
 using Unity.Jobs;
 using Unity.Mathematics;
@@ -34,6 +35,9 @@ public class WorldGrid : MonoBehaviour
     private JobHandle handle;
     private bool flowScheduled = false;
 
+    // list of agents for the path to compute, once finished we will tell them all
+    private Dictionary<int, Selectable> agents;
+
 
     private void Start()
     {
@@ -58,7 +62,7 @@ public class WorldGrid : MonoBehaviour
     {
         // if we follow a target && we do not compute again the same path (every 0.5 sec)
         if (TrStartPosition != null && TrStartPosition.position != StartPosition && Time.realtimeSinceStartup - delay > 0.5f)
-            ChangeTarget(TrStartPosition);
+            ChangeTarget(TrStartPosition, agents);
 
         if (computingJobs)
         {
@@ -108,6 +112,8 @@ public class WorldGrid : MonoBehaviour
                         dijkstraScheduled = false;
                         flowScheduled = false;
                         GameManager.instance.inUse[gridId] = false;
+                        foreach (var i in agents)
+                            i.Value.FullPathDone(NodeArray);
                         // Debug.Log("precise total : " + (Time.realtimeSinceStartup - delay));
                     }
                 }
@@ -117,13 +123,15 @@ public class WorldGrid : MonoBehaviour
 
 
     // Change target position
-    public void ChangeTarget(Transform newStartPosition)
+    public void ChangeTarget(Transform newStartPosition, Dictionary<int, Selectable> agents)
     {
         if (newStartPosition.position == StartPosition)
         {
             GameManager.instance.inUse[gridId] = false;
             return;
         }
+
+        this.agents = agents;
 
         TrStartPosition = newStartPosition;
         StartPosition = newStartPosition.position;

@@ -36,9 +36,8 @@ public class BuildingManager : Selectable
     }
 
 
-    public override void AddDestination(NativeArray<DijkstraTile> path, NativeArray<DijkstraTile> pathImprecise, Vector3 dest, Transform follow = null, int action = 0, ResourceManager res = null)
+    public override void AddDestination(NativeArray<DijkstraTile> pathImprecise, Vector3 dest, Transform follow = null, Actions action = Actions.MOVE, ResourceManager res = null)
     {
-        // action : 1 = attack, 2 = patrol, 3 = collect-resource */
         Debug.LogError("Not implemented yet");
     }
 

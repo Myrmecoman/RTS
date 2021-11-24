@@ -1,5 +1,3 @@
-There is a bug where units get stuck on random walls (especially on ramps).
-
 Detect when destination cannot be reached.
 Implem fast idle state and flocking.
 Display units state in UI (all states display).

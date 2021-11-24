@@ -81,7 +81,7 @@ public class GameManager : MonoBehaviour
             {
                 inUse[i] = true;
                 int actualAgents = 0;
-                grids[i].ChangeTarget(target);
+                grids[i].ChangeTarget(target, agents);
 
                 foreach (KeyValuePair<int, Selectable> ag in agents)
                 {
@@ -90,9 +90,9 @@ public class GameManager : MonoBehaviour
                         actualAgents++;
 
                         if (focus)
-                            ag.Value.AddDestination(grids[i].NodeArray, grids[i].impreciseNodeArray, target.position, target, 1);
+                            ag.Value.AddDestination(grids[i].impreciseNodeArray, target.position, target, Actions.ATTACK);
                         else
-                            ag.Value.AddDestination(grids[i].NodeArray, grids[i].impreciseNodeArray, target.position, null, 1);
+                            ag.Value.AddDestination(grids[i].impreciseNodeArray, target.position, null, Actions.ATTACK);
                     }
                 }
 
@@ -111,19 +111,19 @@ public class GameManager : MonoBehaviour
             if (!inUse[i])
             {
                 inUse[i] = true;
-                grids[i].ChangeTarget(target);
+                grids[i].ChangeTarget(target, agents);
 
                 foreach (KeyValuePair<int, Selectable> ag in agents)
                 {
                     if (follow)
-                        ag.Value.AddDestination(grids[i].NodeArray, grids[i].impreciseNodeArray, target.position, target);
+                        ag.Value.AddDestination(grids[i].impreciseNodeArray, target.position, target, Actions.FOLLOW);
                     else if (resource && ag.Value.isWorker)
                     {
-                        ag.Value.AddDestination(grids[i].NodeArray, grids[i].impreciseNodeArray, target.position, null, 3, target.GetComponent<ResourceManager>());
+                        ag.Value.AddDestination(grids[i].impreciseNodeArray, target.position, null, Actions.HARVEST, target.GetComponent<ResourceManager>());
                         target.GetComponent<ResourceManager>().MoveTowardsSprite();
                     }
                     else
-                        ag.Value.AddDestination(grids[i].NodeArray, grids[i].impreciseNodeArray, target.position);
+                        ag.Value.AddDestination(grids[i].impreciseNodeArray, target.position);
                 }
 
                 return;

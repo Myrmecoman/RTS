@@ -19,10 +19,6 @@ public class AgentManager : Selectable
     public Transform leftPart;
     public Transform rightPart;
 
-    [HideInInspector] public DijkstraTile[] path;
-    [HideInInspector] public DijkstraTile[] pathImprecise;
-    [HideInInspector] public Vector3 destination;
-    [HideInInspector] public bool isFullPath = false;
     [HideInInspector] public bool hasDestination = false;
 
     private bool holdPosition = false;
@@ -195,16 +191,13 @@ public class AgentManager : Selectable
     }
 
 
-    public override void AddDestination(NativeArray<DijkstraTile> path, NativeArray<DijkstraTile> pathImprecise, Vector3 dest, Transform follow = null, int action = 0, ResourceManager res = null)
+    public override void AddDestination(NativeArray<DijkstraTile> pathImprecise, Vector3 dest, Transform follow = null, Actions action = Actions.MOVE, ResourceManager res = null)
     {
-        // action : 1 = attack, 2 = patrol, 3 = collect-resource */
-        if (action == 3 && isWorker)
+        if (action == Actions.HARVEST && isWorker)
         {
             int result = res.IsFreeSlot(gameObject.GetInstanceID());
             if (result == 0)
-            {
                 UnsetDestinationExceptResource();
-            }
             else if (result == 1)
             {
                 UnsetDestination();
@@ -221,12 +214,12 @@ public class AgentManager : Selectable
         NativeArray<DijkstraTile>.Copy(pathImprecise, this.pathImprecise);
 
         hasDestination = true;
-        this.follow = follow;
 
-        if (action == 1)
+        if (action == Actions.FOLLOW)
+            this.follow = follow;
+
+        if (action == Actions.ATTACK)
             attackCommand = true;
-        else
-            attackCommand = false;
     }
 
 
@@ -263,7 +256,7 @@ public class AgentManager : Selectable
         float ixPos = (a_vWorldPos.x + GameManager.instance.vGridWorldSize.x / 2) / GameManager.instance.vGridWorldSize.x;
         float iyPos = (a_vWorldPos.z + GameManager.instance.vGridWorldSize.y / 2) / GameManager.instance.vGridWorldSize.y;
 
-        if (!isFullPath)
+        if (isFullPath)
         {
             int ix = (int)(ixPos * GameManager.instance.grids[0].iGridSizeX);
             int iy = (int)(iyPos * GameManager.instance.grids[0].iGridSizeY);
