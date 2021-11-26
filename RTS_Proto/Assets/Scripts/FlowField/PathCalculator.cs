@@ -96,10 +96,9 @@ public class PathCalculator : MonoBehaviour
     public void ChangeTarget(Transform newStartPosition, int gridId)
     {
         if (newStartPosition.position == targetPosition)
-        {
-            this.gridId = gridId;
             return;
-        }
+
+        this.gridId = gridId;
 
         TrStartPosition = newStartPosition;
         targetPosition = newStartPosition.position;
