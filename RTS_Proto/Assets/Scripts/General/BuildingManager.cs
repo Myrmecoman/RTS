@@ -1,5 +1,5 @@
-using Unity.Collections;
 using UnityEngine;
+
 
 public class BuildingManager : Selectable
 {
@@ -17,7 +17,7 @@ public class BuildingManager : Selectable
         for (int i = 0; i < 100; i++)
         {
             GameObject newhandler = (GameObject)Instantiate(Resources.Load("CoroutineHandler"), null);
-            newhandler.GetComponent<CoroutineHandler>().CallCoroutine(GameManager.instance.grids[i].AddGridColliders(transform.position));
+            newhandler.GetComponent<CoroutineHandler>().CallCoroutine(PathRegister.instance.AddGridColliders(transform.position));
         }
         //Debug.Log("update grids colliders time : " + (Time.realtimeSinceStartupAsDouble - delay));
     }
@@ -30,13 +30,13 @@ public class BuildingManager : Selectable
         for (int i = 0; i < 100; i++)
         {
             GameObject newhandler = (GameObject) Instantiate(Resources.Load("CoroutineHandler"), null);
-            newhandler.GetComponent<CoroutineHandler>().CallCoroutine(GameManager.instance.grids[i].RemoveGridColliders(transform.position));
+            newhandler.GetComponent<CoroutineHandler>().CallCoroutine(PathRegister.instance.RemoveGridColliders(transform.position));
         }
         //Debug.Log("update grids colliders time : " + (Time.realtimeSinceStartupAsDouble - delay));
     }
 
 
-    public override void AddDestination(NativeArray<DijkstraTile> pathImprecise, Vector3 dest, Transform follow = null, Actions action = Actions.MOVE, ResourceManager res = null)
+    public override void AddDestination(int gridId, int calculatorId, Vector3 dest, Transform follow = null, Actions action = Actions.MOVE, ResourceManager res = null)
     {
         Debug.LogError("Not implemented yet");
     }

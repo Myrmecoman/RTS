@@ -2,6 +2,7 @@ using Unity.Burst;
 using Unity.Collections;
 using Unity.Jobs;
 
+
 [BurstCompile(FloatPrecision = FloatPrecision.Low)]
 public struct UpdateGrid : IJobParallelFor
 {

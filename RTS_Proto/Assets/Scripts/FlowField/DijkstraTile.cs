@@ -1,9 +1,10 @@
 ﻿using Unity.Mathematics;
 
+
 public struct DijkstraTile
 {
-    public int2 gridPos;
     public int weight;
+    public int2 gridPos;
     public int2 FlowFieldVector;
 
     public DijkstraTile(int2 gridPos)

@@ -11,7 +11,7 @@ public class DebugFeeder : MonoBehaviour
     private void Update()
     {
         fps.text = ((int) (1.0f / Time.smoothDeltaTime)) + " fps";
-        grids.text = "grids available : " + GameManager.instance.NbCurrentlyFree();
+        grids.text = "grids available : " + PathRegister.instance.NbCurrentlyFree();
         mineral.text = "mineral : " + GameManager.instance.minerals;
         gas.text = "gas : " + GameManager.instance.gas;
     }

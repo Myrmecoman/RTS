@@ -1,4 +1,4 @@
-﻿using Unity.Collections;
+﻿
 using Unity.Mathematics;
 using UnityEngine;
 
@@ -31,8 +31,6 @@ public class AgentManager : Selectable
 
     private void Start()
     {
-        path = new DijkstraTile[(int)(GameManager.instance.vGridWorldSize.x * GameManager.instance.vGridWorldSize.y)];
-        pathImprecise = new DijkstraTile[(int)(GameManager.instance.vGridWorldSize.x / 2 * GameManager.instance.vGridWorldSize.y / 2)];
         rb = GetComponent<Rigidbody>();
     }
 
@@ -191,7 +189,7 @@ public class AgentManager : Selectable
     }
 
 
-    public override void AddDestination(NativeArray<DijkstraTile> pathImprecise, Vector3 dest, Transform follow = null, Actions action = Actions.MOVE, ResourceManager res = null)
+    public override void AddDestination(int gridId, int calculatorId, Vector3 dest, Transform follow = null, Actions action = Actions.MOVE, ResourceManager res = null)
     {
         if (action == Actions.HARVEST && isWorker)
         {
@@ -211,9 +209,9 @@ public class AgentManager : Selectable
             UnsetDestination();
 
         destination = dest;
-        NativeArray<DijkstraTile>.Copy(pathImprecise, this.pathImprecise);
-
         hasDestination = true;
+        this.gridId = gridId;
+        this.calculatorId = calculatorId;
 
         if (action == Actions.FOLLOW)
             this.follow = follow;
@@ -225,12 +223,15 @@ public class AgentManager : Selectable
 
     public void UnsetDestination()
     {
+        if (hasDestination)
+            PathRegister.instance.inUse[gridId]--;
+
         follow = null;
         hasDestination = false;
         attackCommand = false;
         holdPosition = false;
         rb.isKinematic = false;
-        isFullPath = false;
+
         if (ressource != null)
         {
             ressource.FreeSlot();
@@ -241,32 +242,34 @@ public class AgentManager : Selectable
     
     public void UnsetDestinationExceptResource()
     {
+        if (hasDestination)
+            PathRegister.instance.inUse[gridId]--;
+
         follow = null;
         hasDestination = false;
         attackCommand = false;
         holdPosition = false;
         rb.isKinematic = false;
-        isFullPath = false;
     }
 
 
     // Gets the closest node to the given world position
     public DijkstraTile NodeFromWorldPoint(Vector3 a_vWorldPos)
     {
-        float ixPos = (a_vWorldPos.x + GameManager.instance.vGridWorldSize.x / 2) / GameManager.instance.vGridWorldSize.x;
-        float iyPos = (a_vWorldPos.z + GameManager.instance.vGridWorldSize.y / 2) / GameManager.instance.vGridWorldSize.y;
+        float ixPos = (a_vWorldPos.x + PathRegister.instance.vGridWorldSize.x / 2) / PathRegister.instance.vGridWorldSize.x;
+        float iyPos = (a_vWorldPos.z + PathRegister.instance.vGridWorldSize.y / 2) / PathRegister.instance.vGridWorldSize.y;
 
-        if (isFullPath)
+        if (!PathRegister.instance.calculators[calculatorId].computingJobs)
         {
-            int ix = (int)(ixPos * GameManager.instance.grids[0].iGridSizeX);
-            int iy = (int)(iyPos * GameManager.instance.grids[0].iGridSizeY);
-            return path[GameManager.instance.grids[0].iGridSizeY * ix + iy];
+            int ix = (int)(ixPos * PathRegister.instance.iGridSizeX);
+            int iy = (int)(iyPos * PathRegister.instance.iGridSizeY);
+            return PathRegister.instance.grids[gridId][PathRegister.instance.iGridSizeY * ix + iy];
         }
         else
         {
-            int ix = (int)(ixPos * GameManager.instance.grids[0].impreciseiGridSizeX);
-            int iy = (int)(iyPos * GameManager.instance.grids[0].impreciseiGridSizeY);
-            return pathImprecise[GameManager.instance.grids[0].impreciseiGridSizeY * ix + iy];
+            int ix = (int)(ixPos * PathRegister.instance.impreciseiGridSizeX);
+            int iy = (int)(iyPos * PathRegister.instance.impreciseiGridSizeY);
+            return PathRegister.instance.impreciseGrids[gridId][PathRegister.instance.impreciseiGridSizeY * ix + iy];
         }
     }
 }
