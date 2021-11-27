@@ -83,7 +83,7 @@ public class PathCalculator : MonoBehaviour
                         updateScheduled = false;
                         dijkstraScheduled = false;
                         flowScheduled = false;
-
+                        DebugFeeder.instance.lastPathingTime = Time.realtimeSinceStartup - delay;
                         // Debug.Log("precise total : " + (Time.realtimeSinceStartup - delay));
                     }
                 }

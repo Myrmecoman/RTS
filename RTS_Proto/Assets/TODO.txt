@@ -1,5 +1,6 @@
 Detect when destination cannot be reached.
 Implem fast idle state and flocking.
+Implem auto aggro.
 Display units state in UI (all states display).
 Produce units in buildings.
 Set rally points.

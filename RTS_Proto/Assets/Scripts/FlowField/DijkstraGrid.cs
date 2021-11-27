@@ -3,6 +3,7 @@ using Unity.Collections;
 using Unity.Jobs;
 using Unity.Mathematics;
 
+
 [BurstCompile(FloatPrecision = FloatPrecision.Low)]
 public struct DijkstraGrid : IJob
 {
@@ -27,20 +28,13 @@ public struct DijkstraGrid : IJob
         for (int i = 0; i < toVisit.Length; i++)
         {
             bool bleft = toVisit[i].gridPos.x > 0;
-            DijkstraTile left = new DijkstraTile(new int2(toVisit[i].gridPos.x - 1, toVisit[i].gridPos.y));
-
             bool bup = toVisit[i].gridPos.y > 0;
-            DijkstraTile up = new DijkstraTile(new int2(toVisit[i].gridPos.x, toVisit[i].gridPos.y - 1));
-
             bool bright = toVisit[i].gridPos.x < gridSize.x - 1;
-            DijkstraTile right = new DijkstraTile(new int2(toVisit[i].gridPos.x + 1, toVisit[i].gridPos.y));
-
             bool bdown = toVisit[i].gridPos.y < gridSize.y - 1;
-            DijkstraTile down = new DijkstraTile(new int2(toVisit[i].gridPos.x, toVisit[i].gridPos.y + 1));
 
             if (bleft)
             {
-                DijkstraTile neighbour = left;
+                DijkstraTile neighbour = new DijkstraTile(new int2(toVisit[i].gridPos.x - 1, toVisit[i].gridPos.y));
                 // if tile has not been visited
                 if (grid[gridSize.y * neighbour.gridPos.x + neighbour.gridPos.y].weight == -1)
                 {
@@ -52,7 +46,7 @@ public struct DijkstraGrid : IJob
 
             if (bup)
             {
-                DijkstraTile neighbour = up;
+                DijkstraTile neighbour = new DijkstraTile(new int2(toVisit[i].gridPos.x, toVisit[i].gridPos.y - 1));
                 // if tile has not been visited
                 if (grid[gridSize.y * neighbour.gridPos.x + neighbour.gridPos.y].weight == -1)
                 {
@@ -64,7 +58,7 @@ public struct DijkstraGrid : IJob
 
             if (bright)
             {
-                DijkstraTile neighbour = right;
+                DijkstraTile neighbour = new DijkstraTile(new int2(toVisit[i].gridPos.x + 1, toVisit[i].gridPos.y));
                 // if tile has not been visited
                 if (grid[gridSize.y * neighbour.gridPos.x + neighbour.gridPos.y].weight == -1)
                 {
@@ -76,7 +70,7 @@ public struct DijkstraGrid : IJob
 
             if (bdown)
             {
-                DijkstraTile neighbour = down;
+                DijkstraTile neighbour = new DijkstraTile(new int2(toVisit[i].gridPos.x, toVisit[i].gridPos.y + 1)); ;
                 // if tile has not been visited
                 if (grid[gridSize.y * neighbour.gridPos.x + neighbour.gridPos.y].weight == -1)
                 {
