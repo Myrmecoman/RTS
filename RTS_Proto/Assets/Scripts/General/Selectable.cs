@@ -1,3 +1,4 @@
+using Unity.Collections;
 using UnityEngine;
 
 
@@ -9,6 +10,8 @@ public abstract class Selectable : MonoBehaviour
     public bool isWorker = false;
     public bool isAlly = true;
 
+    protected NativeArray<DijkstraTile> customGrid;
+    protected bool customUsed = false;
     protected Vector3 destination;
     protected int gridId;
     protected int calculatorId;

@@ -14,6 +14,7 @@ public class PathCalculator : MonoBehaviour
     private double delay;
     private int gridId;
     private NativeArray<DijkstraTile> tempDijkstra;
+    private NativeQueue<DijkstraTile> toVisit;
     private JobHandle handleUpdate;
     private bool updateScheduled = false;
     private JobHandle handleDijkstra;
@@ -27,6 +28,7 @@ public class PathCalculator : MonoBehaviour
     private void Start()
     {
         pathRegister = PathRegister.instance;
+        toVisit = new NativeQueue<DijkstraTile>(Allocator.Persistent);
     }
 
 
@@ -57,6 +59,7 @@ public class PathCalculator : MonoBehaviour
                     jobDataDij.target = NodeFromWorldPoint(targetPosition);
                     computingJobs = true;
                     jobDataDij.gridSize = new int2(pathRegister.iGridSizeX, pathRegister.iGridSizeY);
+                    jobDataDij.toVisit = toVisit;
                     jobDataDij.grid = PathRegister.instance.grids[gridId];
                     handleDijkstra = jobDataDij.Schedule(handleUpdate);
                 }
@@ -114,6 +117,7 @@ public class PathCalculator : MonoBehaviour
         var jobDataDij = new DijkstraGrid();
         jobDataDij.target = NodeFromWorldPoint(targetPosition);
         jobDataDij.gridSize = new int2(pathRegister.impreciseiGridSizeX, pathRegister.impreciseiGridSizeY);
+        jobDataDij.toVisit = toVisit;
         jobDataDij.grid = PathRegister.instance.impreciseGrids[gridId];
         jobDataDij.Run();
 
@@ -150,5 +154,11 @@ public class PathCalculator : MonoBehaviour
             int iy = (int)(iyPos * pathRegister.impreciseiGridSizeY);
             return PathRegister.instance.impreciseGrids[gridId][pathRegister.impreciseiGridSizeY * ix + iy];
         }
+    }
+
+
+    private void OnDestroy()
+    {
+        toVisit.Dispose();
     }
 }

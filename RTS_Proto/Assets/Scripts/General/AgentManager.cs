@@ -82,9 +82,9 @@ public class AgentManager : Selectable
         if (horizontalDist < 0.05f || destination == null)
             return;
 
-        Vector3 leftMostPart = new Vector3(leftPart.position.x, -50, leftPart.position.z);
-        Vector3 rightMostPart = new Vector3(rightPart.position.x, -50, rightPart.position.z);
-        Vector3 targetPosition = new Vector3(destination.x, -50, destination.z);
+        float3 leftMostPart = new float3(leftPart.position.x, -50, leftPart.position.z);
+        float3 rightMostPart = new float3(rightPart.position.x, -50, rightPart.position.z);
+        float3 targetPosition = new float3(destination.x, -50, destination.z);
 
         // control height
         RaycastHit verifyHeight;
