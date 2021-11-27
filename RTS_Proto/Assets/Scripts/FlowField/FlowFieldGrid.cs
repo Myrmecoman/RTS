@@ -3,14 +3,15 @@ using Unity.Collections;
 using Unity.Jobs;
 using Unity.Mathematics;
 
-[BurstCompile(FloatPrecision = FloatPrecision.Low)]
+
+[BurstCompile(FloatPrecision = FloatPrecision.Low, FloatMode = FloatMode.Fast), NoAlias]
 public struct FlowFieldGrid : IJobParallelFor
 {
-    [ReadOnly]
+    [ReadOnly, NoAlias]
     public int2 gridSize;
-    [ReadOnly]
+    [ReadOnly, NoAlias]
     public NativeArray<DijkstraTile> RdGrid;
-    [WriteOnly]
+    [WriteOnly, NoAlias]
     public NativeArray<DijkstraTile> grid;
 
 
@@ -19,6 +20,7 @@ public struct FlowFieldGrid : IJobParallelFor
         int2 pos;
         int2 min;
         int2 n;
+
         //skip current iteration if index has obstacle
         if (RdGrid[i].weight != int.MaxValue)
         {
@@ -27,35 +29,20 @@ public struct FlowFieldGrid : IJobParallelFor
 
             bool minNotNull = false;
             int minDist = 0;
-            min = int2.zero; // this may be incorrect
+            min = int2.zero;
 
             bool bleft = isValid(pos.x - 1, pos.y);
-            int2 left = new int2(pos.x - 1, pos.y);
-
-            bool bleftup = isValid(pos.x, pos.y - 1) /* bup */ && isValid(pos.x - 1, pos.y - 1);
-            int2 leftup = new int2(pos.x - 1, pos.y - 1);
-
             bool bup = isValid(pos.x, pos.y - 1);
-            int2 up = new int2(pos.x, pos.y - 1);
-
-            bool bupright = isValid(pos.x + 1, pos.y) /* right */ && isValid(pos.x + 1, pos.y - 1);
-            int2 upright = new int2(pos.x + 1, pos.y - 1);
-
             bool bright = isValid(pos.x + 1, pos.y);
-            int2 right = new int2(pos.x + 1, pos.y);
-
-            bool bdownright = isValid(pos.x, pos.y + 1) /* down */ && isValid(pos.x + 1, pos.y + 1);
-            int2 downright = new int2(pos.x + 1, pos.y + 1);
-
             bool bdown = isValid(pos.x, pos.y + 1);
-            int2 down = new int2(pos.x, pos.y + 1);
-
+            bool bleftup = bup && isValid(pos.x - 1, pos.y - 1);
+            bool bupright = bright && isValid(pos.x + 1, pos.y - 1);
+            bool bdownright = bdown && isValid(pos.x + 1, pos.y + 1);
             bool bdownleft = bleft && isValid(pos.x - 1, pos.y + 1);
-            int2 downleft = new int2(pos.x - 1, pos.y + 1);
 
             if (bleft)
             {
-                n = left;
+                n = new int2(pos.x - 1, pos.y);
                 int dist = RdGrid[gridSize.y * n.x + n.y].weight - RdGrid[gridSize.y * pos.x + pos.y].weight;
                 if (dist < minDist)
                 {
@@ -65,9 +52,9 @@ public struct FlowFieldGrid : IJobParallelFor
                 }
             }
 
-            if (bleftup && bleft && bup)
+            if (bleftup && bleft)
             {
-                n = leftup;
+                n = new int2(pos.x - 1, pos.y - 1);
                 int dist = RdGrid[gridSize.y * n.x + n.y].weight - RdGrid[gridSize.y * pos.x + pos.y].weight;
                 if (dist < minDist)
                 {
@@ -79,7 +66,7 @@ public struct FlowFieldGrid : IJobParallelFor
 
             if (bup)
             {
-                n = up;
+                n = new int2(pos.x, pos.y - 1);
                 int dist = RdGrid[gridSize.y * n.x + n.y].weight - RdGrid[gridSize.y * pos.x + pos.y].weight;
                 if (dist < minDist)
                 {
@@ -89,9 +76,9 @@ public struct FlowFieldGrid : IJobParallelFor
                 }
             }
 
-            if (bupright && bup && bright)
+            if (bupright && bup)
             {
-                n = upright;
+                n = new int2(pos.x + 1, pos.y - 1);
                 int dist = RdGrid[gridSize.y * n.x + n.y].weight - RdGrid[gridSize.y * pos.x + pos.y].weight;
                 if (dist < minDist)
                 {
@@ -103,7 +90,7 @@ public struct FlowFieldGrid : IJobParallelFor
 
             if (bright)
             {
-                n = right;
+                n = new int2(pos.x + 1, pos.y);
                 int dist = RdGrid[gridSize.y * n.x + n.y].weight - RdGrid[gridSize.y * pos.x + pos.y].weight;
                 if (dist < minDist)
                 {
@@ -113,9 +100,9 @@ public struct FlowFieldGrid : IJobParallelFor
                 }
             }
 
-            if (bdownright && bdown && bright)
+            if (bdownright && bright)
             {
-                n = downright;
+                n = new int2(pos.x + 1, pos.y + 1);
                 int dist = RdGrid[gridSize.y * n.x + n.y].weight - RdGrid[gridSize.y * pos.x + pos.y].weight;
                 if (dist < minDist)
                 {
@@ -127,7 +114,7 @@ public struct FlowFieldGrid : IJobParallelFor
 
             if (bdown)
             {
-                n = down;
+                n = new int2(pos.x, pos.y + 1);
                 int dist = RdGrid[gridSize.y * n.x + n.y].weight - RdGrid[gridSize.y * pos.x + pos.y].weight;
                 if (dist < minDist)
                 {
@@ -137,9 +124,9 @@ public struct FlowFieldGrid : IJobParallelFor
                 }
             }
 
-            if (bdownleft && bdown && bleft)
+            if (bdownleft && bdown)
             {
-                n = downleft;
+                n = new int2(pos.x - 1, pos.y + 1);
                 int dist = RdGrid[gridSize.y * n.x + n.y].weight - RdGrid[gridSize.y * pos.x + pos.y].weight;
                 if (dist < minDist)
                 {
@@ -151,7 +138,7 @@ public struct FlowFieldGrid : IJobParallelFor
 
             //If we found a valid neighbour, point in its direction
             if (minNotNull)
-                grid[i] = new DijkstraTile(RdGrid[i].gridPos, RdGrid[i].weight, min - pos); //potential problem
+                grid[i] = new DijkstraTile(RdGrid[i].gridPos, RdGrid[i].weight, min - pos);
         }
     }
 

@@ -3,9 +3,10 @@ using Unity.Collections;
 using Unity.Jobs;
 
 
-[BurstCompile(FloatPrecision = FloatPrecision.Low)]
+[BurstCompile(FloatPrecision = FloatPrecision.Low, FloatMode = FloatMode.Fast), NoAlias]
 public struct UpdateGrid : IJobParallelFor
 {
+    [NoAlias]
     public NativeArray<DijkstraTile> grid;
 
 
