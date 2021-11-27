@@ -9,9 +9,15 @@ public class DebugFeeder : MonoBehaviour
     public Text grids;
     public Text mineral;
     public Text gas;
-    public Text pathingtime;
+    public Text totaltime;
+    public Text arrayClearTime;
+    public Text pathingTime;
+    public Text flowFieldTime;
 
+    [HideInInspector] public double lastTotalTime = 0;
+    [HideInInspector] public double lastClearTime = 0;
     [HideInInspector] public double lastPathingTime = 0;
+    [HideInInspector] public double lastFlowFIeldTime = 0;
 
 
     private void Start()
@@ -30,6 +36,9 @@ public class DebugFeeder : MonoBehaviour
         grids.text = "grids available : " + PathRegister.instance.NbCurrentlyFree();
         mineral.text = "mineral : " + GameManager.instance.minerals;
         gas.text = "gas : " + GameManager.instance.gas;
-        pathingtime.text = "pathing time : " + ((float)lastPathingTime * 1000) + " ms";
+        totaltime.text = "total time : " + ((float)lastTotalTime * 1000) + " ms";
+        arrayClearTime.text = "clear time : " + ((float)lastClearTime * 1000) + " ms";
+        pathingTime.text = "pathing time : " + ((float)lastPathingTime * 1000) + " ms";
+        flowFieldTime.text = "flowfield time : " + ((float)lastFlowFIeldTime * 1000) + " ms";
     }
 }

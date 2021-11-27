@@ -12,6 +12,9 @@ public class PathCalculator : MonoBehaviour
 
     // Needed to manage jobs without blocking
     private double delay;
+    private double clearDelay;
+    private double pathingDelay;
+    private double flowFieldDelay;
     private int gridId;
     private NativeArray<DijkstraTile> tempDijkstra;
     private NativeQueue<DijkstraTile> toVisit;
@@ -42,6 +45,8 @@ public class PathCalculator : MonoBehaviour
         {
             if (!updateScheduled)
             {
+                clearDelay = Time.realtimeSinceStartup;
+
                 updateScheduled = true;
                 var jobUpdateGrid = new UpdateGrid();
                 jobUpdateGrid.grid = PathRegister.instance.grids[gridId];
@@ -54,6 +59,10 @@ public class PathCalculator : MonoBehaviour
                 {
                     dijkstraScheduled = true;
                     handleUpdate.Complete();
+
+                    DebugFeeder.instance.lastClearTime = Time.realtimeSinceStartup - clearDelay;
+                    pathingDelay = Time.realtimeSinceStartup;
+
                     var jobDataDij = new DijkstraGrid();
                     computingJobs = false;
                     jobDataDij.target = NodeFromWorldPoint(targetPosition);
@@ -70,6 +79,10 @@ public class PathCalculator : MonoBehaviour
                     {
                         flowScheduled = true;
                         handleDijkstra.Complete();
+
+                        DebugFeeder.instance.lastPathingTime = Time.realtimeSinceStartup - pathingDelay;
+                        flowFieldDelay = Time.realtimeSinceStartup;
+
                         var jobData = new FlowFieldGrid();
                         jobData.gridSize = new int2(pathRegister.iGridSizeX, pathRegister.iGridSizeY);
                         tempDijkstra = new NativeArray<DijkstraTile>(PathRegister.instance.grids[gridId], Allocator.TempJob);
@@ -86,7 +99,10 @@ public class PathCalculator : MonoBehaviour
                         updateScheduled = false;
                         dijkstraScheduled = false;
                         flowScheduled = false;
-                        DebugFeeder.instance.lastPathingTime = Time.realtimeSinceStartup - delay;
+
+                        DebugFeeder.instance.lastFlowFIeldTime = Time.realtimeSinceStartup - flowFieldDelay;
+                        DebugFeeder.instance.lastTotalTime = Time.realtimeSinceStartup - delay;
+
                         // Debug.Log("precise total : " + (Time.realtimeSinceStartup - delay));
                     }
                 }
