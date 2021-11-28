@@ -112,6 +112,9 @@ public class PathCalculator : MonoBehaviour
         DebugFeeder.instance.lastClearTime = Time.realtimeSinceStartup - clearDelay;
         pathingDelay = Time.realtimeSinceStartup;
 
+        // need to deactivate temporarily for NodeFromWorldPoint
+        computingJobs = false;
+
         // dijkstra start
         var jobDataDij = new DijkstraGrid();
         jobDataDij.target = NodeFromWorldPoint(targetPosition);
@@ -120,6 +123,8 @@ public class PathCalculator : MonoBehaviour
         jobDataDij.toVisit = toVisit;
         jobDataDij.grid = PathRegister.instance.grids[gridId];
         handle = jobDataDij.Schedule();
+
+        computingJobs = true;
     }
 
 
