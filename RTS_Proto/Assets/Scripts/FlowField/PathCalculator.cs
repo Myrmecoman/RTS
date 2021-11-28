@@ -18,12 +18,7 @@ public class PathCalculator : MonoBehaviour
     private int gridId;
     private NativeArray<DijkstraTile> tempDijkstra;
     private NativeQueue<DijkstraTile> toVisit;
-    private JobHandle handleUpdate;
-    private bool updateScheduled = false;
-    private JobHandle handleDijkstra;
-    private bool dijkstraScheduled = false;
     private JobHandle handle;
-    private bool flowScheduled = false;
 
     private PathRegister pathRegister;
 
@@ -41,72 +36,30 @@ public class PathCalculator : MonoBehaviour
         if (TrStartPosition != null && TrStartPosition.position != targetPosition && Time.realtimeSinceStartup - delay > 0.5f)
             ChangeTarget(TrStartPosition, gridId);
 
-        if (computingJobs)
+        if (computingJobs && handle.IsCompleted)
         {
-            if (!updateScheduled)
-            {
-                clearDelay = Time.realtimeSinceStartup;
+            // complete dijkstra
+            handle.Complete();
 
-                updateScheduled = true;
-                var jobUpdateGrid = new UpdateGrid();
-                jobUpdateGrid.grid = PathRegister.instance.grids[gridId];
-                handleUpdate = jobUpdateGrid.Schedule(PathRegister.instance.grids[gridId].Length, 32 /* batches */);
-            }
+            DebugFeeder.instance.lastPathingTime = Time.realtimeSinceStartup - pathingDelay;
+            flowFieldDelay = Time.realtimeSinceStartup;
 
-            if (handleUpdate.IsCompleted)
-            {
-                if (!dijkstraScheduled)
-                {
-                    dijkstraScheduled = true;
-                    handleUpdate.Complete();
+            // flowfield
+            var jobData = new FlowFieldGrid();
+            jobData.gridSize = new int2(pathRegister.iGridSizeX, pathRegister.iGridSizeY);
+            tempDijkstra = new NativeArray<DijkstraTile>(PathRegister.instance.grids[gridId], Allocator.TempJob);
+            jobData.RdGrid = tempDijkstra;
+            jobData.grid = PathRegister.instance.grids[gridId];
+            handle = jobData.Schedule(PathRegister.instance.grids[gridId].Length, 32 /* batches */);
+            handle.Complete();
 
-                    DebugFeeder.instance.lastClearTime = Time.realtimeSinceStartup - clearDelay;
-                    pathingDelay = Time.realtimeSinceStartup;
+            tempDijkstra.Dispose();
+            computingJobs = false;
 
-                    var jobDataDij = new DijkstraGrid();
-                    computingJobs = false;
-                    jobDataDij.target = NodeFromWorldPoint(targetPosition);
-                    computingJobs = true;
-                    jobDataDij.gridSize = new int2(pathRegister.iGridSizeX, pathRegister.iGridSizeY);
-                    jobDataDij.toVisit = toVisit;
-                    jobDataDij.grid = PathRegister.instance.grids[gridId];
-                    handleDijkstra = jobDataDij.Schedule(handleUpdate);
-                }
+            DebugFeeder.instance.lastFlowFIeldTime = Time.realtimeSinceStartup - flowFieldDelay;
+            DebugFeeder.instance.lastTotalTime = Time.realtimeSinceStartup - delay;
 
-                if (handleDijkstra.IsCompleted)
-                {
-                    if (!flowScheduled)
-                    {
-                        flowScheduled = true;
-                        handleDijkstra.Complete();
-
-                        DebugFeeder.instance.lastPathingTime = Time.realtimeSinceStartup - pathingDelay;
-                        flowFieldDelay = Time.realtimeSinceStartup;
-
-                        var jobData = new FlowFieldGrid();
-                        jobData.gridSize = new int2(pathRegister.iGridSizeX, pathRegister.iGridSizeY);
-                        tempDijkstra = new NativeArray<DijkstraTile>(PathRegister.instance.grids[gridId], Allocator.TempJob);
-                        jobData.RdGrid = tempDijkstra;
-                        jobData.grid = PathRegister.instance.grids[gridId];
-                        handle = jobData.Schedule(PathRegister.instance.grids[gridId].Length, 32 /* batches */, handleDijkstra);
-                    }
-
-                    if (handle.IsCompleted)
-                    {
-                        handle.Complete();
-                        tempDijkstra.Dispose();
-                        computingJobs = false;
-                        updateScheduled = false;
-                        dijkstraScheduled = false;
-                        flowScheduled = false;
-
-                        DebugFeeder.instance.lastFlowFIeldTime = Time.realtimeSinceStartup - flowFieldDelay;
-                        DebugFeeder.instance.lastTotalTime = Time.realtimeSinceStartup - delay;
-
-                        // Debug.Log("precise total : " + (Time.realtimeSinceStartup - delay));
-                    }
-                }
-            }
+            // Debug.Log("precise total : " + (Time.realtimeSinceStartup - delay));
         }
     }
 
@@ -117,38 +70,56 @@ public class PathCalculator : MonoBehaviour
         if (newStartPosition.position == targetPosition)
             return;
 
+        computingJobs = true;
         this.gridId = gridId;
 
         TrStartPosition = newStartPosition;
         targetPosition = newStartPosition.position;
-        computingJobs = true;
-        double imprecisedelay = Time.realtimeSinceStartupAsDouble;
 
-        // imprecise claculation
-        var jobUpdateGrid = new UpdateGrid();
-        jobUpdateGrid.grid = PathRegister.instance.impreciseGrids[gridId];
-        var imprecisehandleUpdate = jobUpdateGrid.Schedule(PathRegister.instance.impreciseGrids[gridId].Length, 32 /* batches */);
-        imprecisehandleUpdate.Complete();
+        // imprecise grid clear
+        var jobUpdateGridImprecise = new UpdateGrid();
+        jobUpdateGridImprecise.grid = PathRegister.instance.impreciseGrids[gridId];
+        handle = jobUpdateGridImprecise.Schedule(PathRegister.instance.impreciseGrids[gridId].Length, 32 /* batches */);
+        handle.Complete();
 
-        var jobDataDij = new DijkstraGrid();
-        jobDataDij.target = NodeFromWorldPoint(targetPosition);
-        jobDataDij.gridSize = new int2(pathRegister.impreciseiGridSizeX, pathRegister.impreciseiGridSizeY);
-        jobDataDij.toVisit = toVisit;
-        jobDataDij.grid = PathRegister.instance.impreciseGrids[gridId];
-        jobDataDij.Run();
+        // imprecise dijkstra
+        var jobDataDijImprecise = new DijkstraGrid();
+        jobDataDijImprecise.target = NodeFromWorldPoint(targetPosition);
+        jobDataDijImprecise.gridSize = new int2(pathRegister.impreciseiGridSizeX, pathRegister.impreciseiGridSizeY);
+        jobDataDijImprecise.toVisit = toVisit;
+        jobDataDijImprecise.grid = PathRegister.instance.impreciseGrids[gridId];
+        jobDataDijImprecise.Run();
 
+        // imprecise flowfield
         var jobData = new FlowFieldGrid();
         jobData.gridSize = new int2(pathRegister.impreciseiGridSizeX, pathRegister.impreciseiGridSizeY);
         NativeArray<DijkstraTile> imprecisetempDijkstra = new NativeArray<DijkstraTile>(PathRegister.instance.impreciseGrids[gridId], Allocator.TempJob);
         jobData.RdGrid = imprecisetempDijkstra;
         jobData.grid = PathRegister.instance.impreciseGrids[gridId];
-        var impreciseFlowHandle = jobData.Schedule(PathRegister.instance.impreciseGrids[gridId].Length, 32 /* batches */);
-        impreciseFlowHandle.Complete();
+        handle = jobData.Schedule(PathRegister.instance.impreciseGrids[gridId].Length, 32 /* batches */);
+        handle.Complete();
         imprecisetempDijkstra.Dispose();
 
-        // Debug.Log("imprecise total : " + (Time.realtimeSinceStartup - imprecisedelay));
+        delay = Time.realtimeSinceStartup;
+        clearDelay = Time.realtimeSinceStartup;
 
-        delay = Time.realtimeSinceStartupAsDouble;
+        // grid clear
+        var jobUpdateGrid = new UpdateGrid();
+        jobUpdateGrid.grid = PathRegister.instance.grids[gridId];
+        handle = jobUpdateGrid.Schedule(PathRegister.instance.grids[gridId].Length, 32 /* batches */);
+        handle.Complete();
+
+        DebugFeeder.instance.lastClearTime = Time.realtimeSinceStartup - clearDelay;
+        pathingDelay = Time.realtimeSinceStartup;
+
+        // dijkstra start
+        var jobDataDij = new DijkstraGrid();
+        jobDataDij.target = NodeFromWorldPoint(targetPosition);
+        computingJobs = true;
+        jobDataDij.gridSize = new int2(pathRegister.iGridSizeX, pathRegister.iGridSizeY);
+        jobDataDij.toVisit = toVisit;
+        jobDataDij.grid = PathRegister.instance.grids[gridId];
+        handle = jobDataDij.Schedule();
     }
 
 
