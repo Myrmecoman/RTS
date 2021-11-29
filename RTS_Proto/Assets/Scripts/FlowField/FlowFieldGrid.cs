@@ -17,129 +17,116 @@ public struct FlowFieldGrid : IJobParallelFor
 
     public void Execute(int i)
     {
-        int2 pos;
-        int2 min;
-        int2 n;
-
         //skip current iteration if index has obstacle
-        if (RdGrid[i].weight != int.MaxValue)
+        if (RdGrid[i].weight == int.MaxValue)
+            return;
+
+        int2 pos = new int2(i / gridSize.y, i % gridSize.y);
+        int2 n;
+        int2 min = int2.zero;
+        int minDist = 0;
+
+        bool bleft = isValid(pos.x - 1, pos.y);
+        bool bup = isValid(pos.x, pos.y - 1);
+        bool bright = isValid(pos.x + 1, pos.y);
+        bool bdown = isValid(pos.x, pos.y + 1);
+        bool bleftup = bup && isValid(pos.x - 1, pos.y - 1);
+        bool bupright = bright && isValid(pos.x + 1, pos.y - 1);
+        bool bdownright = bdown && isValid(pos.x + 1, pos.y + 1);
+        bool bdownleft = bleft && isValid(pos.x - 1, pos.y + 1);
+
+        if (bleft)
         {
-            pos.x = i / gridSize.y;
-            pos.y = i % gridSize.y;
-
-            bool minNotNull = false;
-            int minDist = 0;
-            min = int2.zero;
-
-            bool bleft = isValid(pos.x - 1, pos.y);
-            bool bup = isValid(pos.x, pos.y - 1);
-            bool bright = isValid(pos.x + 1, pos.y);
-            bool bdown = isValid(pos.x, pos.y + 1);
-            bool bleftup = bup && isValid(pos.x - 1, pos.y - 1);
-            bool bupright = bright && isValid(pos.x + 1, pos.y - 1);
-            bool bdownright = bdown && isValid(pos.x + 1, pos.y + 1);
-            bool bdownleft = bleft && isValid(pos.x - 1, pos.y + 1);
-
-            if (bleft)
+            n = new int2(pos.x - 1, pos.y);
+            int dist = RdGrid[gridSize.y * n.x + n.y].weight - RdGrid[gridSize.y * pos.x + pos.y].weight;
+            if (dist < minDist)
             {
-                n = new int2(pos.x - 1, pos.y);
-                int dist = RdGrid[gridSize.y * n.x + n.y].weight - RdGrid[gridSize.y * pos.x + pos.y].weight;
-                if (dist < minDist)
-                {
-                    min = n;
-                    minNotNull = true;
-                    minDist = dist;
-                }
+                min = n;
+                minDist = dist;
             }
-
-            if (bleftup && bleft)
-            {
-                n = new int2(pos.x - 1, pos.y - 1);
-                int dist = RdGrid[gridSize.y * n.x + n.y].weight - RdGrid[gridSize.y * pos.x + pos.y].weight;
-                if (dist < minDist)
-                {
-                    min = n;
-                    minNotNull = true;
-                    minDist = dist;
-                }
-            }
-
-            if (bup)
-            {
-                n = new int2(pos.x, pos.y - 1);
-                int dist = RdGrid[gridSize.y * n.x + n.y].weight - RdGrid[gridSize.y * pos.x + pos.y].weight;
-                if (dist < minDist)
-                {
-                    min = n;
-                    minNotNull = true;
-                    minDist = dist;
-                }
-            }
-
-            if (bupright && bup)
-            {
-                n = new int2(pos.x + 1, pos.y - 1);
-                int dist = RdGrid[gridSize.y * n.x + n.y].weight - RdGrid[gridSize.y * pos.x + pos.y].weight;
-                if (dist < minDist)
-                {
-                    min = n;
-                    minNotNull = true;
-                    minDist = dist;
-                }
-            }
-
-            if (bright)
-            {
-                n = new int2(pos.x + 1, pos.y);
-                int dist = RdGrid[gridSize.y * n.x + n.y].weight - RdGrid[gridSize.y * pos.x + pos.y].weight;
-                if (dist < minDist)
-                {
-                    min = n;
-                    minNotNull = true;
-                    minDist = dist;
-                }
-            }
-
-            if (bdownright && bright)
-            {
-                n = new int2(pos.x + 1, pos.y + 1);
-                int dist = RdGrid[gridSize.y * n.x + n.y].weight - RdGrid[gridSize.y * pos.x + pos.y].weight;
-                if (dist < minDist)
-                {
-                    min = n;
-                    minNotNull = true;
-                    minDist = dist;
-                }
-            }
-
-            if (bdown)
-            {
-                n = new int2(pos.x, pos.y + 1);
-                int dist = RdGrid[gridSize.y * n.x + n.y].weight - RdGrid[gridSize.y * pos.x + pos.y].weight;
-                if (dist < minDist)
-                {
-                    min = n;
-                    minNotNull = true;
-                    minDist = dist;
-                }
-            }
-
-            if (bdownleft && bdown)
-            {
-                n = new int2(pos.x - 1, pos.y + 1);
-                int dist = RdGrid[gridSize.y * n.x + n.y].weight - RdGrid[gridSize.y * pos.x + pos.y].weight;
-                if (dist < minDist)
-                {
-                    min = n;
-                    minNotNull = true;
-                    minDist = dist;
-                }
-            }
-
-            //If we found a valid neighbour, point in its direction
-            if (minNotNull)
-                grid[i] = new DijkstraTile(RdGrid[i].gridPos, RdGrid[i].weight, min - pos);
         }
+
+        if (bleftup && bleft)
+        {
+            n = new int2(pos.x - 1, pos.y - 1);
+            int dist = RdGrid[gridSize.y * n.x + n.y].weight - RdGrid[gridSize.y * pos.x + pos.y].weight;
+            if (dist < minDist)
+            {
+                min = n;
+                minDist = dist;
+            }
+        }
+
+        if (bup)
+        {
+            n = new int2(pos.x, pos.y - 1);
+            int dist = RdGrid[gridSize.y * n.x + n.y].weight - RdGrid[gridSize.y * pos.x + pos.y].weight;
+            if (dist < minDist)
+            {
+                min = n;
+                minDist = dist;
+            }
+        }
+
+        if (bupright && bup)
+        {
+            n = new int2(pos.x + 1, pos.y - 1);
+            int dist = RdGrid[gridSize.y * n.x + n.y].weight - RdGrid[gridSize.y * pos.x + pos.y].weight;
+            if (dist < minDist)
+            {
+                min = n;
+                minDist = dist;
+            }
+        }
+
+        if (bright)
+        {
+            n = new int2(pos.x + 1, pos.y);
+            int dist = RdGrid[gridSize.y * n.x + n.y].weight - RdGrid[gridSize.y * pos.x + pos.y].weight;
+            if (dist < minDist)
+            {
+                min = n;
+                minDist = dist;
+            }
+        }
+
+        if (bdownright && bright)
+        {
+            n = new int2(pos.x + 1, pos.y + 1);
+            int dist = RdGrid[gridSize.y * n.x + n.y].weight - RdGrid[gridSize.y * pos.x + pos.y].weight;
+            if (dist < minDist)
+            {
+                min = n;
+                minDist = dist;
+            }
+        }
+
+        if (bdown)
+        {
+            n = new int2(pos.x, pos.y + 1);
+            int dist = RdGrid[gridSize.y * n.x + n.y].weight - RdGrid[gridSize.y * pos.x + pos.y].weight;
+            if (dist < minDist)
+            {
+                min = n;
+                minDist = dist;
+            }
+        }
+
+        if (bdownleft && bdown)
+        {
+            n = new int2(pos.x - 1, pos.y + 1);
+            int dist = RdGrid[gridSize.y * n.x + n.y].weight - RdGrid[gridSize.y * pos.x + pos.y].weight;
+            if (dist < minDist)
+            {
+                min = n;
+                minDist = dist;
+            }
+        }
+
+        //If we found a valid neighbour, point in its direction
+        if (minDist < 0)
+            grid[i] = new DijkstraTile(RdGrid[i].gridPos, RdGrid[i].weight, min - pos);
+
     }
 
 

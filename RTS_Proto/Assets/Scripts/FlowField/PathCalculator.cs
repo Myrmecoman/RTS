@@ -6,9 +6,9 @@ using UnityEngine;
 
 public class PathCalculator : MonoBehaviour
 {
-    [HideInInspector] public bool computingJobs = false;                   // Tells if we have access to precise pathfinding
-    [HideInInspector] private Transform TrStartPosition;                   // Keep a transform in case of changes (follow)
-    [HideInInspector] public Vector3 targetPosition;                       // This is where the program will start the pathfinding from
+    [HideInInspector] public bool computingJobs;                   // Tells if we have access to precise pathfinding
+    [HideInInspector] private Transform TrStartPosition;           // Keep a transform in case of changes (follow)
+    [HideInInspector] public Vector3 targetPosition;               // This is where the program will start the pathfinding from
 
     // Needed to manage jobs without blocking
     private double delay;
@@ -25,6 +25,7 @@ public class PathCalculator : MonoBehaviour
 
     private void Start()
     {
+        computingJobs = false;
         pathRegister = PathRegister.instance;
         toVisit = new NativeQueue<DijkstraTile>(Allocator.Persistent);
     }
