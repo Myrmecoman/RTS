@@ -47,7 +47,9 @@ public class GameManager : MonoBehaviour
     {
         int gridId;
         int calculatorId;
-        PathRegister.instance.ProvidePath(out gridId, out calculatorId, target, agents.Count);
+
+        PathRegister.instance.ProvidePath(out gridId, out calculatorId, target, agents.Count, focus);
+
         foreach (KeyValuePair<int, Selectable> ag in agents)
         {
             if (ag.Value.GetComponent<AgentManager>())
@@ -65,7 +67,9 @@ public class GameManager : MonoBehaviour
     {
         int gridId;
         int calculatorId;
-        PathRegister.instance.ProvidePath(out gridId, out calculatorId, target, agents.Count);
+
+        PathRegister.instance.ProvidePath(out gridId, out calculatorId, target, agents.Count, follow);
+
         foreach (KeyValuePair<int, Selectable> ag in agents)
         {
             if (follow)

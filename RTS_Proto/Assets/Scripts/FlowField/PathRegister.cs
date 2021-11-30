@@ -97,7 +97,7 @@ public class PathRegister : MonoBehaviour
                 {
                     tile.weight = int.MaxValue;
                     if (generateColliders)
-                        Instantiate(Resources.Load("RuntimeWallCollider"), worldPoint, Quaternion.identity);
+                        Instantiate(Resources.Load("RuntimeWallCollider"), worldPoint, Quaternion.identity, transform);
                 }
 
                 nodeGrid[iGridSizeY * x + y] = tile; // Create a new node in the array
@@ -162,7 +162,7 @@ public class PathRegister : MonoBehaviour
                     {
                         grids[i][iGridSizeY * x + y] = tile;
                         if (i == 0 && !Physics.CheckCapsule(worldPoint - Vector3.up * 100, worldPoint - Vector3.up * 80, fNodeRadius - 0.01f /* in case of single point collision */, WallMask))
-                            Instantiate(Resources.Load("RuntimeWallCollider"), worldPoint, Quaternion.identity);
+                            Instantiate(Resources.Load("RuntimeWallCollider"), worldPoint, Quaternion.identity, transform);
                     }
                 }
             }
@@ -244,7 +244,7 @@ public class PathRegister : MonoBehaviour
     }
 
 
-    public void ProvidePath(out int gridId, out int calculatorId, Transform target, int nbAgents)
+    public void ProvidePath(out int gridId, out int calculatorId, Transform target, int nbAgents, bool follow)
     {
         for (int i = 0; i < 10; i++)
         {
@@ -256,7 +256,7 @@ public class PathRegister : MonoBehaviour
                 if (inUse[j] != 0)
                     continue;
 
-                calculators[i].ChangeTarget(target, j);
+                calculators[i].ChangeTarget(target, j, follow);
                 inUse[j] = nbAgents;
                 calculatorId = i;
                 gridId = j;

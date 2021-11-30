@@ -35,7 +35,7 @@ public class PathCalculator : MonoBehaviour
     {
         // if we follow a target && we do not compute again the same path (every 0.5 sec)
         if (TrStartPosition != null && TrStartPosition.position != targetPosition && Time.realtimeSinceStartup - delay > 0.5f)
-            ChangeTarget(TrStartPosition, gridId);
+            ChangeTarget(TrStartPosition, gridId, true);
 
         if (computingJobs && handle.IsCompleted)
         {
@@ -66,7 +66,7 @@ public class PathCalculator : MonoBehaviour
 
 
     // Change target position
-    public void ChangeTarget(Transform newStartPosition, int gridId)
+    public void ChangeTarget(Transform newStartPosition, int gridId, bool follow)
     {
         if (newStartPosition.position == targetPosition)
             return;
@@ -74,7 +74,11 @@ public class PathCalculator : MonoBehaviour
         computingJobs = true;
         this.gridId = gridId;
 
-        TrStartPosition = newStartPosition;
+        if (follow)
+            TrStartPosition = newStartPosition;
+        else
+            TrStartPosition = null;
+
         targetPosition = newStartPosition.position;
 
         // imprecise grid clear
