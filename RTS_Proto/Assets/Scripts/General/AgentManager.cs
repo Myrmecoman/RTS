@@ -89,7 +89,11 @@ public class AgentManager : Selectable
 
         float3 leftMostPart = new float3(leftPart.position.x, -50, leftPart.position.z);
         float3 rightMostPart = new float3(rightPart.position.x, -50, rightPart.position.z);
-        float3 targetPosition = new float3(destination.x, -50, destination.z);
+        float3 targetPosition;
+        if (follow == null)
+            targetPosition = new float3(destination.x, -50, destination.z);
+        else
+            targetPosition = new float3(follow.position.x, -50, follow.position.z);
 
         // control height
         RaycastHit verifyHeight;

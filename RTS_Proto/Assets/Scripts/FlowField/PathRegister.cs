@@ -59,8 +59,8 @@ public class PathRegister : MonoBehaviour
             inUse[i] = 0;
         }
 
-        calculators = new PathCalculator[10];
-        for (int i = 0; i < 10; i++)
+        calculators = new PathCalculator[100];
+        for (int i = 0; i < 100; i++)
             calculators[i] = ((GameObject) Instantiate(Resources.Load("PathCalculator"), transform)).GetComponent<PathCalculator>();
     }
 
@@ -246,12 +246,12 @@ public class PathRegister : MonoBehaviour
 
     public void ProvidePath(out int gridId, out int calculatorId, Transform target, int nbAgents, bool follow)
     {
-        for (int i = 0; i < 10; i++)
+        for (int i = 0; i < calculators.Length; i++)
         {
-            if (calculators[i].computingJobs)
+            if (calculators[i].computingJobs || calculators[i].following)
                 continue;
 
-            for (int j = 0; j < 100; j++)
+            for (int j = 0; j < grids.Length; j++)
             {
                 if (inUse[j] != 0)
                     continue;
@@ -285,6 +285,12 @@ public class PathRegister : MonoBehaviour
 
     private void OnApplicationQuit()
     {
+        for (int i = 0; i < calculators.Length; i++)
+        {
+            if (!calculators[i].handle.IsCompleted)
+                calculators[i].handle.Complete();
+        }
+
         for (int i = 0; i < grids.Length; i++)
         {
             grids[i].Dispose();

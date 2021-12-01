@@ -14,11 +14,8 @@ public class BuildingManager : Selectable
     private void Start()
     {
         //double delay = Time.realtimeSinceStartupAsDouble;
-        for (int i = 0; i < 100; i++)
-        {
-            GameObject newhandler = (GameObject)Instantiate(Resources.Load("CoroutineHandler"), null);
-            newhandler.GetComponent<CoroutineHandler>().CallCoroutine(PathRegister.instance.AddGridColliders(transform.position));
-        }
+        GameObject newhandler = (GameObject)Instantiate(Resources.Load("CoroutineHandler"), null);
+        newhandler.GetComponent<CoroutineHandler>().CallCoroutine(PathRegister.instance.AddGridColliders(transform.position));
         //Debug.Log("update grids colliders time : " + (Time.realtimeSinceStartupAsDouble - delay));
     }
 
@@ -27,11 +24,8 @@ public class BuildingManager : Selectable
     {
         //double delay = Time.realtimeSinceStartupAsDouble;
         GetComponent<MeshCollider>().enabled = false;
-        for (int i = 0; i < 100; i++)
-        {
-            GameObject newhandler = (GameObject) Instantiate(Resources.Load("CoroutineHandler"), null);
-            newhandler.GetComponent<CoroutineHandler>().CallCoroutine(PathRegister.instance.RemoveGridColliders(transform.position));
-        }
+        GameObject newhandler = (GameObject) Instantiate(Resources.Load("CoroutineHandler"), null);
+        newhandler.GetComponent<CoroutineHandler>().CallCoroutine(PathRegister.instance.RemoveGridColliders(transform.position));
         //Debug.Log("update grids colliders time : " + (Time.realtimeSinceStartupAsDouble - delay));
     }
 
