@@ -64,7 +64,12 @@ public class AgentManager : Selectable
             return;
 
         // Detecting if we reached our target position
-        float horizontalDist = Vector3.Distance(new Vector3(transform.position.x, 0, transform.position.z), new Vector3(destination.x, 0, destination.z));
+        float horizontalDist;
+        if (follow == null)
+            horizontalDist = Vector3.Distance(new Vector3(transform.position.x, 0, transform.position.z), new Vector3(destination.x, 0, destination.z));
+        else
+            horizontalDist = Vector3.Distance(new Vector3(transform.position.x, 0, transform.position.z), new Vector3(follow.position.x, 0, follow.position.z));
+
         if (horizontalDist <= 0.05f && follow == null)
         {
             UnsetDestinationExceptResource();
@@ -227,6 +232,7 @@ public class AgentManager : Selectable
             PathRegister.instance.inUse[gridId]--;
 
         follow = null;
+        customUsed = false;
         hasDestination = false;
         attackCommand = false;
         holdPosition = false;
@@ -246,6 +252,7 @@ public class AgentManager : Selectable
             PathRegister.instance.inUse[gridId]--;
 
         follow = null;
+        customUsed = false;
         hasDestination = false;
         attackCommand = false;
         holdPosition = false;
