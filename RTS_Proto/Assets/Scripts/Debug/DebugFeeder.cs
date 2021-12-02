@@ -7,6 +7,7 @@ public class DebugFeeder : MonoBehaviour
 
     public Text fps;
     public Text grids;
+    public Text calculators;
     public Text mineral;
     public Text gas;
     public Text totaltime;
@@ -33,7 +34,8 @@ public class DebugFeeder : MonoBehaviour
     private void Update()
     {
         fps.text = ((int) (1.0f / Time.smoothDeltaTime)) + " fps";
-        grids.text = "grids available : " + PathRegister.instance.NbCurrentlyFree();
+        grids.text = "grids available : " + PathRegister.instance.NbFreeGrids();
+        calculators.text = "calculators available : " + PathRegister.instance.NbFreeCalculators();
         mineral.text = "mineral : " + GameManager.instance.minerals;
         gas.text = "gas : " + GameManager.instance.gas;
         totaltime.text = "total time : " + ((float)lastTotalTime * 1000) + " ms";

@@ -16,7 +16,7 @@ public class PathRegister : MonoBehaviour
     [HideInInspector] public NativeArray<DijkstraTile>[] grids;
     [HideInInspector] public NativeArray<DijkstraTile>[] impreciseGrids;
     [HideInInspector] public int[] inUse;
-    //[HideInInspector] public int[] inUseClaculator;
+    [HideInInspector] public int[] inUseClaculator;
     [HideInInspector] public PathCalculator[] calculators;
 
     // Variables for fast pathfinding
@@ -54,10 +54,12 @@ public class PathRegister : MonoBehaviour
         grids = new NativeArray<DijkstraTile>[100];
         impreciseGrids = new NativeArray<DijkstraTile>[100];
         inUse = new int[100];
+        inUseClaculator = new int[100];
         for (int i = 0; i < 100; i++)
         {
             InitGrid(ref grids[i], ref impreciseGrids[i], i == 0);
             inUse[i] = 0;
+            inUseClaculator[i] = -1;
         }
 
         calculators = new PathCalculator[100];
@@ -251,7 +253,13 @@ public class PathRegister : MonoBehaviour
         if (inUse[gridId] == 0)
         {
             // cleanup the calculator in case it's was a follower
+            PathCalculator calc = calculators[inUseClaculator[gridId]];
+            calc.following = false;
+            calc.computingJobs = false;
+            if (!calc.handle.IsCompleted)
+                calc.handle.Complete();
 
+            inUseClaculator[gridId] = -1;
         }
     }
 
@@ -270,6 +278,7 @@ public class PathRegister : MonoBehaviour
 
                 calculators[i].ChangeTarget(target, j, follow);
                 inUse[j] = nbAgents;
+                inUseClaculator[j] = i;
                 calculatorId = i;
                 gridId = j;
                 return;
@@ -283,12 +292,24 @@ public class PathRegister : MonoBehaviour
     }
 
 
-    public int NbCurrentlyFree()
+    public int NbFreeGrids()
     {
         int total = 0;
         foreach (int i in inUse)
         {
             if (i == 0)
+                total++;
+        }
+        return total;
+    }
+
+
+    public int NbFreeCalculators()
+    {
+        int total = 0;
+        foreach (int i in inUseClaculator)
+        {
+            if (i == -1)
                 total++;
         }
         return total;
