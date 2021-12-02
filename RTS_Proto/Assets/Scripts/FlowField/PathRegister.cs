@@ -16,6 +16,7 @@ public class PathRegister : MonoBehaviour
     [HideInInspector] public NativeArray<DijkstraTile>[] grids;
     [HideInInspector] public NativeArray<DijkstraTile>[] impreciseGrids;
     [HideInInspector] public int[] inUse;
+    //[HideInInspector] public int[] inUseClaculator;
     [HideInInspector] public PathCalculator[] calculators;
 
     // Variables for fast pathfinding
@@ -241,6 +242,17 @@ public class PathRegister : MonoBehaviour
                 return false;
         }
         return true;
+    }
+
+
+    public void AgentRetire(int gridId)
+    {
+        inUse[gridId]--;
+        if (inUse[gridId] == 0)
+        {
+            // cleanup the calculator in case it's was a follower
+
+        }
     }
 
 

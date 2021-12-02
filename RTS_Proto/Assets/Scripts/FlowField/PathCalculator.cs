@@ -6,12 +6,11 @@ using UnityEngine;
 
 public class PathCalculator : MonoBehaviour
 {
-    [HideInInspector] public bool computingJobs;     // Tells if we have access to precise pathfinding
-    [HideInInspector] public Vector3 targetPosition; // This is where the program will start the pathfinding from
+    [HideInInspector] public bool computingJobs = false; // Tells if we have access to precise pathfinding
     [HideInInspector] public bool following = false;
     [HideInInspector] public JobHandle handle;
 
-    private Transform TrStartPosition;               // Keep a transform in case of changes (follow)
+    private Transform target;                     // transform of target
     private double delay;
     private double clearDelay;
     private double pathingDelay;
@@ -24,7 +23,6 @@ public class PathCalculator : MonoBehaviour
 
     private void Start()
     {
-        computingJobs = false;
         pathRegister = PathRegister.instance;
         toVisit = new NativeQueue<DijkstraTile>(Allocator.Persistent);
     }
@@ -32,10 +30,6 @@ public class PathCalculator : MonoBehaviour
 
     private void Update()
     {
-        // if we follow a target && we do not compute again the same path (every 0.5 sec)
-        if (!computingJobs && following && Time.realtimeSinceStartup - delay > 1)
-            ChangeTarget(TrStartPosition, gridId, true);
-
         if (computingJobs && handle.IsCompleted)
         {
             // complete dijkstra
@@ -60,9 +54,11 @@ public class PathCalculator : MonoBehaviour
 
             DebugFeeder.instance.lastFlowFIeldTime = Time.realtimeSinceStartup - flowFieldDelay;
             DebugFeeder.instance.lastTotalTime = Time.realtimeSinceStartup - delay;
-
-            // Debug.Log("precise total : " + (Time.realtimeSinceStartup - delay));
         }
+
+        // if we follow a target && we do not compute again the same path (every sec)
+        if (!computingJobs && following && Time.realtimeSinceStartup - delay > 1)
+            ChangeTarget(target, gridId, true);
     }
 
 
@@ -70,18 +66,10 @@ public class PathCalculator : MonoBehaviour
     public void ChangeTarget(Transform newStartPosition, int gridId, bool follow)
     {
         // needed before the check
-        following = follow;
-
-        if (newStartPosition.position == targetPosition)
-            return;
-
-        this.gridId = gridId;
         computingJobs = true;
-        targetPosition = newStartPosition.position;
-        if (following)
-            TrStartPosition = newStartPosition;
-        else
-            TrStartPosition = null;
+        following = follow;
+        this.gridId = gridId;
+        target = newStartPosition;
 
         // imprecise grid clear
         var jobUpdateGridImprecise = new UpdateGrid
@@ -94,7 +82,7 @@ public class PathCalculator : MonoBehaviour
         // imprecise dijkstra
         var jobDataDijImprecise = new DijkstraGrid
         {
-            target = NodeFromWorldPoint(targetPosition),
+            target = NodeFromWorldPoint(target.position),
             gridSize = new int2(pathRegister.impreciseiGridSizeX, pathRegister.impreciseiGridSizeY),
             toVisit = toVisit,
             grid = pathRegister.impreciseGrids[gridId]
@@ -130,7 +118,7 @@ public class PathCalculator : MonoBehaviour
         // dijkstra start
         var jobDataDij = new DijkstraGrid
         {
-            target = NodeFromWorldPoint(targetPosition, true),
+            target = NodeFromWorldPoint(target.position, true),
             gridSize = new int2(pathRegister.iGridSizeX, pathRegister.iGridSizeY),
             toVisit = toVisit,
             grid = pathRegister.grids[gridId]

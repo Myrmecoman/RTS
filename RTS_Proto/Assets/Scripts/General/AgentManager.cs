@@ -72,7 +72,7 @@ public class AgentManager : Selectable
 
         if (horizontalDist <= 0.05f && follow == null)
         {
-            UnsetDestinationExceptResource();
+            UnsetDestination(true);
             if (ressource != null)
                 HoldPosition();
             return;
@@ -169,7 +169,7 @@ public class AgentManager : Selectable
 
     public override void HoldPosition()
     {
-        UnsetDestinationExceptResource();
+        UnsetDestination(true);
         holdPosition = true;
         rb.isKinematic = true;
     }
@@ -204,7 +204,7 @@ public class AgentManager : Selectable
         {
             int result = res.IsFreeSlot(gameObject.GetInstanceID());
             if (result == 0)
-                UnsetDestinationExceptResource();
+                UnsetDestination(true);
             else if (result == 1)
             {
                 UnsetDestination();
@@ -230,10 +230,10 @@ public class AgentManager : Selectable
     }
 
 
-    public void UnsetDestination()
+    public void UnsetDestination(bool unsetResource = false)
     {
         if (hasDestination)
-            PathRegister.instance.inUse[gridId]--;
+            PathRegister.instance.AgentRetire(gridId);
 
         follow = null;
         customUsed = false;
@@ -242,25 +242,11 @@ public class AgentManager : Selectable
         holdPosition = false;
         rb.isKinematic = false;
 
-        if (ressource != null)
+        if (unsetResource && ressource != null)
         {
             ressource.FreeSlot();
             ressource = null;
         }
-    }
-
-    
-    public void UnsetDestinationExceptResource()
-    {
-        if (hasDestination)
-            PathRegister.instance.inUse[gridId]--;
-
-        follow = null;
-        customUsed = false;
-        hasDestination = false;
-        attackCommand = false;
-        holdPosition = false;
-        rb.isKinematic = false;
     }
 
 
