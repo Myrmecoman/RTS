@@ -10,7 +10,7 @@ public class PathCalculator : MonoBehaviour
     [HideInInspector] public bool following = false;
     [HideInInspector] public JobHandle handle;
 
-    private Transform target;                     // transform of target
+    private Transform target;                           // transform of target
     private double delay;
     private double clearDelay;
     private double pathingDelay;

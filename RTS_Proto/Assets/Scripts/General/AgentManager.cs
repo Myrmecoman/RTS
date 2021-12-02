@@ -222,7 +222,7 @@ public class AgentManager : Selectable
         this.gridId = gridId;
         this.calculatorId = calculatorId;
 
-        if (action == Actions.FOLLOW)
+        if (action == Actions.FOLLOW || follow != null)
             this.follow = follow;
 
         if (action == Actions.ATTACK)

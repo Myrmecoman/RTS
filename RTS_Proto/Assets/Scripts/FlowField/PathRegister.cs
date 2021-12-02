@@ -250,6 +250,7 @@ public class PathRegister : MonoBehaviour
     public void AgentRetire(int gridId)
     {
         inUse[gridId]--;
+
         if (inUse[gridId] == 0)
         {
             // cleanup the calculator in case it's was a follower
@@ -268,7 +269,7 @@ public class PathRegister : MonoBehaviour
     {
         for (int i = 0; i < calculators.Length; i++)
         {
-            if (calculators[i].computingJobs || calculators[i].following)
+            if (inUseClaculator[i] != -1)
                 continue;
 
             for (int j = 0; j < grids.Length; j++)
@@ -278,7 +279,7 @@ public class PathRegister : MonoBehaviour
 
                 calculators[i].ChangeTarget(target, j, follow);
                 inUse[j] = nbAgents;
-                inUseClaculator[j] = i;
+                inUseClaculator[i] = j;
                 calculatorId = i;
                 gridId = j;
                 return;
