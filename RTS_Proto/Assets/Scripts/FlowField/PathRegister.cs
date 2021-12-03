@@ -28,7 +28,7 @@ public class PathRegister : MonoBehaviour
     [HideInInspector] public float imprecisefNodeDiameter;                 // imprecise version
 
 
-    private void Start()
+    private void Awake()
     {
         // make this a singleton
         if (instance == null)
