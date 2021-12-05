@@ -32,12 +32,22 @@ public class GameManager : MonoBehaviour
 
     private void Start()
     {
-        for (int x = 0; x < 30; x++)
+        for (int x = 0; x < 10; x++)
         {
-            for (int y = 0; y < 30; y++)
+            for (int y = 0; y < 10; y++)
             {
-                GameObject obj = (GameObject)Instantiate(Resources.Load("Worker"), new Vector3(x, 0, y), Quaternion.identity);
+                GameObject obj = (GameObject)Instantiate(Resources.Load("Agent"), new Vector3(x, 0, y), Quaternion.identity);
                 allyUnits.Add(obj.transform);
+            }
+        }
+
+        for (int x = 0; x < 10; x++)
+        {
+            for (int y = 0; y < 10; y++)
+            {
+                GameObject obj = (GameObject)Instantiate(Resources.Load("Agent"), new Vector3(x + 30, 0, y), Quaternion.identity);
+                obj.GetComponent<AgentManager>().isAlly = false;
+                enemyUnits.Add(obj.transform);
             }
         }
     }

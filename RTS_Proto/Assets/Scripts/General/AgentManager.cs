@@ -1,5 +1,4 @@
-﻿using Unity.Burst;
-using Unity.Mathematics;
+﻿using Unity.Mathematics;
 using UnityEngine;
 
 
@@ -19,14 +18,16 @@ public class AgentManager : Selectable
     public Transform leftPart;
     public Transform rightPart;
 
-    [HideInInspector] public bool hasDestination = false;
-
+    private bool hasDestination = false;
     private bool holdPosition = false;
     private bool attackCommand = false;
-    private double attackCooldown;
+    private double attackCooldown = 0;
     private Rigidbody rb;
     private Transform follow;
     private ResourceManager ressource = null;
+
+    private bool directView = false;
+    private Vector3 targetDirectDirection;
      
 
     private void Start()
@@ -37,13 +38,13 @@ public class AgentManager : Selectable
 
     private void FixedUpdate()
     {
-        // NEED TO FIND OUT WHEN DESTINATION IS REACHED
 
+        // attack cooldown
         if (attackCooldown > 0)
             attackCooldown -= Time.deltaTime;
 
+        // attack reachable targets
         AgentManager foundTarget = CheckEnnemy();
-
         if (attackCooldown <= 0 && (!hasDestination || attackCommand || holdPosition) && foundTarget != null && ressource == null)
         {
             // attack target
@@ -51,19 +52,23 @@ public class AgentManager : Selectable
             return;
         }
 
+        // attacking, check if needing to hold position
         if ((attackCommand || holdPosition) && foundTarget != null && ressource == null)
         {
-            // attacking, need to hold position
             rb.isKinematic = true;
             return;
         }
         else if (ressource == null)
             rb.isKinematic = false;
 
+        // did we reach destination ?
+        // TO BE THINKED OF
+
+        // exit if no destination
         if (!hasDestination)
             return;
 
-        // Detecting if we reached our target position
+        // getting distance to destination
         float horizontalDist;
         if (follow == null)
             horizontalDist = Vector3.Distance(new Vector3(transform.position.x, 0, transform.position.z), new Vector3(destination.x, 0, destination.z));
@@ -77,16 +82,14 @@ public class AgentManager : Selectable
                 HoldPosition();
             return;
         }
-        
-        MoveAndRotate(horizontalDist);
+
+        if (horizontalDist > 0.05f && destination != null)
+            MoveAndRotate(horizontalDist);
     }
 
 
     private void MoveAndRotate(float horizontalDist)
     {
-        if (horizontalDist < 0.05f || destination == null)
-            return;
-
         float3 leftMostPart = new float3(leftPart.position.x, -50, leftPart.position.z);
         float3 rightMostPart = new float3(rightPart.position.x, -50, rightPart.position.z);
         float3 targetPosition;
@@ -107,6 +110,20 @@ public class AgentManager : Selectable
         if (!Physics.Raycast(leftMostPart, targetPosition - leftMostPart, out hitLeft, horizontalDist, layerMask) &&
             !Physics.Raycast(rightMostPart, targetPosition - rightMostPart, out hitRight, horizontalDist, layerMask))
         {
+            // get direct view direction, if we got beyond the point, we reached the destination
+            if (!directView)
+            {
+                directView = true;
+                targetDirectDirection = new Vector3(targetPosition.x, 0, targetPosition.z) - new Vector3(transform.position.x, 0, transform.position.z);
+            }
+            Vector3 currentDirectDirection = new Vector3(targetPosition.x, 0, targetPosition.z) - new Vector3(transform.position.x, 0, transform.position.z);
+            float angle = Vector3.SignedAngle(currentDirectDirection, targetDirectDirection, Vector3.up);
+            if (angle < -90 || angle > 90)
+            {
+                UnsetDestination(false);
+                return;
+            }
+
             // Clear line of sight to target position
             if (follow == null)
             {
@@ -235,6 +252,7 @@ public class AgentManager : Selectable
         if (hasDestination)
             PathRegister.instance.AgentRetire(gridId);
 
+        directView = false;
         follow = null;
         customUsed = false;
         hasDestination = false;
