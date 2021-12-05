@@ -9,6 +9,9 @@ public abstract class Selectable : MonoBehaviour
     public GameObject moveTowardsSprite;
     public bool isWorker = false;
     public bool isAlly = true;
+    public int health = 50;
+    public int armor = 0;
+    public int sightRange = 10;
 
     protected NativeArray<DijkstraTile> customGrid;
     protected bool customUsed = false;
@@ -41,6 +44,9 @@ public abstract class Selectable : MonoBehaviour
 
 
     public abstract void HoldPosition();
+
+
+    public abstract void GetAttacked(int dmg);
 
 
     public abstract void AddDestination(int gridId, int calculatorId, Vector3 dest, Transform follow = null, Actions action = Actions.MOVE, ResourceManager res = null);

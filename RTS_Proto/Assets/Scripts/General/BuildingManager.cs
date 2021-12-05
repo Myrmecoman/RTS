@@ -40,4 +40,26 @@ public class BuildingManager : Selectable
     {
         Debug.LogError("Trying to hold position a building");
     }
+
+
+    public override void GetAttacked(int dmg)
+    {
+        int diff = dmg - armor;
+
+        if (diff <= 0)
+            return;
+
+        health -= diff;
+
+        if (health <= 0)
+        {
+            if (isAlly)
+                GameManager.instance.allyBuildings.RemoveAll(new System.Predicate<int>(IsSameObj));
+            else
+                GameManager.instance.enemyBuildings.RemoveAll(new System.Predicate<int>(IsSameObj));
+
+            SelectedDico.instance.DeslectDueToDestruction(GetInstanceID());
+            Destroy(gameObject);
+        }
+    }
 }

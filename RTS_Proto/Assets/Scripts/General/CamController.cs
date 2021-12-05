@@ -81,14 +81,9 @@ public class CamController : MonoBehaviour
                 lastCommandSprite.transform.position = hit.point + new Vector3(0, 0.0001f, 0);
                 GameManager.instance.AttackCommand(SelectedDico.instance.selectedTable, lastCommandSprite.transform);
             }
-            else if (hit.transform.gameObject.tag == "agent")
+            else if (hit.transform.gameObject.tag == "agent" || hit.transform.gameObject.tag == "building")
             {
-                hit.collider.GetComponent<AgentManager>().MoveTowardsSprite();
-                GameManager.instance.AttackCommand(SelectedDico.instance.selectedTable, hit.transform, true);
-            }
-            else if (hit.transform.gameObject.tag == "building")
-            {
-                hit.collider.GetComponent<BuildingManager>().MoveTowardsSprite();
+                hit.collider.GetComponent<Selectable>().MoveTowardsSprite();
                 GameManager.instance.AttackCommand(SelectedDico.instance.selectedTable, hit.transform, true);
             }
             else if (hit.transform.gameObject.tag == "resource")
@@ -119,21 +114,13 @@ public class CamController : MonoBehaviour
                 lastCommandSprite.transform.position = hit.point + new Vector3(0, 0.0001f, 0);
                 GameManager.instance.MoveCommand(SelectedDico.instance.selectedTable, lastCommandSprite.transform);
             }
-            else if (hit.transform.gameObject.tag == "agent")
+            else if (hit.transform.gameObject.tag == "agent" || hit.transform.gameObject.tag == "building")
             {
-                hit.collider.GetComponent<AgentManager>().MoveTowardsSprite();
-                if (hit.collider.GetComponent<AgentManager>().isAlly)
+                hit.collider.GetComponent<Selectable>().MoveTowardsSprite();
+                if (hit.collider.GetComponent<Selectable>().isAlly)
                     GameManager.instance.MoveCommand(SelectedDico.instance.selectedTable, hit.transform, true);
                 else
                     GameManager.instance.AttackCommand(SelectedDico.instance.selectedTable, hit.transform, true);
-            }
-            else if (hit.transform.gameObject.tag == "building")
-            {
-                hit.collider.GetComponent<BuildingManager>().MoveTowardsSprite();
-                if (hit.collider.GetComponent<BuildingManager>().isAlly)
-                    GameManager.instance.MoveCommand(SelectedDico.instance.selectedTable, hit.transform);
-                else
-                    GameManager.instance.AttackCommand(SelectedDico.instance.selectedTable, hit.transform);
             }
             else if (hit.transform.gameObject.tag == "resource")
             {

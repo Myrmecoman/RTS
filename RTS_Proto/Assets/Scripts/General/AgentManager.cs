@@ -4,13 +4,10 @@ using UnityEngine;
 
 public class AgentManager : Selectable
 {
-    public int sightRange = 10;
     public int supply = 1;
     public int attackDamage = 5;
     public int attackRange = 5;
     public float attackSpeed = 1;
-    public int health = 50;
-    public int armor = 0;
     public float speed = 1.0f;
     public bool canAttackGround = true;
     public bool canAttackAir = true;
@@ -44,7 +41,7 @@ public class AgentManager : Selectable
             attackCooldown -= Time.deltaTime;
 
         // attack reachable targets
-        AgentManager foundTarget = CheckEnnemy();
+        Selectable foundTarget = CheckEnnemy();
         if (attackCooldown <= 0 && (!hasDestination || attackCommand || holdPosition) && foundTarget != null && ressource == null)
         {
             // attack target
@@ -154,30 +151,30 @@ public class AgentManager : Selectable
 
 
     // very intensive function (could be run every x seconds)
-    private AgentManager CheckEnnemy()
+    private Selectable CheckEnnemy()
     {
-        if (GameManager.instance.enemyUnits.Count == 0 || GameManager.instance.allyUnits.Count == 0)
+        if (GameManager.instance.enemyUnits.Count == 0 || GameManager.instance.allyUnits.Count == 0 || GameManager.instance.enemyBuildings.Count == 0 || GameManager.instance.allyBuildings.Count == 0)
             return null;
 
-        Transform nearestEnemy;
+        Transform nearestEnemy = null;
 
         if (isAlly)
             nearestEnemy = GameManager.instance.enemyUnits.FindClosest(transform.position);
         else
             nearestEnemy = GameManager.instance.allyUnits.FindClosest(transform.position);
 
+        if (nearestEnemy == null)
+        {
+            if (isAlly)
+                nearestEnemy = GameManager.instance.enemyBuildings.FindClosest(transform.position);
+            else
+                nearestEnemy = GameManager.instance.allyBuildings.FindClosest(transform.position);
+        }
+
         if (Vector3.Distance(new Vector3(transform.position.x, 0, transform.position.z), new Vector3(nearestEnemy.position.x, 0, nearestEnemy.position.z)) <= attackRange)
-            return nearestEnemy.GetComponent<AgentManager>();
+            return nearestEnemy.GetComponent<Selectable>();
 
         return null;
-    }
-
-
-    private void Attack(AgentManager ag)
-    {
-        transform.LookAt(new Vector3(ag.transform.position.x, transform.position.y, ag.transform.position.z));
-        ag.GetAttacked(attackDamage);
-        attackCooldown = attackSpeed;
     }
 
 
@@ -189,7 +186,15 @@ public class AgentManager : Selectable
     }
 
 
-    private void GetAttacked(int dmg)
+    private void Attack(Selectable ag)
+    {
+        transform.LookAt(new Vector3(ag.transform.position.x, transform.position.y, ag.transform.position.z));
+        ag.GetAttacked(attackDamage);
+        attackCooldown = attackSpeed;
+    }
+
+
+    public override void GetAttacked(int dmg)
     {
         int diff = dmg - armor;
 

@@ -111,8 +111,14 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 0db51f6b3c1e95744972b365c20bb35a, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  unitName: 0
   sprite: {fileID: 233434020740075453}
   moveTowardsSprite: {fileID: 808737614412808785}
+  isWorker: 0
+  isAlly: 1
+  health: 50
+  armor: 0
+  sightRange: 10
   buildingName: base
   buildTime: 1
   unitsNames:
@@ -121,7 +127,6 @@ MonoBehaviour:
   unitsBuildTime:
   - 15
   isBuilding: 1
-  isAlly: 1
 --- !u!1 &1468721508613772780
 GameObject:
   m_ObjectHideFlags: 0
