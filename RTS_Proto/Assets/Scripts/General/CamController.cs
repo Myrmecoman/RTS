@@ -122,12 +122,18 @@ public class CamController : MonoBehaviour
             else if (hit.transform.gameObject.tag == "agent")
             {
                 hit.collider.GetComponent<AgentManager>().MoveTowardsSprite();
-                GameManager.instance.MoveCommand(SelectedDico.instance.selectedTable, hit.transform, true);
+                if (hit.collider.GetComponent<AgentManager>().isAlly)
+                    GameManager.instance.MoveCommand(SelectedDico.instance.selectedTable, hit.transform, true);
+                else
+                    GameManager.instance.AttackCommand(SelectedDico.instance.selectedTable, hit.transform, true);
             }
             else if (hit.transform.gameObject.tag == "building")
             {
                 hit.collider.GetComponent<BuildingManager>().MoveTowardsSprite();
-                GameManager.instance.MoveCommand(SelectedDico.instance.selectedTable, hit.transform);
+                if (hit.collider.GetComponent<BuildingManager>().isAlly)
+                    GameManager.instance.MoveCommand(SelectedDico.instance.selectedTable, hit.transform);
+                else
+                    GameManager.instance.AttackCommand(SelectedDico.instance.selectedTable, hit.transform);
             }
             else if (hit.transform.gameObject.tag == "resource")
             {

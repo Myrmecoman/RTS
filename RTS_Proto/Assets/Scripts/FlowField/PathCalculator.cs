@@ -57,7 +57,7 @@ public class PathCalculator : MonoBehaviour
         }
 
         // if we follow a target && we do not compute again the same path (every sec)
-        if (!computingJobs && following && Time.realtimeSinceStartup - delay > 1)
+        if (!computingJobs && target && following && Time.realtimeSinceStartup - delay > 1)
             ChangeTarget(target, gridId, true);
     }
 

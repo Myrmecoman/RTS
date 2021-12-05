@@ -61,9 +61,6 @@ public class AgentManager : Selectable
         else if (ressource == null)
             rb.isKinematic = false;
 
-        // did we reach destination ?
-        // TO BE THINKED OF
-
         // exit if no destination
         if (!hasDestination)
             return;
