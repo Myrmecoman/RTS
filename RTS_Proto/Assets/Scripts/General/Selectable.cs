@@ -19,6 +19,7 @@ public abstract class Selectable : MonoBehaviour
     protected int gridId;
     protected int calculatorId;
 
+
     protected bool IsSameObj(int objID)
     {
         return gameObject.GetInstanceID() == objID;

@@ -6,11 +6,11 @@ using UnityEngine;
 
 public class PathCalculator : MonoBehaviour
 {
-    [HideInInspector] public bool computingJobs = false; // Tells if we have access to precise pathfinding
+    [HideInInspector] public bool computingJobs = false;
     [HideInInspector] public bool following = false;
     [HideInInspector] public JobHandle handle;
 
-    private Transform target;                           // transform of target
+    private Transform target;
     private double delay;
     private double clearDelay;
     private double pathingDelay;
