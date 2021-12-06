@@ -13,8 +13,6 @@ public abstract class Selectable : MonoBehaviour
     public int armor = 0;
     public int sightRange = 10;
 
-    protected NativeArray<DijkstraTile> customGrid;
-    protected bool customUsed = false;
     protected Vector3 destination;
     protected int gridId;
     protected int calculatorId;
