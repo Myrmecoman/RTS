@@ -15,6 +15,7 @@ public class AgentManager : Selectable
     public Transform leftPart;
     public Transform rightPart;
 
+    private int defaultAgroRange;
     private bool hasDestination = false;
     private bool holdPosition = false;
     private bool attackCommand = false;
@@ -30,6 +31,11 @@ public class AgentManager : Selectable
     private void Start()
     {
         rb = GetComponent<Rigidbody>();
+
+        if (attackRange > 8)
+            defaultAgroRange = attackRange;
+        else
+            defaultAgroRange = 8;
     }
 
 
@@ -40,11 +46,16 @@ public class AgentManager : Selectable
             attackCooldown -= Time.deltaTime;
 
         // attack reachable targets
-        Selectable foundTarget = CheckEnnemy();
-        if (attackCooldown <= 0 && (!hasDestination || attackCommand || holdPosition) && foundTarget != null && ressource == null)
+        Selectable foundTarget = null;
+        foundTarget = CheckEnnemyAttackable();
+        if (attackCooldown <= 0 && (!hasDestination || attackCommand || holdPosition) && ressource == null)
         {
-            Attack(foundTarget);
-            return;
+            if (foundTarget != null)
+            {
+                Attack(foundTarget);
+                rb.isKinematic = true;
+                return;
+            }
         }
 
         // attacking, check if needing to hold position
@@ -55,6 +66,16 @@ public class AgentManager : Selectable
         }
         else if (ressource == null)
             rb.isKinematic = false;
+
+        // check if nearby enemy to take focus on if we do not focus fire already
+        if ((attackCommand || holdPosition || !hasDestination) && foundTarget == null && follow == null)
+        {
+            Selectable foundPotentialTarget = CheckEnnemyToFocus();
+            if (foundPotentialTarget != null)
+            {
+                // follow it and return to not get in move function
+            }
+        }
 
         // exit if no destination
         if (!hasDestination)
@@ -149,7 +170,7 @@ public class AgentManager : Selectable
 
 
     // function cost to be checked
-    private Selectable CheckEnnemy()
+    private Selectable CheckEnnemyAttackable()
     {
         Transform nearestEnemy = null;
 
@@ -169,6 +190,33 @@ public class AgentManager : Selectable
         }
 
         if (nearestEnemy != null && Vector3.Distance(transform.position, nearestEnemy.GetComponent<Collider>().ClosestPoint(transform.position)) <= attackRange)
+            return nearestEnemy.GetComponent<Selectable>();
+
+        return null;
+    }
+
+
+    // function cost to be checked
+    private Selectable CheckEnnemyToFocus()
+    {
+        Transform nearestEnemy = null;
+
+        if (isAlly)
+            nearestEnemy = GameManager.instance.enemyUnits.FindClosest(transform.position);
+        else
+            nearestEnemy = GameManager.instance.allyUnits.FindClosest(transform.position);
+
+        if (nearestEnemy != null && Vector3.Distance(transform.position, nearestEnemy.GetComponent<Collider>().ClosestPoint(transform.position)) <= defaultAgroRange)
+            return nearestEnemy.GetComponent<Selectable>();
+        else
+        {
+            if (isAlly)
+                nearestEnemy = GameManager.instance.enemyBuildings.FindClosest(transform.position);
+            else
+                nearestEnemy = GameManager.instance.allyBuildings.FindClosest(transform.position);
+        }
+
+        if (nearestEnemy != null && Vector3.Distance(transform.position, nearestEnemy.GetComponent<Collider>().ClosestPoint(transform.position)) <= defaultAgroRange)
             return nearestEnemy.GetComponent<Selectable>();
 
         return null;
