@@ -158,7 +158,7 @@ public class AgentManager : Selectable
         else
             nearestEnemy = GameManager.instance.allyUnits.FindClosest(transform.position);
 
-        if (nearestEnemy != null && Vector3.Distance(new Vector3(transform.position.x, 0, transform.position.z), new Vector3(nearestEnemy.position.x, 0, nearestEnemy.position.z)) <= attackRange)
+        if (nearestEnemy != null && Vector3.Distance(transform.position, nearestEnemy.GetComponent<Collider>().ClosestPoint(transform.position)) <= attackRange)
             return nearestEnemy.GetComponent<Selectable>();
         else
         {
@@ -168,7 +168,7 @@ public class AgentManager : Selectable
                 nearestEnemy = GameManager.instance.allyBuildings.FindClosest(transform.position);
         }
 
-        if (nearestEnemy != null && Vector3.Distance(new Vector3(transform.position.x, 0, transform.position.z), new Vector3(nearestEnemy.position.x, 0, nearestEnemy.position.z)) <= attackRange)
+        if (nearestEnemy != null && Vector3.Distance(transform.position, nearestEnemy.GetComponent<Collider>().ClosestPoint(transform.position)) <= attackRange)
             return nearestEnemy.GetComponent<Selectable>();
 
         return null;
