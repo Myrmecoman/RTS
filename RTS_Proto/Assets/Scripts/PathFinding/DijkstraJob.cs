@@ -5,7 +5,7 @@ using Unity.Mathematics;
 
 
 [BurstCompile(FloatPrecision = FloatPrecision.Low, FloatMode = FloatMode.Fast), NoAlias]
-public struct DijkstraGrid : IJob
+public struct DijkstraJob : IJob
 {
     [ReadOnly, NoAlias]
     public DijkstraTile target;

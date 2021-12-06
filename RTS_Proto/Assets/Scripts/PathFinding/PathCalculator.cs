@@ -40,7 +40,7 @@ public class PathCalculator : MonoBehaviour
 
             // flowfield
             NativeArray<DijkstraTile> tempDijkstra = new NativeArray<DijkstraTile>(pathRegister.grids[gridId], Allocator.TempJob);
-            var jobData = new FlowFieldGrid
+            var jobData = new FlowFieldJob
             {
                 gridSize = new int2(pathRegister.iGridSizeX, pathRegister.iGridSizeY),
                 RdGrid = tempDijkstra,
@@ -72,7 +72,7 @@ public class PathCalculator : MonoBehaviour
         target = newStartPosition;
 
         // imprecise grid clear
-        var jobUpdateGridImprecise = new UpdateGrid
+        var jobUpdateGridImprecise = new UpdateGridJob
         {
             grid = pathRegister.impreciseGrids[gridId]
         };
@@ -80,7 +80,7 @@ public class PathCalculator : MonoBehaviour
         handle.Complete();
 
         // imprecise dijkstra
-        var jobDataDijImprecise = new DijkstraGrid
+        var jobDataDijImprecise = new DijkstraJob
         {
             target = NodeFromWorldPoint(target.position),
             gridSize = new int2(pathRegister.impreciseiGridSizeX, pathRegister.impreciseiGridSizeY),
@@ -91,7 +91,7 @@ public class PathCalculator : MonoBehaviour
 
         // imprecise flowfield
         NativeArray<DijkstraTile> imprecisetempDijkstra = new NativeArray<DijkstraTile>(pathRegister.impreciseGrids[gridId], Allocator.TempJob);
-        var jobDataImprecise = new FlowFieldGrid
+        var jobDataImprecise = new FlowFieldJob
         {
             gridSize = new int2(pathRegister.impreciseiGridSizeX, pathRegister.impreciseiGridSizeY),
             RdGrid = imprecisetempDijkstra,
@@ -105,7 +105,7 @@ public class PathCalculator : MonoBehaviour
         clearDelay = Time.realtimeSinceStartup;
 
         // grid clear
-        var jobUpdateGrid = new UpdateGrid
+        var jobUpdateGrid = new UpdateGridJob
         {
             grid = pathRegister.grids[gridId]
         };
@@ -116,7 +116,7 @@ public class PathCalculator : MonoBehaviour
         pathingDelay = Time.realtimeSinceStartup;
 
         // dijkstra start
-        var jobDataDij = new DijkstraGrid
+        var jobDataDij = new DijkstraJob
         {
             target = NodeFromWorldPoint(target.position, true),
             gridSize = new int2(pathRegister.iGridSizeX, pathRegister.iGridSizeY),

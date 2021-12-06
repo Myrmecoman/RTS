@@ -4,7 +4,7 @@ using Unity.Jobs;
 
 
 [BurstCompile(FloatPrecision = FloatPrecision.Low, FloatMode = FloatMode.Fast), NoAlias]
-public struct UpdateGrid : IJobParallelFor
+public struct UpdateGridJob : IJobParallelFor
 {
     [NoAlias]
     public NativeArray<DijkstraTile> grid;

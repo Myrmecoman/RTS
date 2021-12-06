@@ -5,7 +5,7 @@ using Unity.Mathematics;
 
 
 [BurstCompile(FloatPrecision = FloatPrecision.Low, FloatMode = FloatMode.Fast), NoAlias]
-public struct FlowFieldGrid : IJobParallelFor
+public struct FlowFieldJob : IJobParallelFor
 {
     [ReadOnly, NoAlias]
     public int2 gridSize;
