@@ -35,7 +35,6 @@ public class AgentManager : Selectable
 
     private void FixedUpdate()
     {
-
         // attack cooldown
         if (attackCooldown > 0)
             attackCooldown -= Time.deltaTime;
@@ -44,7 +43,6 @@ public class AgentManager : Selectable
         Selectable foundTarget = CheckEnnemy();
         if (attackCooldown <= 0 && (!hasDestination || attackCommand || holdPosition) && foundTarget != null && ressource == null)
         {
-            // attack target
             Attack(foundTarget);
             return;
         }
@@ -150,12 +148,9 @@ public class AgentManager : Selectable
     }
 
 
-    // very intensive function (could be run every x seconds)
+    // function cost to be checked
     private Selectable CheckEnnemy()
     {
-        if (GameManager.instance.enemyUnits.Count == 0 || GameManager.instance.allyUnits.Count == 0 || GameManager.instance.enemyBuildings.Count == 0 || GameManager.instance.allyBuildings.Count == 0)
-            return null;
-
         Transform nearestEnemy = null;
 
         if (isAlly)
@@ -163,7 +158,9 @@ public class AgentManager : Selectable
         else
             nearestEnemy = GameManager.instance.allyUnits.FindClosest(transform.position);
 
-        if (nearestEnemy == null)
+        if (nearestEnemy != null && Vector3.Distance(new Vector3(transform.position.x, 0, transform.position.z), new Vector3(nearestEnemy.position.x, 0, nearestEnemy.position.z)) <= attackRange)
+            return nearestEnemy.GetComponent<Selectable>();
+        else
         {
             if (isAlly)
                 nearestEnemy = GameManager.instance.enemyBuildings.FindClosest(transform.position);
@@ -171,7 +168,7 @@ public class AgentManager : Selectable
                 nearestEnemy = GameManager.instance.allyBuildings.FindClosest(transform.position);
         }
 
-        if (Vector3.Distance(new Vector3(transform.position.x, 0, transform.position.z), new Vector3(nearestEnemy.position.x, 0, nearestEnemy.position.z)) <= attackRange)
+        if (nearestEnemy != null && Vector3.Distance(new Vector3(transform.position.x, 0, transform.position.z), new Vector3(nearestEnemy.position.x, 0, nearestEnemy.position.z)) <= attackRange)
             return nearestEnemy.GetComponent<Selectable>();
 
         return null;

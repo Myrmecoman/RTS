@@ -32,12 +32,16 @@ public class GameManager : MonoBehaviour
 
     private void Start()
     {
+        GameObject obj = (GameObject)Instantiate(Resources.Load("buildings/base"), new Vector3(20, 0, 0), Quaternion.identity);
+        obj.GetComponent<BuildingManager>().isAlly = false;
+        enemyBuildings.Add(obj.transform);
+
         for (int x = 0; x < 10; x++)
         {
             for (int y = 0; y < 10; y++)
             {
-                GameObject obj = (GameObject)Instantiate(Resources.Load("Agent"), new Vector3(x, 0, y), Quaternion.identity);
-                allyUnits.Add(obj.transform);
+                GameObject obj1 = (GameObject)Instantiate(Resources.Load("Agent"), new Vector3(x, 0, y), Quaternion.identity);
+                allyUnits.Add(obj1.transform);
             }
         }
 
@@ -45,9 +49,9 @@ public class GameManager : MonoBehaviour
         {
             for (int y = 0; y < 10; y++)
             {
-                GameObject obj = (GameObject)Instantiate(Resources.Load("Agent"), new Vector3(x + 30, 0, y), Quaternion.identity);
-                obj.GetComponent<AgentManager>().isAlly = false;
-                enemyUnits.Add(obj.transform);
+                GameObject obj2 = (GameObject)Instantiate(Resources.Load("Agent"), new Vector3(x + 30, 0, y), Quaternion.identity);
+                obj2.GetComponent<AgentManager>().isAlly = false;
+                enemyUnits.Add(obj2.transform);
             }
         }
     }

@@ -243,26 +243,23 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 5bc7878f8db6ee645b0d9c91a227be10, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  unitName: 1
   sprite: {fileID: 5240247204630164244}
   moveTowardsSprite: {fileID: 6704976275027894274}
   isWorker: 0
   isAlly: 1
-  unitName: 1
+  health: 50
+  armor: 0
   sightRange: 10
   supply: 1
   attackDamage: 5
   attackRange: 5
   attackSpeed: 1
-  health: 50
-  armor: 0
   speed: 3
   canAttackGround: 1
   canAttackAir: 1
   leftPart: {fileID: 3210876219809377603}
   rightPart: {fileID: 3727201695207642459}
-  worldGrid: {fileID: 0}
-  gridIndexe: 0
-  hasDestination: 0
 --- !u!136 &8997136376528109127
 CapsuleCollider:
   m_ObjectHideFlags: 0
