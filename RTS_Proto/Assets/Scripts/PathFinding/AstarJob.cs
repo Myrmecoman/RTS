@@ -91,12 +91,7 @@ public struct AstarJob : IJob
 
         GetPath();
 
-        _parents.Clear();
-        _costs.Clear();
-        _frontier.Clear();
-
-        // neighbours is cleared in loop
-        // output is used outside
+        // don't clear anything since reallocating every time
     }
 
 
@@ -105,8 +100,6 @@ public struct AstarJob : IJob
         if (!_parents.ContainsKey(end))
             // Pathfinding failed
             return;
-
-        _output.Clear();
 
         int2 curr = end;
 

@@ -18,7 +18,11 @@ public class AgentManager : Selectable
     public Transform leftPart;
     public Transform rightPart;
 
+    // variables for personnal pathfinding
     private int defaultAgroRange;
+    private double delay = 0;
+
+    // info variables
     private bool hasDestination = false;
     private bool holdPosition = false;
     private bool attackCommand = false;
@@ -27,6 +31,7 @@ public class AgentManager : Selectable
     private Transform follow;
     private ResourceManager ressource = null;
 
+    // variables to know when destination reached
     private bool directView = false;
     private Vector3 targetDirectDirection;
      
@@ -39,36 +44,6 @@ public class AgentManager : Selectable
             defaultAgroRange = attackRange;
         else
             defaultAgroRange = 8;
-    }
-
-
-    private void Update()
-    {
-        // test A*
-        if (Keyboard.current.pKey.wasPressedThisFrame)
-        {
-            double delay = Time.realtimeSinceStartupAsDouble;
-
-            DijkstraTile t = NodeFromWorldPoint(transform.position);
-            var AstarJob = new AstarJob
-            {
-                RdGrid = PathRegister.instance.grids[99],
-                gridSize = new int2(PathRegister.instance.iGridSizeX, PathRegister.instance.iGridSizeY),
-                start = new int2(t.gridPos.x, t.gridPos.y),
-                end = new int2(1, 1),
-                _frontier = frontier,
-                _parents = parents,
-                _costs = costs,
-                _neighbours = neighbours,
-                _output = output
-            };
-            AstarJob.Run();
-
-            //for (int i = output.Length - 1; i >= 0; i--)
-            //    Instantiate(Resources.Load("debugSphere"), new Vector3(output[i].x, 5, output[i].y), Quaternion.identity);
-
-            Debug.Log((Time.realtimeSinceStartupAsDouble - delay) * 1000);
-        }
     }
 
 
@@ -100,17 +75,55 @@ public class AgentManager : Selectable
         else if (ressource == null)
             rb.isKinematic = false;
 
+        // if can't move, cannot take agro or move so stop now
+        if (holdPosition)
+            return;
+
         // check if nearby enemy to take focus on if we do not focus fire already
-        if ((attackCommand || holdPosition || !hasDestination) && foundTarget == null && follow == null)
+        if ((attackCommand || !hasDestination) && foundTarget == null && follow == null)
         {
-            Selectable foundPotentialTarget = CheckReachable(defaultAgroRange);
-            if (foundPotentialTarget != null)
+            Selectable foundPotentialTarget = CheckReachable(defaultAgroRange); // VERY INTENSIVE !!!!!
+            if (foundPotentialTarget != null && Time.realtimeSinceStartupAsDouble - delay > 1) // focus target using A*
             {
-                // follow it and return to not get in move function
+                delay = Time.realtimeSinceStartupAsDouble;
+                attackCommand = true;
+
+                NativePriorityQueue<int2> frontier = new NativePriorityQueue<int2>(PathRegister.instance.iGridSizeX * PathRegister.instance.iGridSizeY, Allocator.TempJob);
+                NativeHashMap<int2, int2> parents = new NativeHashMap<int2, int2>(PathRegister.instance.iGridSizeX * PathRegister.instance.iGridSizeY, Allocator.TempJob);
+                NativeHashMap<int2, int> costs = new NativeHashMap<int2, int>(PathRegister.instance.iGridSizeX * PathRegister.instance.iGridSizeY, Allocator.TempJob);
+                NativeList<int2> neighbours = new NativeList<int2>(PathRegister.instance.iGridSizeX * PathRegister.instance.iGridSizeY, Allocator.TempJob);
+                NativeList<int2> output = new NativeList<int2>(PathRegister.instance.iGridSizeX * PathRegister.instance.iGridSizeY, Allocator.TempJob);
+
+                DijkstraTile t1 = NodeFromWorldPoint(transform.position, 99);
+                DijkstraTile t2 = NodeFromWorldPoint(foundPotentialTarget.GetComponent<Transform>().position, 99);
+                var AstarJob = new AstarJob
+                {
+                    RdGrid = PathRegister.instance.grids[99],
+                    gridSize = new int2(PathRegister.instance.iGridSizeX, PathRegister.instance.iGridSizeY),
+                    start = new int2(t1.gridPos.x, t1.gridPos.y),
+                    end = new int2(t2.gridPos.x, t2.gridPos.y),
+                    _frontier = frontier,
+                    _parents = parents,
+                    _costs = costs,
+                    _neighbours = neighbours,
+                    _output = output
+                };
+                AstarJob.Run();
+
+                frontier.Dispose();
+                parents.Dispose();
+                costs.Dispose();
+                neighbours.Dispose();
+                output.Dispose();
+
+                Debug.Log("agro");
             }
+
+            // DO THE MOVE JOB
+            // hasDestination = true;
         }
 
-        // exit if no destination
+        // exit if no destination before move function
         if (!hasDestination)
             return;
 
@@ -192,7 +205,7 @@ public class AgentManager : Selectable
         }
         else
         {
-            int2 flowVector = NodeFromWorldPoint(transform.position).FlowFieldVector;
+            int2 flowVector = NodeFromWorldPoint(transform.position, gridId).FlowFieldVector;
             Vector3 moveDir = new Vector3(flowVector.x, 0, flowVector.y).normalized;
 
             rb.MovePosition(transform.position + (moveDir + Vector3.up * -heightDist) * Time.fixedDeltaTime * speed);
@@ -261,12 +274,6 @@ public class AgentManager : Selectable
 
     private void OnDestroy()
     {
-        frontier.Dispose();
-        parents.Dispose();
-        costs.Dispose();
-        neighbours.Dispose();
-        output.Dispose();
-
         if (isAlly)
             GameManager.instance.allyUnits.RemoveAll(new System.Predicate<int>(IsSameObj));
         else
@@ -330,7 +337,7 @@ public class AgentManager : Selectable
 
 
     // Gets the closest node to the given world position
-    public DijkstraTile NodeFromWorldPoint(Vector3 a_vWorldPos)
+    public DijkstraTile NodeFromWorldPoint(Vector3 a_vWorldPos, int gridId)
     {
         float ixPos = (a_vWorldPos.x + PathRegister.instance.vGridWorldSize.x / 2) / PathRegister.instance.vGridWorldSize.x;
         float iyPos = (a_vWorldPos.z + PathRegister.instance.vGridWorldSize.y / 2) / PathRegister.instance.vGridWorldSize.y;
