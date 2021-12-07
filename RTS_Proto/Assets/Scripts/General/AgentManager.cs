@@ -1,5 +1,8 @@
-﻿using Unity.Mathematics;
+﻿using Unity.Collections;
+using Unity.Jobs;
+using Unity.Mathematics;
 using UnityEngine;
+using UnityEngine.InputSystem;
 
 
 public class AgentManager : Selectable
@@ -36,6 +39,36 @@ public class AgentManager : Selectable
             defaultAgroRange = attackRange;
         else
             defaultAgroRange = 8;
+    }
+
+
+    private void Update()
+    {
+        // test A*
+        if (Keyboard.current.pKey.wasPressedThisFrame)
+        {
+            double delay = Time.realtimeSinceStartupAsDouble;
+
+            DijkstraTile t = NodeFromWorldPoint(transform.position);
+            var AstarJob = new AstarJob
+            {
+                RdGrid = PathRegister.instance.grids[99],
+                gridSize = new int2(PathRegister.instance.iGridSizeX, PathRegister.instance.iGridSizeY),
+                start = new int2(t.gridPos.x, t.gridPos.y),
+                end = new int2(1, 1),
+                _frontier = frontier,
+                _parents = parents,
+                _costs = costs,
+                _neighbours = neighbours,
+                _output = output
+            };
+            AstarJob.Run();
+
+            //for (int i = output.Length - 1; i >= 0; i--)
+            //    Instantiate(Resources.Load("debugSphere"), new Vector3(output[i].x, 5, output[i].y), Quaternion.identity);
+
+            Debug.Log((Time.realtimeSinceStartupAsDouble - delay) * 1000);
+        }
     }
 
 
@@ -222,16 +255,25 @@ public class AgentManager : Selectable
         health -= diff;
 
         if (health <= 0)
-        {
-            if (isAlly)
-                GameManager.instance.allyUnits.RemoveAll(new System.Predicate<int>(IsSameObj));
-            else
-                GameManager.instance.enemyUnits.RemoveAll(new System.Predicate<int>(IsSameObj));
-
-            SelectedDico.instance.DeslectDueToDestruction(GetInstanceID());
-            UnsetDestination();
             Destroy(gameObject);
-        }
+    }
+
+
+    private void OnDestroy()
+    {
+        frontier.Dispose();
+        parents.Dispose();
+        costs.Dispose();
+        neighbours.Dispose();
+        output.Dispose();
+
+        if (isAlly)
+            GameManager.instance.allyUnits.RemoveAll(new System.Predicate<int>(IsSameObj));
+        else
+            GameManager.instance.enemyUnits.RemoveAll(new System.Predicate<int>(IsSameObj));
+
+        SelectedDico.instance.DeslectDueToDestruction(GetInstanceID());
+        UnsetDestination();
     }
 
 

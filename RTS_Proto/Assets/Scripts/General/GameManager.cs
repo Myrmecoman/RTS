@@ -32,6 +32,10 @@ public class GameManager : MonoBehaviour
 
     private void Start()
     {
+        GameObject obj1 = (GameObject)Instantiate(Resources.Load("Agent"), new Vector3(0, 0, 0), Quaternion.identity);
+        allyUnits.Add(obj1.transform);
+
+        /*
         GameObject obj = (GameObject)Instantiate(Resources.Load("buildings/base"), new Vector3(20, 0, 0), Quaternion.identity);
         obj.GetComponent<BuildingManager>().isAlly = false;
         enemyBuildings.Add(obj.transform);
@@ -54,6 +58,7 @@ public class GameManager : MonoBehaviour
                 enemyUnits.Add(obj2.transform);
             }
         }
+        */
     }
 
 
