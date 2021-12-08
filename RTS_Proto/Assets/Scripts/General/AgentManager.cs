@@ -63,8 +63,7 @@ public class AgentManager : Selectable
             attackCooldown -= Time.deltaTime;
 
         // attack reachable targets
-        Selectable foundTarget = null;
-        foundTarget = CheckReachable(attackRange);
+        Selectable foundTarget = CheckReachable(attackRange);
         if (attackCooldown <= 0 && (!hasDestination || attackCommand || holdPosition) && ressource == null)
         {
             if (foundTarget != null)
@@ -131,19 +130,9 @@ public class AgentManager : Selectable
 
         delay = Time.realtimeSinceStartupAsDouble;
 
-        PathRegister.instance.grids[99].CopyTo(ownGrid);
+        PathRegister.instance.cleanGrid.CopyTo(ownGrid);
 
         double delaycpy = Time.realtimeSinceStartupAsDouble;
-
-        // grid clear
-        var jobUpdateGride = new UpdateGridJob
-        {
-            grid = ownGrid
-        };
-        handle = jobUpdateGride.Schedule(ownGrid.Length, 32 /* batches */);
-        handle.Complete();
-
-        double delayclear = Time.realtimeSinceStartupAsDouble;
 
         // dijkstra
         var jobDataDij = new DijkstraJob
@@ -173,13 +162,11 @@ public class AgentManager : Selectable
 
         Debug.Log("total : " + (Time.realtimeSinceStartupAsDouble - delay) * 1000 + "ms\n" +
                   "copy : " + (delaycpy - delay) * 1000 + "ms\n" +
-                  "clear : " + (delayclear - delaycpy) * 1000 + "ms\n" +
-                  "dij : " + (delayDij - delayclear) * 1000 + "ms\n" +
+                  "dij : " + (delayDij - delaycpy) * 1000 + "ms\n" +
                   "flowfield : " + (delayField - delayDij) * 1000 + "ms\n");
 
         return true;
     }
-
 
 
     private void MoveAndRotate(float horizontalDist)

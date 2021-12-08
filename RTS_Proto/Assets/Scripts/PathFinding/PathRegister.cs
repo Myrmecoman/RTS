@@ -1,5 +1,6 @@
 using System.Collections;
 using Unity.Collections;
+using Unity.Jobs;
 using Unity.Mathematics;
 using UnityEditor;
 using UnityEngine;
@@ -13,6 +14,7 @@ public class PathRegister : MonoBehaviour
     public Vector2 vGridWorldSize; // A vector2 to store the width and height of the graph in world units
     public float fNodeRadius;      // This stores how big each square on the graph will be
 
+    [HideInInspector] public NativeArray<DijkstraTile> cleanGrid; // used by agents to get a clean copy
     [HideInInspector] public NativeArray<DijkstraTile>[] grids;
     [HideInInspector] public NativeArray<DijkstraTile>[] impreciseGrids;
     [HideInInspector] public int[] inUse;
@@ -55,12 +57,32 @@ public class PathRegister : MonoBehaviour
         impreciseGrids = new NativeArray<DijkstraTile>[100];
         inUse = new int[100];
         inUseClaculator = new int[100];
+
         for (int i = 0; i < 100; i++)
         {
-            InitGrid(ref grids[i], ref impreciseGrids[i], i == 0);
+            if (i == 0)
+                InitGrid(ref grids[i], ref impreciseGrids[i], true);
+            else
+            {
+                grids[i] = new NativeArray<DijkstraTile>(iGridSizeX * iGridSizeY, Allocator.Persistent);
+                impreciseGrids[i] = new NativeArray<DijkstraTile>(impreciseiGridSizeX * impreciseiGridSizeY, Allocator.Persistent);
+                grids[0].CopyTo(grids[i]);
+                impreciseGrids[0].CopyTo(impreciseGrids[i]);
+            }
+
             inUse[i] = 0;
             inUseClaculator[i] = -1;
         }
+
+        // allocate and clear
+        cleanGrid = new NativeArray<DijkstraTile>(iGridSizeX * iGridSizeY, Allocator.Persistent);
+        grids[0].CopyTo(cleanGrid);
+        var jobUpdateGride = new UpdateGridJob
+        {
+            grid = cleanGrid
+        };
+        JobHandle handle = jobUpdateGride.Schedule(cleanGrid.Length, 32 /* batches */);
+        handle.Complete();
 
         calculators = new PathCalculator[100];
         for (int i = 0; i < 100; i++)
