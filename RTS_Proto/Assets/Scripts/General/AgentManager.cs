@@ -19,8 +19,12 @@ public class AgentManager : Selectable
     public Transform rightPart;
 
     // variables for personnal pathfinding
-    private int defaultAgroRange;
+    private JobHandle handle;
+    private NativeQueue<DijkstraTile> toVisit;
+    private int agroRange;
+    private int quitAgroRange;
     private double delay = 0;
+    private bool useOwnGrid = false;
 
     // info variables
     private bool hasDestination = false;
@@ -34,16 +38,21 @@ public class AgentManager : Selectable
     // variables to know when destination reached
     private bool directView = false;
     private Vector3 targetDirectDirection;
-     
+
 
     private void Start()
     {
         rb = GetComponent<Rigidbody>();
 
+        ownGrid = new NativeArray<DijkstraTile>(PathRegister.instance.iGridSizeX * PathRegister.instance.iGridSizeY, Allocator.Persistent);
+        toVisit = new NativeQueue<DijkstraTile>(Allocator.Persistent);
+
         if (attackRange > 8)
-            defaultAgroRange = attackRange;
+            agroRange = attackRange;
         else
-            defaultAgroRange = 8;
+            agroRange = 8;
+
+        quitAgroRange = agroRange + 2;
     }
 
 
@@ -81,47 +90,7 @@ public class AgentManager : Selectable
 
         // check if nearby enemy to take focus on if we do not focus fire already
         if ((attackCommand || !hasDestination) && foundTarget == null && follow == null)
-        {
-            Selectable foundPotentialTarget = CheckReachable(defaultAgroRange); // VERY INTENSIVE !!!!!
-            if (foundPotentialTarget != null && Time.realtimeSinceStartupAsDouble - delay > 1) // focus target using A*
-            {
-                delay = Time.realtimeSinceStartupAsDouble;
-                attackCommand = true;
-
-                NativePriorityQueue<int2> frontier = new NativePriorityQueue<int2>(PathRegister.instance.iGridSizeX * PathRegister.instance.iGridSizeY, Allocator.TempJob);
-                NativeHashMap<int2, int2> parents = new NativeHashMap<int2, int2>(PathRegister.instance.iGridSizeX * PathRegister.instance.iGridSizeY, Allocator.TempJob);
-                NativeHashMap<int2, int> costs = new NativeHashMap<int2, int>(PathRegister.instance.iGridSizeX * PathRegister.instance.iGridSizeY, Allocator.TempJob);
-                NativeList<int2> neighbours = new NativeList<int2>(PathRegister.instance.iGridSizeX * PathRegister.instance.iGridSizeY, Allocator.TempJob);
-                NativeList<int2> output = new NativeList<int2>(PathRegister.instance.iGridSizeX * PathRegister.instance.iGridSizeY, Allocator.TempJob);
-
-                DijkstraTile t1 = NodeFromWorldPoint(transform.position, 99);
-                DijkstraTile t2 = NodeFromWorldPoint(foundPotentialTarget.GetComponent<Transform>().position, 99);
-                var AstarJob = new AstarJob
-                {
-                    RdGrid = PathRegister.instance.grids[99],
-                    gridSize = new int2(PathRegister.instance.iGridSizeX, PathRegister.instance.iGridSizeY),
-                    start = new int2(t1.gridPos.x, t1.gridPos.y),
-                    end = new int2(t2.gridPos.x, t2.gridPos.y),
-                    _frontier = frontier,
-                    _parents = parents,
-                    _costs = costs,
-                    _neighbours = neighbours,
-                    _output = output
-                };
-                AstarJob.Run();
-
-                frontier.Dispose();
-                parents.Dispose();
-                costs.Dispose();
-                neighbours.Dispose();
-                output.Dispose();
-
-                Debug.Log("agro");
-            }
-
-            // DO THE MOVE JOB
-            // hasDestination = true;
-        }
+            useOwnGrid = ShouldAgro();
 
         // exit if no destination before move function
         if (!hasDestination)
@@ -134,6 +103,7 @@ public class AgentManager : Selectable
         else
             horizontalDist = Vector3.Distance(new Vector3(transform.position.x, 0, transform.position.z), new Vector3(follow.position.x, 0, follow.position.z));
 
+        // if we already reached our target, stop now
         if (horizontalDist <= 0.05f && follow == null)
         {
             UnsetDestination(true);
@@ -142,9 +112,74 @@ public class AgentManager : Selectable
             return;
         }
 
-        if (horizontalDist > 0.05f && destination != null)
+        if (destination != null)
             MoveAndRotate(horizontalDist);
     }
+
+
+    private bool ShouldAgro()
+    {
+        Selectable foundPotentialTarget = CheckReachable(agroRange); // VERY INTENSIVE !!!!!
+
+        // nothing found, no agro
+        if (foundPotentialTarget == null)
+            return false;
+
+        //follow = foundPotentialTarget.transform;
+        attackCommand = true;
+        useOwnGrid = true;
+
+        delay = Time.realtimeSinceStartupAsDouble;
+
+        PathRegister.instance.grids[99].CopyTo(ownGrid);
+
+        double delaycpy = Time.realtimeSinceStartupAsDouble;
+
+        // grid clear
+        var jobUpdateGride = new UpdateGridJob
+        {
+            grid = ownGrid
+        };
+        handle = jobUpdateGride.Schedule(ownGrid.Length, 32 /* batches */);
+        handle.Complete();
+
+        double delayclear = Time.realtimeSinceStartupAsDouble;
+
+        // dijkstra
+        var jobDataDij = new DijkstraJob
+        {
+            target = NodeFromWorldPoint(foundPotentialTarget.transform.position, true),
+            gridSize = new int2(PathRegister.instance.iGridSizeX, PathRegister.instance.iGridSizeY),
+            toVisit = toVisit,
+            grid = ownGrid
+        };
+        jobDataDij.Run();
+
+        double delayDij = Time.realtimeSinceStartupAsDouble;
+
+        // flowfield
+        NativeArray<DijkstraTile> tempDijkstra = new NativeArray<DijkstraTile>(ownGrid, Allocator.TempJob);
+        var jobData = new FlowFieldJob
+        {
+            gridSize = new int2(PathRegister.instance.iGridSizeX, PathRegister.instance.iGridSizeY),
+            RdGrid = tempDijkstra,
+            grid = ownGrid
+        };
+        handle = jobData.Schedule(ownGrid.Length, 32 /* batches */);
+        handle.Complete();
+        tempDijkstra.Dispose();
+
+        double delayField = Time.realtimeSinceStartupAsDouble;
+
+        Debug.Log("total : " + (Time.realtimeSinceStartupAsDouble - delay) * 1000 + "ms\n" +
+                  "copy : " + (delaycpy - delay) * 1000 + "ms\n" +
+                  "clear : " + (delayclear - delaycpy) * 1000 + "ms\n" +
+                  "dij : " + (delayDij - delayclear) * 1000 + "ms\n" +
+                  "flowfield : " + (delayField - delayDij) * 1000 + "ms\n");
+
+        return true;
+    }
+
 
 
     private void MoveAndRotate(float horizontalDist)
@@ -162,12 +197,10 @@ public class AgentManager : Selectable
         Physics.Raycast(transform.position, Vector3.down, out verifyHeight, 1000f, LayerMask.GetMask("ground"));
         float heightDist = verifyHeight.distance * 10;
 
-        RaycastHit hitLeft;
-        RaycastHit hitRight;
         int layerMask = LayerMask.GetMask("wall");
 
-        if (!Physics.Raycast(leftMostPart, targetPosition - leftMostPart, out hitLeft, horizontalDist, layerMask) &&
-            !Physics.Raycast(rightMostPart, targetPosition - rightMostPart, out hitRight, horizontalDist, layerMask))
+        if (!Physics.Raycast(leftMostPart, targetPosition - leftMostPart, out _, horizontalDist, layerMask) &&
+            !Physics.Raycast(rightMostPart, targetPosition - rightMostPart, out _, horizontalDist, layerMask))
         {
             // get direct view direction, if we got beyond the point, we reached the destination
             if (!directView)
@@ -205,7 +238,7 @@ public class AgentManager : Selectable
         }
         else
         {
-            int2 flowVector = NodeFromWorldPoint(transform.position, gridId).FlowFieldVector;
+            int2 flowVector = NodeFromWorldPoint(transform.position).FlowFieldVector;
             Vector3 moveDir = new Vector3(flowVector.x, 0, flowVector.y).normalized;
 
             rb.MovePosition(transform.position + (moveDir + Vector3.up * -heightDist) * Time.fixedDeltaTime * speed);
@@ -280,6 +313,8 @@ public class AgentManager : Selectable
             GameManager.instance.enemyUnits.RemoveAll(new System.Predicate<int>(IsSameObj));
 
         SelectedDico.instance.DeslectDueToDestruction(GetInstanceID());
+        ownGrid.Dispose();
+        toVisit.Dispose();
         UnsetDestination();
     }
 
@@ -316,13 +351,14 @@ public class AgentManager : Selectable
     }
 
 
-    public void UnsetDestination(bool unsetResource = false)
+    private void UnsetDestination(bool unsetResource = false)
     {
         if (hasDestination)
             PathRegister.instance.AgentRetire(gridId);
 
         directView = false;
         follow = null;
+        useOwnGrid = false;
         hasDestination = false;
         attackCommand = false;
         holdPosition = false;
@@ -337,10 +373,17 @@ public class AgentManager : Selectable
 
 
     // Gets the closest node to the given world position
-    public DijkstraTile NodeFromWorldPoint(Vector3 a_vWorldPos, int gridId)
+    private DijkstraTile NodeFromWorldPoint(Vector3 a_vWorldPos, bool useOurOwnGrid = false)
     {
         float ixPos = (a_vWorldPos.x + PathRegister.instance.vGridWorldSize.x / 2) / PathRegister.instance.vGridWorldSize.x;
         float iyPos = (a_vWorldPos.z + PathRegister.instance.vGridWorldSize.y / 2) / PathRegister.instance.vGridWorldSize.y;
+
+        if (useOurOwnGrid)
+        {
+            int ix = (int)(ixPos * PathRegister.instance.iGridSizeX);
+            int iy = (int)(iyPos * PathRegister.instance.iGridSizeY);
+            return ownGrid[PathRegister.instance.iGridSizeY * ix + iy];
+        }
 
         if (!PathRegister.instance.calculators[calculatorId].computingJobs)
         {

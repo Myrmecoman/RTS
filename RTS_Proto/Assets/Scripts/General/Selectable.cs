@@ -1,3 +1,4 @@
+using Unity.Collections;
 using UnityEngine;
 
 
@@ -15,6 +16,9 @@ public abstract class Selectable : MonoBehaviour
     protected Vector3 destination;
     protected int gridId;
     protected int calculatorId;
+
+    // own path
+    protected NativeArray<DijkstraTile> ownGrid;
 
 
     protected bool IsSameObj(int objID)
