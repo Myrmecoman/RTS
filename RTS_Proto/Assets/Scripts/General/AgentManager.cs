@@ -88,7 +88,7 @@ public class AgentManager : Selectable
             return;
 
         // check if nearby enemy to take focus on if we do not focus fire already
-        if ((attackCommand || !hasDestination) && foundTarget == null && follow == null)
+        if ((attackCommand || !hasDestination) && foundTarget == null)
             useOwnGrid = ShouldAgro();
 
         // exit if no destination before move function
@@ -124,9 +124,14 @@ public class AgentManager : Selectable
         if (foundPotentialTarget == null)
             return false;
 
-        //follow = foundPotentialTarget.transform;
+        // recalculate every second
+        if (Time.realtimeSinceStartupAsDouble - delay < 1)
+            return true;
+
+        hasDestination = true;
         attackCommand = true;
         useOwnGrid = true;
+        follow = foundPotentialTarget.transform;
 
         delay = Time.realtimeSinceStartupAsDouble;
 
@@ -135,12 +140,13 @@ public class AgentManager : Selectable
         double delaycpy = Time.realtimeSinceStartupAsDouble;
 
         // dijkstra
-        var jobDataDij = new DijkstraJob
+        var jobDataDij = new DijkstraRestrainedJob
         {
             target = NodeFromWorldPoint(foundPotentialTarget.transform.position, true),
             gridSize = new int2(PathRegister.instance.iGridSizeX, PathRegister.instance.iGridSizeY),
             toVisit = toVisit,
-            grid = ownGrid
+            grid = ownGrid,
+            maxDistance = 20
         };
         jobDataDij.Run();
 
@@ -148,11 +154,12 @@ public class AgentManager : Selectable
 
         // flowfield
         NativeArray<DijkstraTile> tempDijkstra = new NativeArray<DijkstraTile>(ownGrid, Allocator.TempJob);
-        var jobData = new FlowFieldJob
+        var jobData = new FlowFieldRestrainedJob
         {
             gridSize = new int2(PathRegister.instance.iGridSizeX, PathRegister.instance.iGridSizeY),
             RdGrid = tempDijkstra,
-            grid = ownGrid
+            grid = ownGrid,
+            maxDistance = 39
         };
         handle = jobData.Schedule(ownGrid.Length, 32 /* batches */);
         handle.Complete();
@@ -225,7 +232,7 @@ public class AgentManager : Selectable
         }
         else
         {
-            int2 flowVector = NodeFromWorldPoint(transform.position).FlowFieldVector;
+            int2 flowVector = NodeFromWorldPoint(transform.position, useOwnGrid).FlowFieldVector;
             Vector3 moveDir = new Vector3(flowVector.x, 0, flowVector.y).normalized;
 
             rb.MovePosition(transform.position + (moveDir + Vector3.up * -heightDist) * Time.fixedDeltaTime * speed);
@@ -340,7 +347,7 @@ public class AgentManager : Selectable
 
     private void UnsetDestination(bool unsetResource = false)
     {
-        if (hasDestination)
+        if (hasDestination && !useOwnGrid)
             PathRegister.instance.AgentRetire(gridId);
 
         directView = false;

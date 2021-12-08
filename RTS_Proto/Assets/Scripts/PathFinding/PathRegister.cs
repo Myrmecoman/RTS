@@ -339,7 +339,7 @@ public class PathRegister : MonoBehaviour
     }
 
 
-    private void OnApplicationQuit()
+    private void OnDestroy()
     {
         for (int i = 0; i < calculators.Length; i++)
         {
@@ -352,6 +352,8 @@ public class PathRegister : MonoBehaviour
             grids[i].Dispose();
             impreciseGrids[i].Dispose();
         }
+
+        cleanGrid.Dispose();
     }
 
 
