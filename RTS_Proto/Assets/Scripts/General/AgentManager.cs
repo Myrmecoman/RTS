@@ -63,7 +63,7 @@ public class AgentManager : Selectable
             attackCooldown -= Time.deltaTime;
 
         // attack reachable targets
-        Selectable foundTarget = CheckReachable(attackRange);
+        Selectable foundTarget = CheckReachable(attackRange); // VERY INTENSIVE
         if (attackCooldown <= 0 && (!hasDestination || attackCommand || holdPosition) && ressource == null)
         {
             if (foundTarget != null)
@@ -146,7 +146,7 @@ public class AgentManager : Selectable
             gridSize = new int2(PathRegister.instance.iGridSizeX, PathRegister.instance.iGridSizeY),
             toVisit = toVisit,
             grid = ownGrid,
-            maxDistance = 20
+            maxDistance = quitAgroRange + 5
         };
         jobDataDij.Run();
 
@@ -158,10 +158,9 @@ public class AgentManager : Selectable
         {
             gridSize = new int2(PathRegister.instance.iGridSizeX, PathRegister.instance.iGridSizeY),
             RdGrid = tempDijkstra,
-            grid = ownGrid,
-            maxDistance = 39
+            grid = ownGrid
         };
-        handle = jobData.Schedule(ownGrid.Length, 32 /* batches */);
+        handle = jobData.Schedule(ownGrid.Length, 8 /* batches */);
         handle.Complete();
         tempDijkstra.Dispose();
 
