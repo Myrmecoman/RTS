@@ -18,7 +18,7 @@ public struct FlowFieldRestrainedJob : IJobParallelFor
     public void Execute(int i)
     {
         //skip current iteration if index has obstacle
-        if (RdGrid[i].weight == int.MaxValue || RdGrid[i].weight == -1)
+        if (RdGrid[i].weight == -1 || RdGrid[i].weight == int.MaxValue)
             return;
 
         int2 pos = new int2(i / gridSize.y, i % gridSize.y);
@@ -132,6 +132,6 @@ public struct FlowFieldRestrainedJob : IJobParallelFor
 
     private bool isValid(int x, int y)
     {
-        return x >= 0 && y >= 0 && x < gridSize.x && y < gridSize.y && RdGrid[gridSize.y * x + y].weight != int.MaxValue && RdGrid[gridSize.y * x + y].weight != -1;
+        return x >= 0 && y >= 0 && x < gridSize.x && y < gridSize.y && RdGrid[gridSize.y * x + y].weight != -1  && RdGrid[gridSize.y * x + y].weight != int.MaxValue;
     }
 }

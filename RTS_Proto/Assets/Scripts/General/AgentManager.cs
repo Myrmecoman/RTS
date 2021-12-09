@@ -60,22 +60,23 @@ public class AgentManager : Selectable
     {
         // attack cooldown
         if (attackCooldown > 0)
-            attackCooldown -= Time.deltaTime;
+            attackCooldown -= Time.fixedDeltaTime;
 
         // attack reachable targets
-        Selectable foundTarget = CheckReachable(attackRange); // VERY INTENSIVE
-        if (attackCooldown <= 0 && (!hasDestination || attackCommand || holdPosition) && ressource == null)
+        Selectable foundTarget = CheckReachable(); // VERY INTENSIVE : about 0.1ms, so 100ms for 1000 units
+        float closestEnemyDist = 1000f;
+        if (foundTarget != null)
+            closestEnemyDist = Vector3.Distance(transform.position, foundTarget.GetComponent<Collider>().ClosestPoint(transform.position));
+
+        if (attackCooldown <= 0 && (!hasDestination || attackCommand || holdPosition) && ressource == null && closestEnemyDist <= attackRange)
         {
-            if (foundTarget != null)
-            {
-                Attack(foundTarget);
-                rb.isKinematic = true;
-                return;
-            }
+            Attack(foundTarget);
+            rb.isKinematic = true;
+            return;
         }
 
         // attacking, check if needing to hold position
-        if ((attackCommand || holdPosition) && foundTarget != null && ressource == null)
+        if ((attackCommand || holdPosition) && closestEnemyDist <= attackRange && ressource == null)
         {
             rb.isKinematic = true;
             return;
@@ -88,8 +89,8 @@ public class AgentManager : Selectable
             return;
 
         // check if nearby enemy to take focus on if we do not focus fire already
-        if ((attackCommand || !hasDestination) && foundTarget == null)
-            useOwnGrid = ShouldAgro();
+        if ((attackCommand || !hasDestination) && closestEnemyDist > attackRange)
+            useOwnGrid = ShouldAgro(foundTarget, closestEnemyDist);
 
         // exit if no destination before move function
         if (!hasDestination)
@@ -116,12 +117,14 @@ public class AgentManager : Selectable
     }
 
 
-    private bool ShouldAgro()
+    private bool ShouldAgro(Selectable foundPotentialTarget, float closestEnemyDist)
     {
-        Selectable foundPotentialTarget = CheckReachable(agroRange); // VERY INTENSIVE !!!!!
+        // waiting but nothing in zone yet
+        if (!useOwnGrid && closestEnemyDist >= agroRange)
+            return false;
 
-        // nothing found, no agro
-        if (foundPotentialTarget == null)
+        // got too far, leave agro
+        if (useOwnGrid && closestEnemyDist >= quitAgroRange)
             return false;
 
         // recalculate every second
@@ -132,12 +135,10 @@ public class AgentManager : Selectable
         attackCommand = true;
         useOwnGrid = true;
         follow = foundPotentialTarget.transform;
-
         delay = Time.realtimeSinceStartupAsDouble;
 
+        // clear grid
         PathRegister.instance.cleanGrid.CopyTo(ownGrid);
-
-        double delaycpy = Time.realtimeSinceStartupAsDouble;
 
         // dijkstra
         var jobDataDij = new DijkstraRestrainedJob
@@ -149,8 +150,6 @@ public class AgentManager : Selectable
             maxDistance = quitAgroRange + 5
         };
         jobDataDij.Run();
-
-        double delayDij = Time.realtimeSinceStartupAsDouble;
 
         // flowfield
         NativeArray<DijkstraTile> tempDijkstra = new NativeArray<DijkstraTile>(ownGrid, Allocator.TempJob);
@@ -164,12 +163,7 @@ public class AgentManager : Selectable
         handle.Complete();
         tempDijkstra.Dispose();
 
-        double delayField = Time.realtimeSinceStartupAsDouble;
-
-        Debug.Log("total : " + (Time.realtimeSinceStartupAsDouble - delay) * 1000 + "ms\n" +
-                  "copy : " + (delaycpy - delay) * 1000 + "ms\n" +
-                  "dij : " + (delayDij - delaycpy) * 1000 + "ms\n" +
-                  "flowfield : " + (delayField - delayDij) * 1000 + "ms\n");
+        //Debug.Log("total : " + (Time.realtimeSinceStartupAsDouble - delay) * 1000 + "ms\n");
 
         return true;
     }
@@ -242,7 +236,7 @@ public class AgentManager : Selectable
 
 
     // function cost to be checked
-    private Selectable CheckReachable(int range)
+    private Selectable CheckReachable()
     {
         Transform nearestEnemy = null;
 
@@ -251,7 +245,7 @@ public class AgentManager : Selectable
         else
             nearestEnemy = GameManager.instance.allyUnits.FindClosest(transform.position);
 
-        if (nearestEnemy != null && Vector3.Distance(transform.position, nearestEnemy.GetComponent<Collider>().ClosestPoint(transform.position)) <= range)
+        if (nearestEnemy != null)
             return nearestEnemy.GetComponent<Selectable>();
         else
         {
@@ -261,10 +255,7 @@ public class AgentManager : Selectable
                 nearestEnemy = GameManager.instance.allyBuildings.FindClosest(transform.position);
         }
 
-        if (nearestEnemy != null && Vector3.Distance(transform.position, nearestEnemy.GetComponent<Collider>().ClosestPoint(transform.position)) <= range)
-            return nearestEnemy.GetComponent<Selectable>();
-
-        return null;
+        return nearestEnemy.GetComponent<Selectable>();
     }
 
 
