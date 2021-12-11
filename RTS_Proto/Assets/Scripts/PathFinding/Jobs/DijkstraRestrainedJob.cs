@@ -16,7 +16,7 @@ public struct DijkstraRestrainedJob : IJob
     [NoAlias]
     public NativeArray<DijkstraTile> grid;
     [NoAlias]
-    public int maxDistance; // max number of cells between target and agent
+    public float maxDistance; // max number of cells between target and agent
 
 
     public void Execute()

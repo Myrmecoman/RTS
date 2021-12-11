@@ -8,7 +8,7 @@ public class AgentManager : Selectable
 {
     public int supply = 1;
     public int attackDamage = 5;
-    public int attackRange = 5;
+    public float attackRange = 5;
     public float attackSpeed = 1;
     public float speed = 1.0f;
     public bool canAttackGround = true;
@@ -19,8 +19,9 @@ public class AgentManager : Selectable
 
     // variables for personnal pathfinding
     private NativeQueue<DijkstraTile> toVisit;
-    private int agroRange;
-    private int quitAgroRange;
+    private float sqrAttackRange;
+    private float sqrAgroRange;
+    private float sqrQuitAgroRange;
     private double delay = 0;
     private bool useOwnGrid = false;
 
@@ -46,12 +47,20 @@ public class AgentManager : Selectable
         ownGrid = new NativeArray<DijkstraTile>(PathRegister.instance.iGridSizeX * PathRegister.instance.iGridSizeY, Allocator.Persistent);
         toVisit = new NativeQueue<DijkstraTile>(Allocator.Persistent);
 
+        // actually computing squared distances to avoid using Vector3.Distance which uses the costy Sqrt() function
+        sqrAttackRange = attackRange * attackRange;
+        float agroRange;
         if (attackRange > 8)
+        {
             agroRange = attackRange;
+            sqrAgroRange = sqrAttackRange;
+        }
         else
+        {
             agroRange = 8;
-
-        quitAgroRange = agroRange + 2;
+            sqrAgroRange = 8 * 8;
+        }
+        sqrQuitAgroRange = (agroRange + 2) * (agroRange + 2);
     }
 
 
@@ -62,11 +71,13 @@ public class AgentManager : Selectable
             attackCooldown -= Time.fixedDeltaTime;
 
         // attack reachable targets
-        float closestEnemyDist;
+        float sqrClosestEnemyDist;
         Selectable closestEnemySelectable;
-        GetBestTarget(out closestEnemySelectable, out closestEnemyDist); // TO BE OPTIMIZED !!!!!!! (removing it with 1000 units goes from 9fps to 200fps)
+        //double t = Time.realtimeSinceStartupAsDouble;
+        GetBestTarget(out closestEnemySelectable, out sqrClosestEnemyDist); // TO BE OPTIMIZED !!!!!!! (removing it with 1000 units goes from 9fps to 200fps, with 0.05ms)
+        //Debug.Log((Time.realtimeSinceStartupAsDouble - t) * 1000);
 
-        if (attackCooldown <= 0 && (!hasDestination || attackCommand || holdPosition) && closestEnemyDist <= attackRange && ressource == null)
+        if (attackCooldown <= 0 && (!hasDestination || attackCommand || holdPosition) && sqrClosestEnemyDist <= sqrAttackRange && ressource == null)
         {
             Attack(closestEnemySelectable);
             rb.isKinematic = true;
@@ -74,7 +85,7 @@ public class AgentManager : Selectable
         }
 
         // attacking, check if needing to hold position
-        if ((attackCommand || holdPosition) && closestEnemyDist <= attackRange && ressource == null)
+        if ((attackCommand || holdPosition) && sqrClosestEnemyDist <= sqrAttackRange && ressource == null)
         {
             rb.isKinematic = true;
             return;
@@ -87,8 +98,8 @@ public class AgentManager : Selectable
             return;
 
         // check if nearby enemy to take focus on if we do not focus fire already
-        if ((attackCommand || !hasDestination) && closestEnemyDist <= quitAgroRange && ressource == null)
-            useOwnGrid = ShouldAgro(closestEnemySelectable, closestEnemyDist);
+        if ((attackCommand || !hasDestination) && sqrClosestEnemyDist <= sqrQuitAgroRange && ressource == null)
+            useOwnGrid = ShouldAgro(closestEnemySelectable, sqrClosestEnemyDist);
 
         // exit if no destination before move function
         if (!hasDestination)
@@ -115,7 +126,7 @@ public class AgentManager : Selectable
     }
 
 
-    private void GetBestTarget(out Selectable closestEnemySelectable, out float closestEnemyDist)
+    private void GetBestTarget(out Selectable closestEnemySelectable, out float sqrClosestEnemyDist)
     {
         Transform nearestEnemy = null;
         if (isAlly)
@@ -127,11 +138,11 @@ public class AgentManager : Selectable
         if (nearestEnemy != null)
         {
             enemyAgent = nearestEnemy.GetComponent<Selectable>();
-            distAgent = Vector3.Distance(transform.position, enemyAgent.GetComponent<Collider>().ClosestPoint(transform.position));
-            if (distAgent <= attackRange)
+            distAgent = Vector3.SqrMagnitude(transform.position - enemyAgent.GetComponent<Collider>().ClosestPoint(transform.position));
+            if (distAgent <= sqrAttackRange)
             {
                 closestEnemySelectable = enemyAgent;
-                closestEnemyDist = distAgent;
+                sqrClosestEnemyDist = distAgent;
                 return;
             }
         }
@@ -146,56 +157,56 @@ public class AgentManager : Selectable
         if (nearestEnemy != null)
         {
             enemyBuilding = nearestEnemy.GetComponent<Selectable>();
-            distBuilding = Vector3.Distance(transform.position, enemyBuilding.GetComponent<Collider>().ClosestPoint(transform.position));
-            if (distBuilding <= attackRange)
+            distBuilding = Vector3.SqrMagnitude(transform.position - enemyBuilding.GetComponent<Collider>().ClosestPoint(transform.position));
+            if (distBuilding <= sqrAttackRange)
             {
                 closestEnemySelectable = enemyBuilding;
-                closestEnemyDist = distBuilding;
+                sqrClosestEnemyDist = distBuilding;
                 return;
             }
         }
 
-        if (distAgent <= agroRange)
+        if (distAgent <= sqrAgroRange)
         {
             closestEnemySelectable = enemyAgent;
-            closestEnemyDist = distAgent;
+            sqrClosestEnemyDist = distAgent;
             return;
         }
 
-        if (distBuilding <= agroRange)
+        if (distBuilding <= sqrAgroRange)
         {
             closestEnemySelectable = enemyBuilding;
-            closestEnemyDist = distBuilding;
+            sqrClosestEnemyDist = distBuilding;
             return;
         }
 
-        if (distAgent <= quitAgroRange)
+        if (distAgent <= sqrQuitAgroRange)
         {
             closestEnemySelectable = enemyAgent;
-            closestEnemyDist = distAgent;
+            sqrClosestEnemyDist = distAgent;
             return;
         }
 
-        if (distBuilding <= quitAgroRange)
+        if (distBuilding <= sqrQuitAgroRange)
         {
             closestEnemySelectable = enemyBuilding;
-            closestEnemyDist = distBuilding;
+            sqrClosestEnemyDist = distBuilding;
             return;
         }
 
         closestEnemySelectable = null;
-        closestEnemyDist = 1000f;
+        sqrClosestEnemyDist = 1000f;
     }
 
 
-    private bool ShouldAgro(Selectable foundPotentialTarget, float closestEnemyDist)
+    private bool ShouldAgro(Selectable foundPotentialTarget, float sqrClosestEnemyDist)
     {
         // waiting but nothing in zone yet
-        if (!useOwnGrid && closestEnemyDist >= agroRange)
+        if (!useOwnGrid && sqrClosestEnemyDist >= sqrAgroRange)
             return false;
 
         // got too far, leave agro
-        if (useOwnGrid && closestEnemyDist >= quitAgroRange)
+        if (useOwnGrid && sqrClosestEnemyDist >= sqrQuitAgroRange)
             return false;
 
         // recalculate every second
@@ -218,7 +229,7 @@ public class AgentManager : Selectable
             gridSize = new int2(PathRegister.instance.iGridSizeX, PathRegister.instance.iGridSizeY),
             toVisit = toVisit,
             grid = ownGrid,
-            maxDistance = quitAgroRange + 5
+            maxDistance = Mathf.Sqrt(sqrQuitAgroRange) + 5
         };
         jobDataDij.Run();
 
