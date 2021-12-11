@@ -1,6 +1,5 @@
-Detect when destination cannot be reached.
-Implem fast idle state and flocking.
-Implem auto aggro.
+Detect when destination cannot be reached (A* ? Keep track of accessible zones ?). 
+Discriminate focus fire and auto agro focus.
 Display units state in UI (all states display).
 Produce units in buildings.
 Set rally points.

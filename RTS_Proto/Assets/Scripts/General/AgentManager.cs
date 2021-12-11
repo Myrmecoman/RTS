@@ -18,7 +18,6 @@ public class AgentManager : Selectable
     public Transform rightPart;
 
     // variables for personnal pathfinding
-    private JobHandle handle;
     private NativeQueue<DijkstraTile> toVisit;
     private int agroRange;
     private int quitAgroRange;
@@ -26,6 +25,7 @@ public class AgentManager : Selectable
     private bool useOwnGrid = false;
 
     // info variables
+    private bool cleanedGrid = true;
     private bool hasDestination = false;
     private bool holdPosition = false;
     private bool attackCommand = false;
@@ -64,7 +64,7 @@ public class AgentManager : Selectable
         // attack reachable targets
         float closestEnemyDist;
         Selectable closestEnemySelectable;
-        GetBestTarget(out closestEnemySelectable, out closestEnemyDist); // TO BE OPTIMIZED !!!!!!!
+        GetBestTarget(out closestEnemySelectable, out closestEnemyDist); // TO BE OPTIMIZED !!!!!!! (removing it with 1000 units goes from 9fps to 200fps)
 
         if (attackCooldown <= 0 && (!hasDestination || attackCommand || holdPosition) && closestEnemyDist <= attackRange && ressource == null)
         {
@@ -230,8 +230,7 @@ public class AgentManager : Selectable
             RdGrid = tempDijkstra,
             grid = ownGrid
         };
-        handle = jobData.Schedule(ownGrid.Length, 8 /* batches */);
-        handle.Complete();
+        jobData.Schedule(ownGrid.Length, 8 /* batches */).Complete();
         tempDijkstra.Dispose();
 
         //Debug.Log("total : " + (Time.realtimeSinceStartupAsDouble - delay) * 1000 + "ms\n");
@@ -369,6 +368,7 @@ public class AgentManager : Selectable
         else
             UnsetDestination();
 
+        cleanedGrid = false;
         destination = dest;
         hasDestination = true;
         this.gridId = gridId;
@@ -384,9 +384,10 @@ public class AgentManager : Selectable
 
     private void UnsetDestination(bool unsetResource = false)
     {
-        if (hasDestination && !useOwnGrid)
+        if (!cleanedGrid)
             PathRegister.instance.AgentRetire(gridId);
 
+        cleanedGrid = true;
         directView = false;
         follow = null;
         useOwnGrid = false;
