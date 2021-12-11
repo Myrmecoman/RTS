@@ -2,7 +2,6 @@
 using Unity.Jobs;
 using Unity.Mathematics;
 using UnityEngine;
-using UnityEngine.InputSystem;
 
 
 public class AgentManager : Selectable
@@ -63,14 +62,13 @@ public class AgentManager : Selectable
             attackCooldown -= Time.fixedDeltaTime;
 
         // attack reachable targets
-        Selectable foundTarget = CheckReachable(); // VERY INTENSIVE : about 0.1ms, so 100ms for 1000 units
-        float closestEnemyDist = 1000f;
-        if (foundTarget != null)
-            closestEnemyDist = Vector3.Distance(transform.position, foundTarget.GetComponent<Collider>().ClosestPoint(transform.position));
+        float closestEnemyDist;
+        Selectable closestEnemySelectable;
+        GetBestTarget(out closestEnemySelectable, out closestEnemyDist); // TO BE OPTIMIZED !!!!!!!
 
-        if (attackCooldown <= 0 && (!hasDestination || attackCommand || holdPosition) && ressource == null && closestEnemyDist <= attackRange)
+        if (attackCooldown <= 0 && (!hasDestination || attackCommand || holdPosition) && closestEnemyDist <= attackRange && ressource == null)
         {
-            Attack(foundTarget);
+            Attack(closestEnemySelectable);
             rb.isKinematic = true;
             return;
         }
@@ -89,8 +87,8 @@ public class AgentManager : Selectable
             return;
 
         // check if nearby enemy to take focus on if we do not focus fire already
-        if ((attackCommand || !hasDestination) && closestEnemyDist > attackRange)
-            useOwnGrid = ShouldAgro(foundTarget, closestEnemyDist);
+        if ((attackCommand || !hasDestination) && closestEnemyDist <= quitAgroRange && ressource == null)
+            useOwnGrid = ShouldAgro(closestEnemySelectable, closestEnemyDist);
 
         // exit if no destination before move function
         if (!hasDestination)
@@ -114,6 +112,79 @@ public class AgentManager : Selectable
 
         if (destination != null)
             MoveAndRotate(horizontalDist);
+    }
+
+
+    private void GetBestTarget(out Selectable closestEnemySelectable, out float closestEnemyDist)
+    {
+        Transform nearestEnemy = null;
+        if (isAlly)
+            nearestEnemy = GameManager.instance.enemyUnits.FindClosest(transform.position);
+        else
+            nearestEnemy = GameManager.instance.allyUnits.FindClosest(transform.position);
+        Selectable enemyAgent = null;
+        float distAgent = 1000f;
+        if (nearestEnemy != null)
+        {
+            enemyAgent = nearestEnemy.GetComponent<Selectable>();
+            distAgent = Vector3.Distance(transform.position, enemyAgent.GetComponent<Collider>().ClosestPoint(transform.position));
+            if (distAgent <= attackRange)
+            {
+                closestEnemySelectable = enemyAgent;
+                closestEnemyDist = distAgent;
+                return;
+            }
+        }
+
+        nearestEnemy = null;
+        if (isAlly)
+            nearestEnemy = GameManager.instance.enemyBuildings.FindClosest(transform.position);
+        else
+            nearestEnemy = GameManager.instance.allyBuildings.FindClosest(transform.position);
+        Selectable enemyBuilding = null;
+        float distBuilding = 1000f;
+        if (nearestEnemy != null)
+        {
+            enemyBuilding = nearestEnemy.GetComponent<Selectable>();
+            distBuilding = Vector3.Distance(transform.position, enemyBuilding.GetComponent<Collider>().ClosestPoint(transform.position));
+            if (distBuilding <= attackRange)
+            {
+                closestEnemySelectable = enemyBuilding;
+                closestEnemyDist = distBuilding;
+                return;
+            }
+        }
+
+        if (distAgent <= agroRange)
+        {
+            closestEnemySelectable = enemyAgent;
+            closestEnemyDist = distAgent;
+            return;
+        }
+
+        if (distBuilding <= agroRange)
+        {
+            closestEnemySelectable = enemyBuilding;
+            closestEnemyDist = distBuilding;
+            return;
+        }
+
+        if (distAgent <= quitAgroRange)
+        {
+            closestEnemySelectable = enemyAgent;
+            closestEnemyDist = distAgent;
+            return;
+        }
+
+        if (distBuilding <= quitAgroRange)
+        {
+            closestEnemySelectable = enemyBuilding;
+            closestEnemyDist = distBuilding;
+            return;
+        }
+
+        closestEnemySelectable = null;
+        closestEnemyDist = 1000f;
     }
 
 
@@ -232,30 +303,6 @@ public class AgentManager : Selectable
             if (moveDir != Vector3.zero)
                 transform.forward = moveDir;
         }
-    }
-
-
-    // function cost to be checked
-    private Selectable CheckReachable()
-    {
-        Transform nearestEnemy = null;
-
-        if (isAlly)
-            nearestEnemy = GameManager.instance.enemyUnits.FindClosest(transform.position);
-        else
-            nearestEnemy = GameManager.instance.allyUnits.FindClosest(transform.position);
-
-        if (nearestEnemy != null)
-            return nearestEnemy.GetComponent<Selectable>();
-        else
-        {
-            if (isAlly)
-                nearestEnemy = GameManager.instance.enemyBuildings.FindClosest(transform.position);
-            else
-                nearestEnemy = GameManager.instance.allyBuildings.FindClosest(transform.position);
-        }
-
-        return nearestEnemy.GetComponent<Selectable>();
     }
 
 
