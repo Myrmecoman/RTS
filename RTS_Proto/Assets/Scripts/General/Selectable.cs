@@ -16,6 +16,7 @@ public abstract class Selectable : MonoBehaviour
     protected Vector3 destination;
     protected int gridId;
     protected int calculatorId;
+    protected int selectablePathManagerId;
 
     // own path
     protected NativeArray<DijkstraTile> ownGrid;

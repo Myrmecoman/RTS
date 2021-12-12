@@ -61,6 +61,8 @@ public class AgentManager : Selectable
             sqrAgroRange = 8 * 8;
         }
         sqrQuitAgroRange = (agroRange + 2) * (agroRange + 2);
+
+        selectablePathManagerId = SelectablesPathManager.instance.ProvideSlot(transform);
     }
 
 

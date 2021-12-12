@@ -9,7 +9,7 @@ using UnityEngine;
 // Credits for the lighting fast KNN : https://github.com/ArthurBrussee/KNN
 public class SelectablesPathManager : MonoBehaviour
 {
-    SelectablesPathManager instance;
+    public static SelectablesPathManager instance;
 
     // max numbers, could be changed depending on game mode
     private const int agentsListMaxSize = 2000;
@@ -132,8 +132,11 @@ public class SelectablesPathManager : MonoBehaviour
         batchQuery = new QueryKNearestBatchJob(allyBuildingsContainer, enemyAgents, allyBuildingFromEnemyAgent); // get closest ally agent from enemy agent
         batchQuery.ScheduleBatch(enemyAgents.Length, enemyAgents.Length / 32).Complete();
         
-
         DebugFeeder.instance.lastUnitsQueryTime = Time.realtimeSinceStartupAsDouble - t;
+
+
+        //Instantiate(Resources.Load("debugSphere"), new Vector3(allyAgents[0].x, allyAgents[0].y, allyAgents[0].z) + Vector3.up * 2, Quaternion.identity);
+        //Instantiate(Resources.Load("debugSphere"), new Vector3(enemyAgents[enemyAgentFromAllyAgent[0]].x, enemyAgents[enemyAgentFromAllyAgent[0]].y, enemyAgents[enemyAgentFromAllyAgent[0]].z) + Vector3.up * 2, Quaternion.identity);
     }
 
 
@@ -159,6 +162,9 @@ public class SelectablesPathManager : MonoBehaviour
                 allyBuildingsTransforms[allyBuildingIndexProvider] = selectable;
                 return allyBuildingIndexProvider;
             }
+
+            Debug.LogError("Neither building nor agent");
+            return -1;
         }
         else
         {
@@ -178,9 +184,12 @@ public class SelectablesPathManager : MonoBehaviour
                 enemyBuildingsTransforms[enemyBuildingIndexProvider] = selectable;
                 return enemyBuildingIndexProvider;
             }
+
+            Debug.LogError("Neither building nor agent");
+            return -1;
         }
 
-        Debug.LogError("Neither agent nor building ? Neither ally nor enemy ?");
+        Debug.LogError("Neither ally nor enemy");
         return -1;
     }
 

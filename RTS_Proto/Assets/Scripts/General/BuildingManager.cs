@@ -13,19 +13,11 @@ public class BuildingManager : Selectable
 
     private void Start()
     {
+        selectablePathManagerId = SelectablesPathManager.instance.ProvideSlot(transform);
+
         //double delay = Time.realtimeSinceStartupAsDouble;
         GameObject newhandler = (GameObject)Instantiate(Resources.Load("CoroutineHandler"), null);
         newhandler.GetComponent<CoroutineHandler>().CallCoroutine(PathRegister.instance.AddGridColliders(transform.position));
-        //Debug.Log("update grids colliders time : " + (Time.realtimeSinceStartupAsDouble - delay));
-    }
-
-
-    private void OnDestroy()
-    {
-        //double delay = Time.realtimeSinceStartupAsDouble;
-        GetComponent<MeshCollider>().enabled = false;
-        GameObject newhandler = (GameObject) Instantiate(Resources.Load("CoroutineHandler"), null);
-        newhandler.GetComponent<CoroutineHandler>().CallCoroutine(PathRegister.instance.RemoveGridColliders(transform.position));
         //Debug.Log("update grids colliders time : " + (Time.realtimeSinceStartupAsDouble - delay));
     }
 
@@ -61,5 +53,19 @@ public class BuildingManager : Selectable
             SelectedDico.instance.DeslectDueToDestruction(GetInstanceID());
             Destroy(gameObject);
         }
+    }
+
+
+    private void OnDestroy()
+    {
+        //double delay = Time.realtimeSinceStartupAsDouble;
+        GetComponent<MeshCollider>().enabled = false;
+        GameObject newhandler = (GameObject)Instantiate(Resources.Load("CoroutineHandler"), null);
+        newhandler.GetComponent<CoroutineHandler>().CallCoroutine(PathRegister.instance.RemoveGridColliders(transform.position));
+        //Debug.Log("update grids colliders time : " + (Time.realtimeSinceStartupAsDouble - delay));
+
+        SelectedDico.instance.DeslectDueToDestruction(GetInstanceID());
+        ownGrid.Dispose();
+        //UnsetDestination();
     }
 }
