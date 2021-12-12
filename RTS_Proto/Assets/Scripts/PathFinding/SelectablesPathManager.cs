@@ -16,35 +16,35 @@ public class SelectablesPathManager : MonoBehaviour
     private const int buildingsListMaxSize = 2000;
 
     // all necessary containers
-    private Transform[] allyAgentsTransforms;
-    private NativeArray<float3> allyAgents;
+    public Transform[] allyAgentsTransforms;
+    public NativeArray<float3> allyAgents;
     private KnnContainer allyAgentsContainer;
 
-    private Transform[] enemyAgentsTransforms;
-    private NativeArray<float3> enemyAgents;
+    public Transform[] enemyAgentsTransforms;
+    public NativeArray<float3> enemyAgents;
     private KnnContainer enemyAgentsContainer;
 
-    private Transform[] allyBuildingsTransforms;
-    private NativeArray<float3> allyBuildings;
+    public Transform[] allyBuildingsTransforms;
+    public NativeArray<float3> allyBuildings;
     private KnnContainer allyBuildingsContainer;
 
-    private Transform[] enemyBuildingsTransforms;
-    private NativeArray<float3> enemyBuildings;
+    public Transform[] enemyBuildingsTransforms;
+    public NativeArray<float3> enemyBuildings;
     private KnnContainer enemyBuildingsContainer;
 
     // Result arrays
-    NativeArray<int> enemyAgentFromAllyAgent;
-    NativeArray<int> enemyBuildingFromAllyAgent;
-    NativeArray<int> allyAgentFromEnemyAgent;
-    NativeArray<int> allyBuildingFromEnemyAgent;
+    public NativeArray<int> enemyAgentFromAllyAgent;
+    public NativeArray<int> enemyBuildingFromAllyAgent;
+    public NativeArray<int> allyAgentFromEnemyAgent;
+    public NativeArray<int> allyBuildingFromEnemyAgent;
 
     // Predeclared variables
-    KnnRebuildJob rebuilder;
-    QueryKNearestBatchJob batchQuery;
-    int allyAgentIndexProvider = 0;
-    int enemyAgentIndexProvider = 0;
-    int allyBuildingIndexProvider = 0;
-    int enemyBuildingIndexProvider = 0;
+    private KnnRebuildJob rebuilder;
+    private QueryKNearestBatchJob batchQuery;
+    private int allyAgentIndexProvider = 0;
+    private int enemyAgentIndexProvider = 0;
+    private int allyBuildingIndexProvider = 0;
+    private int enemyBuildingIndexProvider = 0;
 
 
     void Awake()

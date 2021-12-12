@@ -9,11 +9,6 @@ public class GameManager : MonoBehaviour
     public int minerals = 0;
     public int gas = 0;
 
-    [HideInInspector] public KdTree<Transform> allyUnits;
-    [HideInInspector] public KdTree<Transform> allyBuildings;
-    [HideInInspector] public KdTree<Transform> enemyUnits;
-    [HideInInspector] public KdTree<Transform> enemyBuildings;
-
 
     private void Awake()
     {
@@ -22,11 +17,6 @@ public class GameManager : MonoBehaviour
             instance = this;
         else
             Destroy(gameObject);
-
-        allyUnits = new KdTree<Transform>();
-        allyBuildings = new KdTree<Transform>();
-        enemyUnits = new KdTree<Transform>();
-        enemyBuildings = new KdTree<Transform>();
     }
 
 
@@ -34,14 +24,12 @@ public class GameManager : MonoBehaviour
     {
         GameObject obj = (GameObject)Instantiate(Resources.Load("buildings/base"), new Vector3(20, 0, -10), Quaternion.identity);
         obj.GetComponent<BuildingManager>().isAlly = false;
-        enemyBuildings.Add(obj.transform);
 
         for (int x = 0; x < 10; x++)
         {
             for (int y = 0; y < 10; y++)
             {
                 GameObject obj1 = (GameObject)Instantiate(Resources.Load("Agent"), new Vector3(x, 0, y), Quaternion.identity);
-                allyUnits.Add(obj1.transform);
             }
         }
 
@@ -51,7 +39,6 @@ public class GameManager : MonoBehaviour
             {
                 GameObject obj2 = (GameObject)Instantiate(Resources.Load("Agent"), new Vector3(x + 30, 0, y), Quaternion.identity);
                 obj2.GetComponent<AgentManager>().isAlly = false;
-                enemyUnits.Add(obj2.transform);
             }
         }
     }

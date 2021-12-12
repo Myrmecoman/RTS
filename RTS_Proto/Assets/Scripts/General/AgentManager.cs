@@ -129,13 +129,27 @@ public class AgentManager : Selectable
     private void GetBestTarget(out Selectable closestEnemySelectable, out float sqrClosestEnemyDist)
     {
         Transform nearestEnemy = null;
+        Vector3 enemyAgentPos;
         if (isAlly)
-            nearestEnemy = GameManager.instance.enemyUnits.FindClosest(transform.position);
+        {
+            enemyAgentPos = new Vector3(
+            SelectablesPathManager.instance.enemyAgents[SelectablesPathManager.instance.enemyAgentFromAllyAgent[selectablePathManagerId]].x,
+            SelectablesPathManager.instance.enemyAgents[SelectablesPathManager.instance.enemyAgentFromAllyAgent[selectablePathManagerId]].y,
+            SelectablesPathManager.instance.enemyAgents[SelectablesPathManager.instance.enemyAgentFromAllyAgent[selectablePathManagerId]].z);
+            nearestEnemy = SelectablesPathManager.instance.enemyAgentsTransforms[SelectablesPathManager.instance.enemyAgentFromAllyAgent[selectablePathManagerId]];
+        }
         else
-            nearestEnemy = GameManager.instance.allyUnits.FindClosest(transform.position);
+        {
+            enemyAgentPos = new Vector3(
+            SelectablesPathManager.instance.allyAgents[SelectablesPathManager.instance.allyAgentFromEnemyAgent[selectablePathManagerId]].x,
+            SelectablesPathManager.instance.allyAgents[SelectablesPathManager.instance.allyAgentFromEnemyAgent[selectablePathManagerId]].y,
+            SelectablesPathManager.instance.allyAgents[SelectablesPathManager.instance.allyAgentFromEnemyAgent[selectablePathManagerId]].z);
+            nearestEnemy = SelectablesPathManager.instance.allyAgentsTransforms[SelectablesPathManager.instance.allyAgentFromEnemyAgent[selectablePathManagerId]];
+        }
+
         Selectable enemyAgent = null;
         float distAgent = 1000f;
-        if (nearestEnemy != null)
+        if (enemyAgentPos.x != -10000)
         {
             enemyAgent = nearestEnemy.GetComponent<Selectable>();
             distAgent = Vector3.SqrMagnitude(transform.position - enemyAgent.GetComponent<Collider>().ClosestPoint(transform.position));
@@ -148,13 +162,27 @@ public class AgentManager : Selectable
         }
 
         nearestEnemy = null;
+        Vector3 enemyBuildingPos;
         if (isAlly)
-            nearestEnemy = GameManager.instance.enemyBuildings.FindClosest(transform.position);
+        {
+            enemyBuildingPos = new Vector3(
+            SelectablesPathManager.instance.enemyBuildings[SelectablesPathManager.instance.enemyBuildingFromAllyAgent[selectablePathManagerId]].x,
+            SelectablesPathManager.instance.enemyBuildings[SelectablesPathManager.instance.enemyBuildingFromAllyAgent[selectablePathManagerId]].y,
+            SelectablesPathManager.instance.enemyBuildings[SelectablesPathManager.instance.enemyBuildingFromAllyAgent[selectablePathManagerId]].z);
+            nearestEnemy = SelectablesPathManager.instance.enemyBuildingsTransforms[SelectablesPathManager.instance.enemyBuildingFromAllyAgent[selectablePathManagerId]];
+        }
         else
-            nearestEnemy = GameManager.instance.allyBuildings.FindClosest(transform.position);
+        {
+            enemyBuildingPos = new Vector3(
+            SelectablesPathManager.instance.allyBuildings[SelectablesPathManager.instance.allyBuildingFromEnemyAgent[selectablePathManagerId]].x,
+            SelectablesPathManager.instance.allyBuildings[SelectablesPathManager.instance.allyBuildingFromEnemyAgent[selectablePathManagerId]].y,
+            SelectablesPathManager.instance.allyBuildings[SelectablesPathManager.instance.allyBuildingFromEnemyAgent[selectablePathManagerId]].z);
+            nearestEnemy = SelectablesPathManager.instance.allyBuildingsTransforms[SelectablesPathManager.instance.allyBuildingFromEnemyAgent[selectablePathManagerId]];
+        }
+
         Selectable enemyBuilding = null;
         float distBuilding = 1000f;
-        if (nearestEnemy != null)
+        if (enemyBuildingPos.x != -10000)
         {
             enemyBuilding = nearestEnemy.GetComponent<Selectable>();
             distBuilding = Vector3.SqrMagnitude(transform.position - enemyBuilding.GetComponent<Collider>().ClosestPoint(transform.position));
@@ -348,11 +376,6 @@ public class AgentManager : Selectable
 
     private void OnDestroy()
     {
-        if (isAlly)
-            GameManager.instance.allyUnits.RemoveAll(new System.Predicate<int>(IsSameObj));
-        else
-            GameManager.instance.enemyUnits.RemoveAll(new System.Predicate<int>(IsSameObj));
-
         SelectedDico.instance.DeslectDueToDestruction(GetInstanceID());
         ownGrid.Dispose();
         toVisit.Dispose();

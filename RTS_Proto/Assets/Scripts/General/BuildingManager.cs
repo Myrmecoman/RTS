@@ -45,12 +45,6 @@ public class BuildingManager : Selectable
 
         if (health <= 0)
         {
-            if (isAlly)
-                GameManager.instance.allyBuildings.RemoveAll(new System.Predicate<int>(IsSameObj));
-            else
-                GameManager.instance.enemyBuildings.RemoveAll(new System.Predicate<int>(IsSameObj));
-
-            SelectedDico.instance.DeslectDueToDestruction(GetInstanceID());
             Destroy(gameObject);
         }
     }
@@ -58,6 +52,8 @@ public class BuildingManager : Selectable
 
     private void OnDestroy()
     {
+        SelectedDico.instance.DeslectDueToDestruction(GetInstanceID());
+
         //double delay = Time.realtimeSinceStartupAsDouble;
         GetComponent<MeshCollider>().enabled = false;
         GameObject newhandler = (GameObject)Instantiate(Resources.Load("CoroutineHandler"), null);
