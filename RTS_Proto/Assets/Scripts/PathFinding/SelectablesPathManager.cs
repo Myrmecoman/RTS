@@ -6,6 +6,7 @@ using Unity.Mathematics;
 using UnityEngine;
 
 
+// Credits for the lighting fast KNN : https://github.com/ArthurBrussee/KNN
 public class SelectablesPathManager : MonoBehaviour
 {
     SelectablesPathManager instance;
@@ -31,7 +32,13 @@ public class SelectablesPathManager : MonoBehaviour
     private NativeArray<float3> enemyBuildings;
     private KnnContainer enemyBuildingsContainer;
 
-    // Declared variables
+    // Result arrays
+    NativeArray<int> enemyAgentFromAllyAgent;
+    NativeArray<int> enemyBuildingFromAllyAgent;
+    NativeArray<int> allyAgentFromEnemyAgent;
+    NativeArray<int> allyBuildingFromEnemyAgent;
+
+    // Predeclared variables
     KnnRebuildJob rebuilder;
     QueryKNearestBatchJob batchQuery;
 
@@ -61,6 +68,12 @@ public class SelectablesPathManager : MonoBehaviour
         enemyAgentsContainer = new KnnContainer(enemyAgents, false, Allocator.Persistent);
         allyBuildingsContainer = new KnnContainer(allyBuildings, false, Allocator.Persistent);
         enemyBuildingsContainer = new KnnContainer(enemyBuildings, false, Allocator.Persistent);
+
+        // result arrays initialization
+        enemyAgentFromAllyAgent = new NativeArray<int>(agentsListMaxSize, Allocator.Persistent);
+        enemyBuildingFromAllyAgent = new NativeArray<int>(agentsListMaxSize, Allocator.Persistent);
+        allyAgentFromEnemyAgent = new NativeArray<int>(buildingsListMaxSize, Allocator.Persistent);
+        allyBuildingFromEnemyAgent = new NativeArray<int>(buildingsListMaxSize, Allocator.Persistent);
     }
 
 
@@ -105,12 +118,6 @@ public class SelectablesPathManager : MonoBehaviour
         rebuilder = new KnnRebuildJob(enemyBuildingsContainer);
         rebuilder.Schedule().Complete();
         
-        // we want to query neighbours for all points, keep an array of neighbour indices of all points
-        var enemyAgentFromAllyAgent = new NativeArray<int>(agentsListMaxSize, Allocator.TempJob);
-        var enemyBuildingFromAllyAgent = new NativeArray<int>(agentsListMaxSize, Allocator.TempJob);
-        var allyAgentFromEnemyAgent = new NativeArray<int>(buildingsListMaxSize, Allocator.TempJob);
-        var allyBuildingFromEnemyAgent = new NativeArray<int>(buildingsListMaxSize, Allocator.TempJob);
-        
         // get results for all points
         batchQuery = new QueryKNearestBatchJob(enemyAgentsContainer, allyAgents, enemyAgentFromAllyAgent); // get closest enemy agent from ally agent
         batchQuery.ScheduleBatch(allyAgents.Length, allyAgents.Length / 32).Complete();
@@ -121,10 +128,6 @@ public class SelectablesPathManager : MonoBehaviour
         batchQuery = new QueryKNearestBatchJob(allyBuildingsContainer, enemyAgents, allyBuildingFromEnemyAgent); // get closest ally agent from enemy agent
         batchQuery.ScheduleBatch(enemyAgents.Length, enemyAgents.Length / 32).Complete();
         
-        enemyAgentFromAllyAgent.Dispose();
-        enemyBuildingFromAllyAgent.Dispose();
-        allyAgentFromEnemyAgent.Dispose();
-        allyBuildingFromEnemyAgent.Dispose();
 
         DebugFeeder.instance.lastUnitsQueryTime = Time.realtimeSinceStartupAsDouble - t;
     }
@@ -143,5 +146,10 @@ public class SelectablesPathManager : MonoBehaviour
 
         enemyBuildingsContainer.Dispose();
         enemyBuildings.Dispose();
+
+        enemyAgentFromAllyAgent.Dispose();
+        enemyBuildingFromAllyAgent.Dispose();
+        allyAgentFromEnemyAgent.Dispose();
+        allyBuildingFromEnemyAgent.Dispose();
     }
 }
