@@ -1,5 +1,17 @@
 {
   "dependencies": {
+    "com.akb.knn": {
+      "version": "https://github.com/ArthurBrussee/KNN.git",
+      "depth": 0,
+      "source": "git",
+      "dependencies": {
+        "com.unity.burst": "1.1.2",
+        "com.unity.collections": "0.1.1-preview",
+        "com.unity.mathematics": "1.1.0",
+        "com.unity.jobs": "0.1.1-preview"
+      },
+      "hash": "e5efc6375802d3a87a729aedc25dc79fa7b51a23"
+    },
     "com.unity.burst": {
       "version": "1.4.1",
       "depth": 1,

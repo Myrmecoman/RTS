@@ -14,11 +14,13 @@ public class DebugFeeder : MonoBehaviour
     public Text arrayClearTime;
     public Text pathingTime;
     public Text flowFieldTime;
+    public Text unitsQueryTime;
 
     [HideInInspector] public double lastTotalTime = 0;
     [HideInInspector] public double lastClearTime = 0;
     [HideInInspector] public double lastPathingTime = 0;
     [HideInInspector] public double lastFlowFIeldTime = 0;
+    [HideInInspector] public double lastUnitsQueryTime = 0;
 
 
     private void Start()
@@ -42,5 +44,6 @@ public class DebugFeeder : MonoBehaviour
         arrayClearTime.text = "clear time : " + ((float)lastClearTime * 1000) + " ms";
         pathingTime.text = "pathing time : " + ((float)lastPathingTime * 1000) + " ms";
         flowFieldTime.text = "flowfield time : " + ((float)lastFlowFIeldTime * 1000) + " ms";
+        unitsQueryTime.text = "units query time : " + ((float)lastUnitsQueryTime * 1000) + " ms";
     }
 }
