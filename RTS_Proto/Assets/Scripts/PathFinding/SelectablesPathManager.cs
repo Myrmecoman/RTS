@@ -12,8 +12,8 @@ public class SelectablesPathManager : MonoBehaviour
     SelectablesPathManager instance;
 
     // max numbers, could be changed depending on game mode
-    private const int agentsListMaxSize = 1000;
-    private const int buildingsListMaxSize = 1000;
+    private const int agentsListMaxSize = 2000;
+    private const int buildingsListMaxSize = 2000;
 
     // all necessary containers
     private Transform[] allyAgentsTransforms;
@@ -41,6 +41,10 @@ public class SelectablesPathManager : MonoBehaviour
     // Predeclared variables
     KnnRebuildJob rebuilder;
     QueryKNearestBatchJob batchQuery;
+    int allyAgentIndexProvider = 0;
+    int enemyAgentIndexProvider = 0;
+    int allyBuildingIndexProvider = 0;
+    int enemyBuildingIndexProvider = 0;
 
 
     void Awake()
@@ -130,6 +134,54 @@ public class SelectablesPathManager : MonoBehaviour
         
 
         DebugFeeder.instance.lastUnitsQueryTime = Time.realtimeSinceStartupAsDouble - t;
+    }
+
+
+    public int ProvideSlot(Transform selectable)
+    {
+        Selectable selecComponent = selectable.GetComponent<Selectable>();
+
+        if (selecComponent.isAlly)
+        {
+            if (selectable.GetComponent<AgentManager>())
+            {
+                while (allyAgentsTransforms[allyAgentIndexProvider] != null)
+                    allyAgentIndexProvider = (allyAgentIndexProvider + 1) % agentsListMaxSize;
+
+                allyAgentsTransforms[allyAgentIndexProvider] = selectable;
+                return allyAgentIndexProvider;
+            }
+            else if (selectable.GetComponent<BuildingManager>())
+            {
+                while (allyBuildingsTransforms[allyBuildingIndexProvider] != null)
+                    allyBuildingIndexProvider = (allyBuildingIndexProvider + 1) % buildingsListMaxSize;
+
+                allyBuildingsTransforms[allyBuildingIndexProvider] = selectable;
+                return allyBuildingIndexProvider;
+            }
+        }
+        else
+        {
+            if (selectable.GetComponent<AgentManager>())
+            {
+                while (enemyAgentsTransforms[enemyAgentIndexProvider] != null)
+                    enemyAgentIndexProvider = (enemyAgentIndexProvider + 1) % agentsListMaxSize;
+
+                enemyAgentsTransforms[enemyAgentIndexProvider] = selectable;
+                return enemyAgentIndexProvider;
+            }
+            else if (selectable.GetComponent<BuildingManager>())
+            {
+                while (enemyBuildingsTransforms[enemyBuildingIndexProvider] != null)
+                    enemyBuildingIndexProvider = (enemyBuildingIndexProvider + 1) % buildingsListMaxSize;
+
+                enemyBuildingsTransforms[enemyBuildingIndexProvider] = selectable;
+                return enemyBuildingIndexProvider;
+            }
+        }
+
+        Debug.LogError("Neither agent nor building ? Neither ally nor enemy ?");
+        return -1;
     }
 
 
