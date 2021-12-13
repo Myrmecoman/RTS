@@ -60,8 +60,7 @@ public class BuildingManager : Selectable
         newhandler.GetComponent<CoroutineHandler>().CallCoroutine(PathRegister.instance.RemoveGridColliders(transform.position));
         //Debug.Log("update grids colliders time : " + (Time.realtimeSinceStartupAsDouble - delay));
 
-        SelectedDico.instance.DeslectDueToDestruction(GetInstanceID());
-        ownGrid.Dispose();
+        //ownGrid.Dispose();
         //UnsetDestination();
     }
 }

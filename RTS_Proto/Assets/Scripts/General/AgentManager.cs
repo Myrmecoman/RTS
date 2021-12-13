@@ -149,7 +149,7 @@ public class AgentManager : Selectable
 
         Selectable enemyAgent = null;
         float distAgent = 1000f;
-        if (enemyAgentPos.x != -10000)
+        if (enemyAgentPos.x != -10000 && nearestEnemy)
         {
             enemyAgent = nearestEnemy.GetComponent<Selectable>();
             distAgent = Vector3.SqrMagnitude(transform.position - enemyAgent.GetComponent<Collider>().ClosestPoint(transform.position));
@@ -182,7 +182,7 @@ public class AgentManager : Selectable
 
         Selectable enemyBuilding = null;
         float distBuilding = 1000f;
-        if (enemyBuildingPos.x != -10000)
+        if (enemyBuildingPos.x != -10000 && nearestEnemy)
         {
             enemyBuilding = nearestEnemy.GetComponent<Selectable>();
             distBuilding = Vector3.SqrMagnitude(transform.position - enemyBuilding.GetComponent<Collider>().ClosestPoint(transform.position));

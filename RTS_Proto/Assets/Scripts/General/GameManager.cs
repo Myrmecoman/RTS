@@ -27,7 +27,7 @@ public class GameManager : MonoBehaviour
 
         for (int x = 0; x < 10; x++)
         {
-            for (int y = 0; y < 10; y++)
+            for (int y = 0; y < 100; y++)
             {
                 GameObject obj1 = (GameObject)Instantiate(Resources.Load("Agent"), new Vector3(x, 0, y), Quaternion.identity);
             }
@@ -35,7 +35,7 @@ public class GameManager : MonoBehaviour
 
         for (int x = 0; x < 10; x++)
         {
-            for (int y = 0; y < 10; y++)
+            for (int y = 0; y < 100; y++)
             {
                 GameObject obj2 = (GameObject)Instantiate(Resources.Load("Agent"), new Vector3(x + 30, 0, y), Quaternion.identity);
                 obj2.GetComponent<AgentManager>().isAlly = false;

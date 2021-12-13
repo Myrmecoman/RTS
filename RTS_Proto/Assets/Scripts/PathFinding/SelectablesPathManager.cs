@@ -78,6 +78,19 @@ public class SelectablesPathManager : MonoBehaviour
         enemyBuildingFromAllyAgent = new NativeArray<int>(agentsListMaxSize, Allocator.Persistent);
         allyAgentFromEnemyAgent = new NativeArray<int>(buildingsListMaxSize, Allocator.Persistent);
         allyBuildingFromEnemyAgent = new NativeArray<int>(buildingsListMaxSize, Allocator.Persistent);
+
+        // updating points positions
+        for (int i = 0; i < agentsListMaxSize; ++i)
+        {
+            allyAgents[i] = new float3(-10000, -10000 - i, -10000); // the "- i" is to prevent same positions, that would kill the algorithm optimization
+            enemyAgents[i] = new float3(-10000, -10000 - i, -10000);
+
+            if (i < buildingsListMaxSize)
+            {
+                allyBuildings[i] = new float3(-10000, -10000 - i, -10000);
+                enemyBuildings[i] = new float3(-10000, -10000 - i, -10000);
+            }
+        }
     }
 
 
