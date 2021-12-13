@@ -47,7 +47,7 @@ public class SelectablesPathManager : MonoBehaviour
     private int enemyBuildingIndexProvider = 0;
 
 
-    void Awake()
+    private void Awake()
     {
         // make this a singleton
         if (instance == null)
@@ -55,6 +55,25 @@ public class SelectablesPathManager : MonoBehaviour
         else
             Destroy(gameObject);
 
+        AllocateArrays();
+
+        // updating points positions
+        for (int i = 0; i < agentsListMaxSize; ++i)
+        {
+            allyAgents[i] = new float3(-10000, -10000 - i, -10000); // the "- i" is to prevent same positions, that would kill the algorithm optimization
+            enemyAgents[i] = new float3(-10000, -10000 - i, -10000);
+
+            if (i < buildingsListMaxSize)
+            {
+                allyBuildings[i] = new float3(-10000, -10000 - i, -10000);
+                enemyBuildings[i] = new float3(-10000, -10000 - i, -10000);
+            }
+        }
+    }
+
+
+    private void AllocateArrays()
+    {
         // allocate transform arrays
         allyAgentsTransforms = new Transform[agentsListMaxSize];
         enemyAgentsTransforms = new Transform[agentsListMaxSize];
@@ -78,23 +97,31 @@ public class SelectablesPathManager : MonoBehaviour
         enemyBuildingFromAllyAgent = new NativeArray<int>(agentsListMaxSize, Allocator.Persistent);
         allyAgentFromEnemyAgent = new NativeArray<int>(buildingsListMaxSize, Allocator.Persistent);
         allyBuildingFromEnemyAgent = new NativeArray<int>(buildingsListMaxSize, Allocator.Persistent);
-
-        // updating points positions
-        for (int i = 0; i < agentsListMaxSize; ++i)
-        {
-            allyAgents[i] = new float3(-10000, -10000 - i, -10000); // the "- i" is to prevent same positions, that would kill the algorithm optimization
-            enemyAgents[i] = new float3(-10000, -10000 - i, -10000);
-
-            if (i < buildingsListMaxSize)
-            {
-                allyBuildings[i] = new float3(-10000, -10000 - i, -10000);
-                enemyBuildings[i] = new float3(-10000, -10000 - i, -10000);
-            }
-        }
     }
 
 
-    void Update()
+    private void DeallocateArrays()
+    {
+        allyAgentsContainer.Dispose();
+        allyAgents.Dispose();
+
+        enemyAgentsContainer.Dispose();
+        enemyAgents.Dispose();
+
+        allyBuildingsContainer.Dispose();
+        allyBuildings.Dispose();
+
+        enemyBuildingsContainer.Dispose();
+        enemyBuildings.Dispose();
+
+        enemyAgentFromAllyAgent.Dispose();
+        enemyBuildingFromAllyAgent.Dispose();
+        allyAgentFromEnemyAgent.Dispose();
+        allyBuildingFromEnemyAgent.Dispose();
+    }
+
+
+    private void Update()
     {
         double t = Time.realtimeSinceStartupAsDouble;
 
@@ -201,29 +228,11 @@ public class SelectablesPathManager : MonoBehaviour
             Debug.LogError("Neither building nor agent");
             return -1;
         }
-
-        Debug.LogError("Neither ally nor enemy");
-        return -1;
     }
 
 
     private void OnDestroy()
     {
-        allyAgentsContainer.Dispose();
-        allyAgents.Dispose();
-
-        enemyAgentsContainer.Dispose();
-        enemyAgents.Dispose();
-
-        allyBuildingsContainer.Dispose();
-        allyBuildings.Dispose();
-
-        enemyBuildingsContainer.Dispose();
-        enemyBuildings.Dispose();
-
-        enemyAgentFromAllyAgent.Dispose();
-        enemyBuildingFromAllyAgent.Dispose();
-        allyAgentFromEnemyAgent.Dispose();
-        allyBuildingFromEnemyAgent.Dispose();
+        DeallocateArrays();
     }
 }

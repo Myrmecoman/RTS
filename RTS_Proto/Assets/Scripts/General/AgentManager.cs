@@ -75,7 +75,7 @@ public class AgentManager : Selectable
         // attack reachable targets
         float sqrClosestEnemyDist;
         Selectable closestEnemySelectable;
-        GetBestTarget(out closestEnemySelectable, out sqrClosestEnemyDist); // TO BE OPTIMIZED !!!!!!! (removing it with 1000 units goes from 9fps to 200fps, with 0.05ms)
+        GetBestTarget(out closestEnemySelectable, out sqrClosestEnemyDist);
 
         if (attackCooldown <= 0 && (!hasDestination || attackCommand || holdPosition) && sqrClosestEnemyDist <= sqrAttackRange && ressource == null)
         {

@@ -22,20 +22,24 @@ public class GameManager : MonoBehaviour
 
     private void Start()
     {
+        for (int x = 0; x < 10; x++)
+        {
+            for (int y = 0; y < 10; y++)
+                Instantiate(Resources.Load("Worker"), new Vector3(x - 30, 0, y), Quaternion.identity);
+        }
+
+        for (int x = 0; x < 10; x++)
+        {
+            for (int y = 0; y < 10; y++)
+                Instantiate(Resources.Load("Agent"), new Vector3(x, 0, y), Quaternion.identity);
+        }
+
         GameObject obj = (GameObject)Instantiate(Resources.Load("buildings/base"), new Vector3(20, 0, -10), Quaternion.identity);
         obj.GetComponent<BuildingManager>().isAlly = false;
 
         for (int x = 0; x < 10; x++)
         {
-            for (int y = 0; y < 100; y++)
-            {
-                GameObject obj1 = (GameObject)Instantiate(Resources.Load("Agent"), new Vector3(x, 0, y), Quaternion.identity);
-            }
-        }
-
-        for (int x = 0; x < 10; x++)
-        {
-            for (int y = 0; y < 100; y++)
+            for (int y = 0; y < 10; y++)
             {
                 GameObject obj2 = (GameObject)Instantiate(Resources.Load("Agent"), new Vector3(x + 30, 0, y), Quaternion.identity);
                 obj2.GetComponent<AgentManager>().isAlly = false;
