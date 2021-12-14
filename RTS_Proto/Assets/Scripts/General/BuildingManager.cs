@@ -44,23 +44,23 @@ public class BuildingManager : Selectable
         health -= diff;
 
         if (health <= 0)
-        {
             Destroy(gameObject);
-        }
     }
 
 
     private void OnDestroy()
     {
         SelectedDico.instance.DeslectDueToDestruction(GetInstanceID());
+        //ownGrid.Dispose();
+        //UnsetDestination();
+
+        if (!gameObject.scene.isLoaded) // leave before spawning the handler if we quit the scene anyway
+            return;
 
         //double delay = Time.realtimeSinceStartupAsDouble;
         GetComponent<MeshCollider>().enabled = false;
         GameObject newhandler = (GameObject)Instantiate(Resources.Load("CoroutineHandler"), null);
         newhandler.GetComponent<CoroutineHandler>().CallCoroutine(PathRegister.instance.RemoveGridColliders(transform.position));
         //Debug.Log("update grids colliders time : " + (Time.realtimeSinceStartupAsDouble - delay));
-
-        //ownGrid.Dispose();
-        //UnsetDestination();
     }
 }
