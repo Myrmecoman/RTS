@@ -1,3 +1,4 @@
+There are some selection bugs (to be defined)
 Detect when destination cannot be reached (A* ? Keep track of accessible zones ?). 
 Discriminate focus fire and auto agro focus.
 Display units state in UI (all states display).

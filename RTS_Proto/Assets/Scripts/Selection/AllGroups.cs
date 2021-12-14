@@ -65,14 +65,17 @@ public class AllGroups : MonoBehaviour
 
     private void UpdateGroupIcon(int groupNb)
     {
-        Image img = InputReceiver.instance.buttonGroups[groupNb].transform.GetChild(0).GetComponent<Image>();
+        Image img = InputReceiver.instance.buttonGroups[groupNb].GetComponent<Image>();
+        Image icon = InputReceiver.instance.buttonGroups[groupNb].transform.GetChild(0).GetComponent<Image>();
 
         if (controlGroups[groupNb].Count == 0)
         {
-            img.sprite = null;
-            img.color = new Color(img.color.r, img.color.g, img.color.b, 0);
+            icon.sprite = null;
+            icon.color = new Color(icon.color.r, icon.color.g, icon.color.b, 0);
+            img.enabled = false;
             return;
         }
+        img.enabled = true;
 
         Names lowestName = (Names)int.MaxValue;
         foreach (var i in controlGroups[groupNb])
@@ -90,7 +93,7 @@ public class AllGroups : MonoBehaviour
             path += "otherIcons/";
 
         path += lowestName.ToString();
-        img.sprite = Resources.Load<Sprite>(path);
-        img.color = new Color(img.color.r, img.color.g, img.color.b, 1);
+        icon.sprite = Resources.Load<Sprite>(path);
+        icon.color = new Color(icon.color.r, icon.color.g, icon.color.b, 1);
     }
 }
