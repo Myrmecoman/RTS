@@ -16,19 +16,19 @@ public class SelectablesPathManager : MonoBehaviour
     private const int buildingsListMaxSize = 2000;
 
     // all necessary containers
-    public Transform[] allyAgentsTransforms;
+    [HideInInspector] public Transform[] allyAgentsTransforms;
     public NativeArray<float3> allyAgents;
     private KnnContainer allyAgentsContainer;
 
-    public Transform[] enemyAgentsTransforms;
+    [HideInInspector] public Transform[] enemyAgentsTransforms;
     public NativeArray<float3> enemyAgents;
     private KnnContainer enemyAgentsContainer;
 
-    public Transform[] allyBuildingsTransforms;
+    [HideInInspector] public Transform[] allyBuildingsTransforms;
     public NativeArray<float3> allyBuildings;
     private KnnContainer allyBuildingsContainer;
 
-    public Transform[] enemyBuildingsTransforms;
+    [HideInInspector] public Transform[] enemyBuildingsTransforms;
     public NativeArray<float3> enemyBuildings;
     private KnnContainer enemyBuildingsContainer;
 

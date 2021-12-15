@@ -1,3 +1,7 @@
+/*
+ * Possible actions for an unit.
+ */
+
 public enum Actions
 {
     MOVE = 0,

@@ -1,4 +1,3 @@
-
 /*
  * This enum hold all the units, buildings and selectable elements possible.
  * 
