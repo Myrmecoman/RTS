@@ -12,8 +12,8 @@ public class SelectablesPathManager : MonoBehaviour
     public static SelectablesPathManager instance;
 
     // max numbers, could be changed depending on game mode
-    private const int agentsListMaxSize = 2000;
-    private const int buildingsListMaxSize = 2000;
+    private const int agentsListMaxSize = 1200;
+    private const int buildingsListMaxSize = 1200;
 
     // all necessary containers
     [HideInInspector] public Transform[] allyAgentsTransforms;

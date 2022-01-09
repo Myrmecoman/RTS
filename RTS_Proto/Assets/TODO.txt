@@ -6,3 +6,4 @@ Produce units in buildings.
 Place buildings.
 Set rally points.
 Implem fog of war.
+Make units buttons UI and functions.
