@@ -243,6 +243,9 @@ public class GlobalSelection : MonoBehaviour
 
         if ((hitAgent != null && hitAgent.isAlly) || (hitBuilding != null && hitBuilding.isAlly))
         {
+            if (nbAddedBoxing == 0)
+                selected_table.DeselectAll();
+                
             selected_table.AddSelected(other.GetComponent<AgentManager>());
             nbAddedBoxing++;
         }
